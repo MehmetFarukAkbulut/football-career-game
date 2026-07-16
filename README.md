@@ -33,6 +33,8 @@ node scripts/export-web-data.js
 
 Bu komut `data/web-data.json` dosyasını üretir. Web sitesi bu statik dosyayı okuyarak çalışır.
 
+Tarihsel maç veri setinde bulunmayan fakat kaynak oyuncu kimliğiyle doğrulanan kariyerler `data/web-career-overrides.json` dosyasında tutulur. Bu kayıtlar yalnızca kesin Transfermarkt oyuncu ve kulüp ID'leriyle eklenir.
+
 ## Teknoloji
 
 - HTML5
