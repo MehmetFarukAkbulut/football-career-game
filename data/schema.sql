@@ -1,0 +1,12 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE IF NOT EXISTS leagues (id INTEGER PRIMARY KEY, name TEXT NOT NULL, country TEXT NOT NULL, tier INTEGER NOT NULL DEFAULT 1, active INTEGER NOT NULL DEFAULT 1, UNIQUE(name,country));
+CREATE TABLE IF NOT EXISTS clubs (id INTEGER PRIMARY KEY, slug TEXT NOT NULL UNIQUE, name TEXT NOT NULL, normalized_name TEXT NOT NULL, country TEXT NOT NULL, league TEXT NOT NULL, league_id INTEGER, logo_url TEXT, wikidata_id TEXT UNIQUE, aliases_json TEXT NOT NULL DEFAULT '[]', external_ids_json TEXT NOT NULL DEFAULT '{}', active_game_pool INTEGER NOT NULL DEFAULT 1, FOREIGN KEY(league_id) REFERENCES leagues(id));
+CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY, name TEXT NOT NULL, normalized_name TEXT NOT NULL, birth_date TEXT, nationality TEXT, photo_url TEXT, wikidata_id TEXT UNIQUE, external_ids_json TEXT NOT NULL DEFAULT '{}');
+CREATE TABLE IF NOT EXISTS player_clubs (player_id INTEGER NOT NULL, club_id INTEGER NOT NULL, start_date TEXT, end_date TEXT, appearances INTEGER, data_source TEXT NOT NULL, confidence REAL NOT NULL DEFAULT 0.5, verified_first_team INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(player_id,club_id,start_date), FOREIGN KEY(player_id) REFERENCES players(id), FOREIGN KEY(club_id) REFERENCES clubs(id));
+CREATE TABLE IF NOT EXISTS data_sources (id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE, license TEXT NOT NULL, last_sync_at TEXT, source_url TEXT);
+CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_players_normalized_name ON players(normalized_name);
+CREATE INDEX IF NOT EXISTS idx_clubs_normalized_name ON clubs(normalized_name);
+CREATE INDEX IF NOT EXISTS idx_player_clubs_club ON player_clubs(club_id);
+CREATE INDEX IF NOT EXISTS idx_player_clubs_player ON player_clubs(player_id);
+CREATE INDEX IF NOT EXISTS idx_player_clubs_club_player ON player_clubs(club_id,player_id);

@@ -1,0 +1,39 @@
+{
+  "name": "iki-forma",
+  "version": "2.0.0",
+  "description": "Yerel SQLite destekli futbol kariyer oyunu",
+  "author": "İki Forma",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/launch-electron.js",
+    "dev": "node scripts/launch-electron.js",
+    "test": "node --test tests/*.test.js",
+    "lint": "node scripts/lint.js",
+    "data:build": "node scripts/build-database.js",
+    "data:update": "node scripts/download-open-data.js && node scripts/import-open-data.js && node scripts/import-curated-careers.js",
+    "data:update:wikidata": "node scripts/update-data.js",
+    "data:import-open": "node scripts/import-open-data.js",
+    "data:curated": "node scripts/import-curated-careers.js",
+    "data:verify": "node scripts/verify-data.js",
+    "web:export": "node scripts/export-web-data.js",
+    "web:serve": "npx serve .",
+    "build": "npm run build:portable",
+    "build:portable": "npm test && npm run lint && electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^43.1.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.ikiforma.app",
+    "productName": "İki Forma",
+    "artifactName": "Iki-Forma.${ext}",
+    "compression": "normal",
+    "asar": true,
+    "files": ["main.js", "preload.js", "src/**/*", "data/football.db", "data/clubs.json", "package.json"],
+    "extraResources": [{"from": "data/football.db", "to": "data/football.db"}],
+    "directories": {"output": "dist"},
+    "win": {"target": "portable"}
+  }
+}

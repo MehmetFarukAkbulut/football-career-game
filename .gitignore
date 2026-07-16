@@ -1,0 +1,12 @@
+node_modules/
+dist/
+cache/
+logs/
+data/import-cache/
+data/football.db
+build-output.log
+*.log
+.DS_Store
+Thumbs.db
+.env*
+!.env.example
