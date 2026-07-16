@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "electron": "^43.1.1",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "i18n-iso-countries": "^7.14.0"
   },
   "build": {
     "appId": "com.ikiforma.app",
@@ -31,9 +32,25 @@
     "artifactName": "Iki-Forma.${ext}",
     "compression": "normal",
     "asar": true,
-    "files": ["main.js", "preload.js", "src/**/*", "data/football.db", "data/clubs.json", "package.json"],
-    "extraResources": [{"from": "data/football.db", "to": "data/football.db"}],
-    "directories": {"output": "dist"},
-    "win": {"target": "portable"}
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "data/football.db",
+      "data/clubs.json",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "data/football.db",
+        "to": "data/football.db"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable"
+    }
   }
 }
