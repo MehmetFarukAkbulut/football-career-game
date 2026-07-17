@@ -282,6 +282,14 @@ async function main() {
   const players = [...profiles.values()]
     .filter((p) => p.clubIds.length)
     .map((p) => ({ ...p, clubIds: [...new Set(p.clubIds)] }));
+  const goalOverrides = JSON.parse(fs.readFileSync(path.join(root, "data", "career-goal-overrides.json"), "utf8")),
+    goalOverrideMap = new Map(goalOverrides.map((row) => [+row.playerId, row]));
+  for (const player of players) {
+    const override = goalOverrideMap.get(+player.id);
+    player.careerGoals = override?.careerGoals ?? (player.goals || 0) + (player.nationalGoals || 0);
+    player.careerGoalsSource = override?.source || "Club goals plus senior national-team goals";
+    player.careerGoalsAsOf = override?.asOf || null;
+  }
   const leagues = Object.entries(leagueNames).map(([id, meta]) => ({
     id,
     name: meta[0],
