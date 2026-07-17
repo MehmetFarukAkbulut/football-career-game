@@ -127,6 +127,20 @@ async function main() {
       statisticsCoverage: "Transfermarkt club career; current season reconciled",
     });
   }
+  const auditFile = path.join(root, "data", "player-stat-audit.json");
+  const audits = fs.existsSync(auditFile) ? JSON.parse(fs.readFileSync(auditFile, "utf8")) : {};
+  for (const player of data.players) {
+    const audit = audits[player.id];
+    if (!audit || audit.status !== "verified") continue;
+    Object.assign(player, {
+      appearances: audit.appearances, goals: audit.goals, assists: audit.assists,
+      minutesPlayed: audit.minutesPlayed, statisticsComplete: true,
+      statisticsCoverage: `Live Transfermarkt game audit ${audit.verifiedAt}`,
+    });
+    const ids = playerClubs.get(String(player.id)) || new Set();
+    for (const clubId of audit.clubIds) ids.add(+clubId);
+    playerClubs.set(String(player.id), ids);
+  }
   const knownClubs = new Set(data.clubs.map((club) => +club.id));
   for (const [id, team] of teams) {
     if (knownClubs.has(id)) continue;
