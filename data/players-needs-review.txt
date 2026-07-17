@@ -1,34 +1,4 @@
 transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
-45611	Leigh Griffiths	142	283	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-4357	Klaas-Jan Huntelaar	121	287	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-22388	Bafétimbi Gomis	118	258	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-30418	Marcus Berg	110	209	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-283130	Moussa Marega	93	232	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-123294	Billy McKay	88	231	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-81808	Wilfried Bony	85	176	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-90583	Laurent Depoitre	72	293	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-44855	Dame N'Doye	71	214	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-22382	Moussa Sow	67	162	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-118022	Younès Belhanda	65	362	EKSIK	6	Weekly match dataset only; historical aggregate unavailable
-5980	Luca Toni	59	128	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-61505	Aleksandar Prijovic	57	89	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-75287	Seydou Doumbia	56	141	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-133838	Karim Ansarifard	54	168	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-245228	Tarik Tissoudali	54	144	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-98826	Kris Doolan	53	182	EKSIK	1	Weekly match dataset only; historical aggregate unavailable
-45161	Mbaye Leye	53	170	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-84481	Éder	52	250	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-50413	Deniz Kadah	49	184	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-67220	Erik Falkenburg	48	228	EKSIK	6	Weekly match dataset only; historical aggregate unavailable
-37091	Ilhan Parlak	48	263	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-78961	Gary Mackay-Steven	46	263	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-13023	Igor de Camargo	46	173	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-47011	Óscar Scarione	46	130	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-5878	Alberto Gilardino	45	142	EKSIK	6	Weekly match dataset only; historical aggregate unavailable
-16649	Jefferson Farfán	44	141	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-42393	Tom De Sutter	43	163	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-55801	Marco Sau	42	201	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-31867	Yasin Öztekin	42	233	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
 120785	Knowledge Musona	41	144	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
 146805	Majeed Waris	41	192	EKSIK	7	Weekly match dataset only; historical aggregate unavailable
 4673	Wesley Sneijder	41	165	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
