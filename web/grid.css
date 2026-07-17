@@ -271,3 +271,125 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Setup screens use the viewport efficiently: controls stay visible and only
+   the genuinely long league collection receives its own scroll area. */
+@media (min-width: 901px) {
+  body:has(.setup.active) {
+    overflow-y: hidden;
+  }
+  body:has(.setup.active) footer {
+    display: none;
+  }
+  .setup.view {
+    max-width: 1440px;
+    min-height: 0;
+    padding-top: 12px;
+    padding-bottom: 16px;
+  }
+  .setup > .back {
+    margin-bottom: 8px;
+  }
+  .setup .surface {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.72fr) minmax(520px, 1.28fr);
+    grid-template-rows: auto auto auto auto auto auto 1fr;
+    column-gap: 28px;
+    max-width: 1180px;
+    height: calc(100dvh - 165px);
+    min-height: 500px;
+    padding: 24px;
+    text-align: left;
+  }
+  .setup .surface > :not(.league-options) {
+    grid-column: 1;
+  }
+  .setup .surface > .kicker {
+    align-self: end;
+  }
+  .setup .surface > h2 {
+    margin: 4px 0;
+    font-size: clamp(26px, 3vw, 36px);
+  }
+  .setup .surface > p {
+    margin: 0 0 4px;
+    color: var(--muted);
+  }
+  .setup label {
+    margin: 8px 0;
+  }
+  .setup .surface > .start {
+    align-self: end;
+    justify-self: start;
+    margin-top: 10px;
+  }
+  .setup .league-options {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    min-width: 0;
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+    overflow: visible;
+  }
+  .setup .league-list {
+    max-height: calc(100dvh - 340px);
+  }
+}
+
+.league-list,
+.suggestions {
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyan) rgba(6, 17, 30, 0.6);
+}
+.league-list::-webkit-scrollbar,
+.suggestions::-webkit-scrollbar {
+  width: 9px;
+}
+.league-list::-webkit-scrollbar-track,
+.suggestions::-webkit-scrollbar-track {
+  margin-block: 5px;
+  border-radius: 99px;
+  background: rgba(6, 17, 30, 0.55);
+}
+.league-list::-webkit-scrollbar-thumb,
+.suggestions::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(6, 17, 30, 0.55);
+  border-radius: 99px;
+  background: linear-gradient(var(--mint), var(--cyan));
+}
+
+@media (max-width: 900px) {
+  .setup .surface {
+    max-width: 680px;
+  }
+  .setup .league-options {
+    max-height: none;
+    overflow: visible;
+  }
+  .setup .league-list {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-height: 800px) and (min-width: 901px) {
+  .view:not(.setup) {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+  .versus {
+    margin: 22px 0;
+  }
+  .club-panel {
+    min-height: 170px;
+  }
+  .grid-head,
+  .grid-cell {
+    min-height: clamp(78px, 12.5dvh, 104px);
+  }
+  .grid-status {
+    padding-block: 9px;
+    margin-bottom: 9px;
+  }
+}
