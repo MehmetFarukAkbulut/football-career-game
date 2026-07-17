@@ -234,6 +234,29 @@ function scoreTwinGuesses(target, metric, first, second) {
   return { targetValue, distances: [firstDistance, secondDistance], winner: firstDistance === secondDistance ? null : firstDistance < secondDistance ? 0 : 1 };
 }
 
+function randomFiveScore(player, clubIds) {
+  const career = new Set((player?.clubIds || []).map(Number));
+  return clubIds.reduce((score, id) => score + (career.has(Number(id)) ? 1 : 0), 0);
+}
+
+function randomFiveRanking(pool, clubIds, excluded = new Set()) {
+  return pool
+    .filter((player) => !excluded.has(player?.id))
+    .map((player) => ({ player, score: randomFiveScore(player, clubIds) }))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || (Number(b.player.appearances) || 0) - (Number(a.player.appearances) || 0));
+}
+
+function chooseRandomFiveComputer({ pool, clubIds, difficulty = "normal", excluded = new Set(), rng = Math.random }) {
+  const ranking = randomFiveRanking(pool, clubIds, excluded);
+  if (!ranking.length) return null;
+  const best = ranking[0].score;
+  let candidates = ranking.filter((entry) => entry.score === best);
+  if (difficulty === "normal") candidates = ranking.filter((entry) => entry.score >= Math.max(1, best - 1));
+  if (difficulty === "easy") candidates = ranking.filter((entry) => entry.score >= Math.max(1, best - 2));
+  return candidates[Math.floor(rng() * candidates.length)];
+}
+
 const api = {
   DIFFICULTIES,
   WINNING_LINES,
@@ -249,6 +272,9 @@ const api = {
   careerTwinRanking,
   chooseTwinComputerGuess,
   scoreTwinGuesses,
+  randomFiveScore,
+  randomFiveRanking,
+  chooseRandomFiveComputer,
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;
