@@ -53,12 +53,26 @@ function submitOnlineAnswer(state, { playerIndex, questionId, selectedPlayerId, 
   if (state.currentTurn !== playerIndex) throw new Error("NOT_YOUR_TURN");
   if (state.answeredBy !== null) throw new Error("QUESTION_ALREADY_ANSWERED");
   if (state.question.questionId !== questionId) throw new Error("STALE_QUESTION");
-  if (!state.question.optionPlayerIds.map(Number).includes(+selectedPlayerId)) throw new Error("INVALID_OPTION");
-  const correct = +selectedPlayerId === +state.question.correctPlayerId, scores = [...state.scores];
+  if (state.question.optionPlayerIds?.length && !state.question.optionPlayerIds.map(Number).includes(+selectedPlayerId)) throw new Error("INVALID_OPTION");
+  const correctIds = (state.question.validPlayerIds || [state.question.correctPlayerId]).map(Number);
+  const correct = correctIds.includes(+selectedPlayerId), scores = [...state.scores];
   if (correct) scores[playerIndex] += 1;
   return advance(state, { scores, answeredBy: playerIndex, selectedPlayerId: +selectedPlayerId, answerResult: correct ? "correct" : "wrong", currentTurn: correct ? playerIndex : playerIndex ? 0 : 1 });
 }
+function passOnlineTurn(state, { playerIndex, questionId, expectedVersion, now = Date.now() }) {
+  assertMutable(state, expectedVersion, now);
+  if (state.status !== "playing" || !state.question) throw new Error("QUESTION_NOT_ACTIVE");
+  if (state.currentTurn !== playerIndex) throw new Error("NOT_YOUR_TURN");
+  if (state.answeredBy !== null || state.question.questionId !== questionId) throw new Error("QUESTION_ALREADY_ANSWERED");
+  return advance(state, { answeredBy: playerIndex, selectedPlayerId: null, answerResult: "pass", currentTurn: playerIndex ? 0 : 1 });
+}
+function finishOnlineGame(state, { playerIndex, expectedVersion, now = Date.now() }) {
+  assertMutable(state, expectedVersion, now);
+  if (playerIndex !== 0) throw new Error("HOST_ONLY");
+  if (state.status !== "playing" || state.answeredBy === null) throw new Error("FINISH_NOT_ALLOWED");
+  return advance(state, { status: "finished", finishedAt: now });
+}
 function isRoomExpired(state, now = Date.now()) { return !state || now >= state.expiresAt; }
-const api = { ROOM_TTL_MS, generateRoomCode, createOnlineRoom, joinOnlineRoom, updateConnection, setOnlineReady, startOnlineGame, publishOnlineQuestion, submitOnlineAnswer, isRoomExpired };
-if (typeof module !== "undefined") module.exports = api;
-if (typeof window !== "undefined") window.IkiFormaOnlineCore = api;
+const onlineApi = { ROOM_TTL_MS, generateRoomCode, createOnlineRoom, joinOnlineRoom, updateConnection, setOnlineReady, startOnlineGame, publishOnlineQuestion, submitOnlineAnswer, passOnlineTurn, finishOnlineGame, isRoomExpired };
+if (typeof module !== "undefined") module.exports = onlineApi;
+if (typeof window !== "undefined") window.IkiFormaOnlineCore = onlineApi;

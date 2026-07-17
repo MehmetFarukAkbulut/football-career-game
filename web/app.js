@@ -46,6 +46,7 @@ let DATA,
   grid = {},
   twin = {},
   randomFive = {},
+  online = {},
   computerTimer;
 function toast(message) {
   $("#toast").textContent = message;
@@ -289,6 +290,9 @@ function startGame(mode, screen) {
     total: +screen.querySelector(".rounds").value,
     seconds: +screen.querySelector(".seconds").value,
     score: 0,
+    scores: [0, 0],
+    currentTurn: 0,
+    playerNames: ["Oyuncu 1", format === "computer" ? "Bilgisayar" : "Oyuncu 2"],
     pairs: buildPairs(mode, difficulty, selectedLeagues),
     history: [],
   };
@@ -316,6 +320,7 @@ function nextRound() {
   game.round++;
   game.left = game.seconds;
   $("#gameRound").textContent = `Tur ${game.round}/${game.total}`;
+  $("#gameContext").textContent = game.format === "solo" ? `${game.answerMethod === "multiple" ? "Çoktan seçmeli" : "Serbest metin"} · ${game.difficulty}` : `${game.playerNames[game.currentTurn]} · ${game.scores[0]}—${game.scores[1]}`;
   $("#sideA").innerHTML = side(current.a);
   $("#sideB").innerHTML = side(current.b);
   $("#answerInput").value = "";
@@ -332,6 +337,216 @@ function nextRound() {
   }, 1000);
   if (game.answerMethod === "multiple") renderMultipleChoice();
   else $("#answerInput").focus();
+  if (game.format === "computer" && game.currentTurn === 1) {
+    $("#gameMessage").textContent = "Bilgisayar düşünüyor…";
+    const accuracy = IkiFormaCore.DIFFICULTIES[game.difficulty].accuracy;
+    computerTimer = setTimeout(() => {
+      if (game.answerMethod === "multiple") {
+        const options = game.question.optionPlayerIds, chosen = Math.random() < accuracy ? game.question.correctPlayerId : options.find((id) => id !== game.question.correctPlayerId);
+        answerMultipleChoice(chosen);
+      } else if (Math.random() < accuracy) endRound(game.current.answers[0], "");
+      else endRound(null, "Bilgisayar yanlış cevapladı");
+    }, 700);
+  }
+}
+
+function onlineSettingsFromScreen(mode, screen) {
+  return {
+    gameType: mode,
+    rounds: +screen.querySelector(".rounds").value,
+    seconds: +screen.querySelector(".seconds").value,
+    difficulty: screen.querySelector(".difficulty").value,
+    answerMethod: screen.querySelector(".answer-method").value,
+    optionCount: 4,
+    repeatPlayers: false,
+    leagueIds: [...screen.querySelectorAll(".league-options input:checked")].map((input) => input.value),
+  };
+}
+
+function openOnlineLobby(mode, screen) {
+  online = { settings: onlineSettingsFromScreen(mode, screen), state: null, service: null };
+  $("#onlineEntry").hidden = false;
+  $("#onlineRoomState").hidden = true;
+  $("#onlineModeNotice").textContent = IkiFormaOnlineService.isLocal
+    ? "Geliştirme mock'u etkin: yalnızca bu site adresindeki sekmeler arasında çalışır; internet oyunu değildir."
+    : IkiFormaOnlineService.configured ? "Supabase Realtime ile iki farklı cihazdan bağlanabilirsiniz." : "Online servis henüz yapılandırılmadı. README'deki Supabase adımlarını uygulayın veya geliştirme için ?onlineMock=1 kullanın.";
+  show("onlineLobby");
+}
+
+function saveOnlineSession() {
+  sessionStorage.setItem("iki-forma-online-session", JSON.stringify({ code: online.state.roomCode, token: online.token, playerIndex: online.playerIndex }));
+}
+
+async function connectOnlineRoom(kind) {
+  try {
+    if (!IkiFormaOnlineService.configured) throw new Error("ONLINE_NOT_CONFIGURED");
+    online.service ||= await IkiFormaOnlineService.createRoomService();
+    const playerName = $("#onlinePlayerName").value.trim() || "Oyuncu";
+    const result = kind === "create"
+      ? await online.service.create({ code: IkiFormaOnlineCore.generateRoomCode(), playerName, settings: online.settings })
+      : await online.service.join({ code: $("#onlineRoomCodeInput").value, playerName });
+    Object.assign(online, result);
+    saveOnlineSession();
+    online.unsubscribe = online.service.subscribe(online.state.roomCode, refreshOnlineRoom, (status) => {
+      $("#onlineConnection").textContent = status === "SUBSCRIBED" ? "● Bağlı" : status === "LOCAL_MOCK" ? "● Yerel mock" : "Bağlanıyor…";
+    });
+    renderOnlineLobby();
+  } catch (error) {
+    const messages = { ONLINE_NOT_CONFIGURED: "Online servis yapılandırılmamış.", ROOM_NOT_FOUND: "Oda bulunamadı.", ROOM_EXPIRED: "Bu odanın süresi dolmuş.", ROOM_FULL: "Oda dolu veya oyun başlamış." };
+    $("#onlineModeNotice").textContent = messages[error.message] || `Bağlantı hatası: ${error.message}`;
+  }
+}
+
+async function refreshOnlineRoom() {
+  if (!online.service || !online.state) return;
+  try {
+    online.state = await online.service.get(online.state.roomCode, online.token);
+    renderOnlineLobby();
+  } catch (error) {
+    $("#onlineLobbyMessage").textContent = error.message === "ROOM_EXPIRED" ? "Odanın süresi doldu." : "Bağlantı kesildi; yeniden bağlanılıyor…";
+  }
+}
+
+async function restoreOnlineSession() {
+  const saved = sessionStorage.getItem("iki-forma-online-session");
+  if (!saved || !IkiFormaOnlineService.configured) return false;
+  try {
+    const session = JSON.parse(saved), service = await IkiFormaOnlineService.createRoomService();
+    const state = await service.get(session.code, session.token);
+    online = { state, settings: state.settings, service, token: session.token, playerIndex: session.playerIndex };
+    online.unsubscribe = service.subscribe(state.roomCode, refreshOnlineRoom, (status) => { $("#onlineConnection").textContent = status === "SUBSCRIBED" ? "● Bağlı" : status === "LOCAL_MOCK" ? "● Yerel mock" : "Yeniden bağlanılıyor…"; });
+    show("onlineLobby"); renderOnlineLobby();
+    await mutateOnline({ type: "connection", connected: true });
+    return true;
+  } catch (error) {
+    sessionStorage.removeItem("iki-forma-online-session");
+    return false;
+  }
+}
+
+function renderOnlineLobby() {
+  const state = online.state;
+  if (!state) return;
+  $("#onlineEntry").hidden = true; $("#onlineRoomState").hidden = false;
+  $("#onlineRoomCode").textContent = state.roomCode;
+  $("#onlinePlayers").innerHTML = state.players.map((player, index) => player
+    ? `<article class="online-player ${player.connected ? "is-connected" : ""}"><b>${esc(player.name)} ${player.host ? "👑" : ""}</b><small>Oyuncu ${index + 1} · ${player.connected ? "Bağlı" : "Yeniden bağlanıyor"}</small><span>${player.ready ? "✓ Hazır" : "Bekleniyor"}</span></article>`
+    : `<article class="online-player"><b>Oyuncu 2</b><small>Rakip bekleniyor…</small></article>`).join("");
+  $("#onlineTurn").textContent = state.players[state.currentTurn]?.name || "—";
+  $("#onlineScore").textContent = `${state.scores[0]} — ${state.scores[1]}`;
+  const me = state.players[online.playerIndex];
+  $("#onlineReady").textContent = me?.ready ? "Hazır değilim" : "Hazırım";
+  $("#onlineReady").hidden = state.status !== "waiting";
+  $("#onlineStart").hidden = online.playerIndex !== 0 || state.status !== "waiting";
+  $("#onlineStart").disabled = !state.players.every((player) => player?.ready);
+  $("#onlineLobbyMessage").textContent = state.status === "playing" ? "Oyun başladı; soru hazırlanıyor…" : state.players[1] ? "İki oyuncu da hazır olduğunda oda sahibi oyunu başlatabilir." : "Oda kodunu arkadaşınızla paylaşın.";
+  if (state.status === "playing" || state.status === "finished") handleOnlineState();
+}
+
+async function mutateOnline(action) {
+  try {
+    online.state = await online.service.mutate(online.state.roomCode, online.token, online.state.stateVersion, action);
+    renderOnlineLobby();
+    return online.state;
+  } catch (error) {
+    if (error.message.includes("STALE_STATE")) await refreshOnlineRoom();
+    else $("#onlineLobbyMessage").textContent = `İşlem yapılamadı: ${error.message}`;
+    return null;
+  }
+}
+
+$("#createOnlineRoom").onclick = () => connectOnlineRoom("create");
+$("#joinOnlineRoom").onclick = () => connectOnlineRoom("join");
+$("#copyRoomCode").onclick = async () => { await navigator.clipboard.writeText(online.state.roomCode); toast("Oda kodu kopyalandı."); };
+$("#onlineReady").onclick = () => mutateOnline({ type: "ready", ready: !online.state.players[online.playerIndex].ready });
+$("#onlineStart").onclick = async () => {
+  const state = await mutateOnline({ type: "start" });
+  if (state) startOnlineMatch();
+};
+
+function startOnlineMatch() {
+  online.pairs = buildPairs(online.state.settings.gameType, online.state.settings.difficulty, new Set(online.state.settings.leagueIds || []));
+  online.usedPlayerIds = new Set();
+  show("game");
+  if (online.playerIndex === 0) publishNextOnlineQuestion();
+}
+
+async function publishNextOnlineQuestion() {
+  if (online.playerIndex !== 0 || online.publishing) return;
+  if (online.state.questionSequence >= online.state.settings.rounds) {
+    online.publishing = true; await mutateOnline({ type: "finish" }); online.publishing = false; return;
+  }
+  online.pairs ||= buildPairs(online.state.settings.gameType, online.state.settings.difficulty, new Set(online.state.settings.leagueIds || []));
+  let pair, question;
+  for (let attempt = 0; attempt < 30 && online.pairs.length; attempt++) {
+    pair = online.pairs.shift();
+    if (online.state.settings.answerMethod === "multiple") {
+      question = online.state.settings.gameType === "clubs"
+        ? IkiFormaCore.generateTwoClubMultipleChoiceQuestion({ clubAId: pair.a.id, clubBId: pair.b.id, indexes, used: online.usedPlayerIds, difficulty: online.state.settings.difficulty })
+        : IkiFormaCore.generateCountryClubMultipleChoiceQuestion({ countryCode: pair.a.countryCode, clubId: pair.b.id, indexes, used: online.usedPlayerIds, difficulty: online.state.settings.difficulty });
+    } else {
+      const validPlayerIds = pair.answers.map((player) => +player.id).filter((id) => !online.usedPlayerIds.has(id));
+      if (validPlayerIds.length) question = { questionId: `q-${Date.now().toString(36)}-${online.state.questionSequence + 1}`, mode: online.state.settings.gameType, correctPlayerId: validPlayerIds[0], validPlayerIds, optionPlayerIds: [], clubAId: pair.a.id || null, clubBId: pair.b.id, clubId: pair.b.id, countryCode: pair.a.countryCode || null };
+    }
+    if (question) break;
+    console.debug("ONLINE_QUESTION_RETRY", { attempt, key: pair?.key });
+  }
+  if (!question) return $("#gameMessage").textContent = "Yeterli ve doğrulanmış seçenek üretilemedi.";
+  question.deadlineAt = Date.now() + online.state.settings.seconds * 1000;
+  online.publishing = true;
+  const state = await mutateOnline({ type: "question", question });
+  online.publishing = false;
+  if (state) handleOnlineState();
+}
+
+function handleOnlineState() {
+  const state = online.state;
+  if (!state) return;
+  if (state.status === "finished") {
+    clearInterval(timer);
+    const names = state.players.map((player) => player.name), winner = state.scores[0] === state.scores[1] ? "Berabere" : `${names[state.scores[0] > state.scores[1] ? 0 : 1]} kazandı`;
+    $("#finalScore").textContent = `${winner} · ${state.scores[0]} — ${state.scores[1]}`;
+    $("#roundResults").innerHTML = `<article><b>Oda ${esc(state.roomCode)}</b><small>Online oyun tamamlandı.</small></article>`;
+    return show("results");
+  }
+  show("game");
+  if (!state.question) return;
+  const question = state.question, isCountry = state.settings.gameType === "country";
+  game = {
+    ...game, online: true, mode: state.settings.gameType, answerMethod: state.settings.answerMethod,
+    question, current: {
+      a: isCountry ? { name: players.find((player) => player.nationalityCode === question.countryCode)?.nationality || question.countryCode, league: "Vatandaşlık", country: "Ülke", countryCode: question.countryCode } : clubMap.get(+question.clubAId),
+      b: clubMap.get(+(question.clubBId || question.clubId)),
+      answers: (question.validPlayerIds || [question.correctPlayerId]).map((id) => indexes.playerById.get(+id)).filter(Boolean),
+    },
+  };
+  $("#gameRound").textContent = `Online · Tur ${state.questionSequence}/${state.settings.rounds} · ${state.players[state.currentTurn].name}`;
+  $("#gameContext").textContent = `${state.roomCode} · ${state.settings.answerMethod === "multiple" ? "Çoktan seçmeli" : "Serbest metin"} · ${state.scores[0]}—${state.scores[1]}`;
+  $("#sideA").innerHTML = side(game.current.a); $("#sideB").innerHTML = side(game.current.b);
+  $("#answerInput").closest(".answer-box").hidden = game.answerMethod === "multiple";
+  $("#multipleChoiceOptions").hidden = game.answerMethod !== "multiple";
+  $("#pass").disabled = state.currentTurn !== online.playerIndex || state.answeredBy !== null;
+  if (game.answerMethod === "multiple") renderMultipleChoice(); else $("#answerInput").focus();
+  if (state.answeredBy !== null) {
+    const selected = indexes.playerById.get(+state.selectedPlayerId), correct = indexes.playerById.get(+question.correctPlayerId);
+    $("#gameMessage").textContent = state.answerResult === "correct" ? `✓ Doğru: ${selected?.name}` : state.answerResult === "pass" ? "Pas geçildi; sıra rakipte." : `✕ Yanlış. Doğru cevap: ${correct?.name}`;
+    if (game.answerMethod === "multiple") $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +question.correctPlayerId) button.classList.add("is-correct"); if (+button.dataset.playerId === +state.selectedPlayerId && state.answerResult !== "correct") button.classList.add("is-wrong"); });
+    if (online.playerIndex === 0 && online.advanceScheduledSeq !== state.questionSequence) {
+      online.advanceScheduledSeq = state.questionSequence;
+      setTimeout(() => { refreshOnlineRoom().then(publishNextOnlineQuestion); }, 1400);
+    }
+  } else {
+    $("#gameMessage").textContent = state.currentTurn === online.playerIndex ? "Sıra sizde." : `${state.players[state.currentTurn].name} cevaplıyor…`;
+  }
+  clearInterval(timer);
+  const updateOnlineTime = () => { const left = Math.max(0, Math.ceil((question.deadlineAt - Date.now()) / 1000)); $("#timer").textContent = `${left} sn`; $("#timebar").style.width = `${Math.min(100, left / state.settings.seconds * 100)}%`; if (!left) clearInterval(timer); };
+  updateOnlineTime(); timer = setInterval(updateOnlineTime, 500);
+}
+
+async function submitOnlinePlayer(playerId) {
+  if (online.state.currentTurn !== online.playerIndex) return toast("Sıra rakibinizde.");
+  await mutateOnline({ type: "answer", questionId: online.state.question.questionId, selectedPlayerId: +playerId });
+  handleOnlineState();
 }
 
 function renderMultipleChoice() {
@@ -352,6 +567,7 @@ function renderMultipleChoice() {
 }
 
 function answerMultipleChoice(playerId) {
+  if (game.online) return submitOnlinePlayer(playerId);
   if (game.answerLocked) return;
   game.answerLocked = true;
   clearInterval(timer);
@@ -378,6 +594,7 @@ function endRound(player, result) {
   if (player) {
     const points = Math.max(10, game.left * 3);
     game.score += points;
+    game.scores[game.currentTurn] += points;
     $("#score").textContent = game.score;
     result = `Doğru: ${player.name} (+${points})`;
   }
@@ -392,7 +609,9 @@ function endRound(player, result) {
   setTimeout(nextRound, 750);
 }
 function finishGame() {
-  $("#finalScore").textContent = `Toplam skor: ${game.score}`;
+  $("#finalScore").textContent = game.format === "duo" || game.format === "computer"
+    ? `${game.playerNames[0]} ${game.scores[0]} — ${game.scores[1]} ${game.playerNames[1]}`
+    : `Toplam skor: ${game.score}`;
   $("#roundResults").innerHTML = game.history
     .map(
       (x, i) =>
@@ -416,7 +635,8 @@ $("#answerInput").oninput = (e) => {
       (b.onclick = () => {
         const p = players.find((x) => x.id === +b.dataset.id),
           valid = game.current.answers.some((x) => x.id === p.id);
-        if (valid) endRound(p, "");
+        if (game.online) submitOnlinePlayer(p.id);
+        else if (valid) endRound(p, "");
         else {
           $("#gameMessage").textContent =
             "Bu oyuncu eşleşme için geçerli değil.";
@@ -430,11 +650,18 @@ $("#answerInput").onkeydown = (e) => {
     const p = game.current?.answers.find(
       (x) => norm(x.name) === norm(e.target.value),
     );
-    if (p) endRound(p, "");
+    if (p && game.online) submitOnlinePlayer(p.id);
+    else if (p) endRound(p, "");
     else $("#gameMessage").textContent = "Listeden geçerli bir futbolcu seçin.";
   }
 };
-$("#pass").onclick = () => endRound(null, "Pas");
+$("#pass").onclick = async () => {
+  if (game.online) {
+    await mutateOnline({ type: "pass", questionId: online.state.question.questionId });
+    return handleOnlineState();
+  } else if (game.format === "duo" || game.format === "computer") game.currentTurn = game.currentTurn ? 0 : 1;
+  endRound(null, "Pas");
+};
 function playerRow(p, i, showStats = true) {
   const career = p.clubIds
       .map((id) => clubMap.get(id)?.name)
@@ -1168,6 +1395,7 @@ async function init() {
     enhanceLeagueSelector($("#gridSetup"));
     enhanceLeagueSelector($("#twinSetup"));
     enhanceLeagueSelector($("#randomFiveSetup"));
+    if (await restoreOnlineSession()) return;
     const requested = location.hash.slice(1);
     show(
       document.getElementById(requested)?.classList.contains("view")
