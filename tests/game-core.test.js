@@ -64,6 +64,36 @@ test("kullanılan oyuncu tekrar kullanılamaz", () => {
     /PLAYER_USED/,
   );
 });
+test("yatay üçlü XOX çizgisi oyunu anında bitirir", () => {
+  let state = createGridState({ mode: "duo" });
+  state.grid = { marks: Array(9).fill(null) };
+  for (const [cellIndex, playerId] of [
+    [0, 20],
+    [3, 21],
+    [1, 22],
+    [4, 23],
+    [2, 24],
+  ])
+    state = applyAttempt(state, { cellIndex, playerId, valid: true });
+  assert.equal(state.status, "finished");
+  assert.equal(state.winner, 0);
+  assert.deepEqual(state.winningLine, [0, 1, 2]);
+});
+test("çapraz üçlü XOX çizgisi kazananı belirler", () => {
+  let state = createGridState({ mode: "duo" });
+  state.grid = { marks: Array(9).fill(null) };
+  for (const [cellIndex, playerId] of [
+    [0, 30],
+    [1, 31],
+    [4, 32],
+    [2, 33],
+    [8, 34],
+  ])
+    state = applyAttempt(state, { cellIndex, playerId, valid: true });
+  assert.equal(state.status, "finished");
+  assert.equal(state.winner, 0);
+  assert.deepEqual(state.winningLine, [0, 4, 8]);
+});
 test("bilgisayar deterministik RNG ile kontrollü doğru ve yanlış seçebilir", () => {
   const indexes = buildIndexes(data);
   assert.equal(

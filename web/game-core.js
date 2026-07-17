@@ -6,6 +6,30 @@ const DIFFICULTIES = {
   hard: { accuracy: 0.9, delay: [500, 1400] },
 };
 
+const WINNING_LINES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
+function winningLine(marks = []) {
+  return (
+    WINNING_LINES.find(([a, b, c]) => {
+      const owner = marks[a]?.owner;
+      return (
+        owner !== undefined &&
+        marks[b]?.owner === owner &&
+        marks[c]?.owner === owner
+      );
+    }) || null
+  );
+}
+
 function normalizeText(value) {
   return String(value || "")
     .normalize("NFD")
@@ -128,7 +152,15 @@ function applyAttempt(state, { cellIndex, playerId, valid }) {
   } else next.wrong[turn]++;
   next.history.push({ turn, cellIndex, playerId, valid });
   next.currentTurn = turn ? 0 : 1;
-  if (next.grid?.marks.every(Boolean)) next.status = "finished";
+  const line = next.grid ? winningLine(next.grid.marks) : null;
+  if (line) {
+    next.status = "finished";
+    next.winner = turn;
+    next.winningLine = line;
+  } else if (next.grid?.marks.every(Boolean)) {
+    next.status = "finished";
+    next.winner = null;
+  }
   return next;
 }
 
@@ -169,6 +201,8 @@ function chooseComputerMove({
 
 const api = {
   DIFFICULTIES,
+  WINNING_LINES,
+  winningLine,
   normalizeText,
   cellKey,
   buildIndexes,
