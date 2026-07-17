@@ -4,6 +4,7 @@ const root = path.resolve(__dirname, ".."), dataDir = path.join(root, "data"),
   queueFile = path.join(dataDir, "players-needs-review.txt"),
   auditFile = path.join(dataDir, "player-stat-audit.json");
 const limit = Math.max(1, +(process.argv.find((x) => x.startsWith("--limit=")) || "--limit=10").split("=")[1]);
+const concurrency = Math.max(1, +(process.argv.find((x) => x.startsWith("--concurrency=")) || "--concurrency=1").split("=")[1]);
 const existing = fs.existsSync(auditFile) ? JSON.parse(fs.readFileSync(auditFile, "utf8")) : {};
 const queue = fs.readFileSync(queueFile, "utf8").trim().split(/\r?\n/).slice(1)
   .map((line) => { const [id, name] = line.split("\t"); return { id: +id, name }; })
@@ -30,11 +31,16 @@ async function audit(player) {
     ...stats, clubIds: [...clubs.keys()], clubAppearances: Object.fromEntries(clubs), status: "verified" };
 }
 (async () => {
-  for (const player of queue) {
-    try { existing[player.id] = await audit(player); console.log("OK", player.id, player.name, existing[player.id].appearances, existing[player.id].goals); }
-    catch (error) { existing[player.id] = { id: player.id, name: player.name, checkedAt: new Date().toISOString(), status: "error", reason: error.message }; console.error("ERR", player.id, player.name, error.message); }
-    fs.writeFileSync(auditFile, JSON.stringify(existing, null, 2));
-    await new Promise((resolve) => setTimeout(resolve, 750));
+  let cursor = 0;
+  async function worker() {
+    while (cursor < queue.length) {
+      const player = queue[cursor++];
+      try { existing[player.id] = await audit(player); console.log("OK", player.id, player.name, existing[player.id].appearances, existing[player.id].goals); }
+      catch (error) { existing[player.id] = { id: player.id, name: player.name, checkedAt: new Date().toISOString(), status: "error", reason: error.message }; console.error("ERR", player.id, player.name, error.message); }
+      fs.writeFileSync(auditFile, JSON.stringify(existing, null, 2));
+      await new Promise((resolve) => setTimeout(resolve, concurrency === 1 ? 750 : 100));
+    }
   }
+  await Promise.all(Array.from({ length: concurrency }, worker));
   console.log(`Denetim kaydi: ${Object.keys(existing).length}; bu tur: ${queue.length}`);
 })();
