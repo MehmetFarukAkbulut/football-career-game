@@ -37,6 +37,9 @@ async function rows(file, zipped, onRow) {
   }
 }
 const empty = () => ({ appearances: 0, goals: 0, assists: 0, yellowCards: 0, redCards: 0 });
+const slug = (value) => String(value || "club")
+  .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const add = (target, row) => {
   target.appearances += +row.appearances || +row.nb_on_pitch || 0;
   target.goals += +row.goals || 0;
@@ -56,9 +59,20 @@ async function main() {
   if (!fs.existsSync(historyFile)) throw new Error("Tam tarihsel performans dosyasi eksik");
   const data = JSON.parse(fs.readFileSync(webFile, "utf8")),
     wanted = new Set(data.players.map((p) => String(p.id))),
-    historical = new Map(), currentHistory = new Map();
+    historical = new Map(), currentHistory = new Map(),
+    playerClubs = new Map(), teams = new Map();
   await rows(historyFile, false, (row) => {
     if (!wanted.has(row.player_id)) return;
+    const clubId = +row.team_id;
+    if (clubId) {
+      const set = playerClubs.get(row.player_id) || new Set();
+      set.add(clubId); playerClubs.set(row.player_id, set);
+      if (!teams.has(clubId)) teams.set(clubId, {
+        name: row.team_name || `Kulüp ${clubId}`,
+        league: row.competition_name || "Lig bilgisi bilinmiyor",
+        leagueId: row.competition_id || "UNKNOWN",
+      });
+    }
     const current = row.season_name === "25/26" || row.season_name === "2025" || row.season_name === "2026";
     const key = `${row.player_id}:${row.season_name}:${row.competition_id}:${row.team_id}`;
     const map = current ? currentHistory : historical;
@@ -66,12 +80,22 @@ async function main() {
   });
   const games = new Map();
   await rows(path.join(cache, "games.csv.gz"), true, (row) => {
-    if (+row.season >= 2025) games.set(row.game_id, row);
+    if (+row.season >= 2025 && row.competition_type !== "national_team_competition")
+      games.set(row.game_id, row);
   });
   const currentOpen = new Map();
   await rows(path.join(cache, "appearances.csv.gz"), true, (row) => {
     if (!wanted.has(row.player_id)) return;
     const game = games.get(row.game_id); if (!game) return;
+    const clubId = +row.player_club_id;
+    if (clubId) {
+      const set = playerClubs.get(row.player_id) || new Set();
+      set.add(clubId); playerClubs.set(row.player_id, set);
+      if (!teams.has(clubId)) {
+        const name = +game.home_club_id === clubId ? game.home_club_name : game.away_club_name;
+        teams.set(clubId, { name: name || `Kulüp ${clubId}`, league: row.competition_id, leagueId: row.competition_id });
+      }
+    }
     const shortSeason = `${String(+game.season).slice(-2)}/${String(+game.season + 1).slice(-2)}`;
     const candidates = [
       `${row.player_id}:${shortSeason}:${row.competition_id}:${row.player_club_id}`,
@@ -103,6 +127,33 @@ async function main() {
       statisticsCoverage: "Transfermarkt club career; current season reconciled",
     });
   }
+  const knownClubs = new Set(data.clubs.map((club) => +club.id));
+  for (const [id, team] of teams) {
+    if (knownClubs.has(id)) continue;
+    data.clubs.push({
+      id, clubId: id, slug: `${slug(team.name)}-${id}`,
+      name: team.name, clubName: team.name,
+      country: "Bilinmiyor", countryName: "Bilinmiyor", countryCode: "UN",
+      league: team.league, leagueId: team.leagueId, leagueLevel: null,
+      logo: `https://tmssl.akamaized.net/images/wappen/head/${id}.png`,
+      logoAsset: `https://tmssl.akamaized.net/images/wappen/head/${id}.png`,
+      logoSource: "transfermarkt-cdn", transfermarktClubId: id,
+      transfermarktUrl: `https://www.transfermarkt.com/verein/startseite/verein/${id}`,
+      active: false,
+    });
+    knownClubs.add(id);
+  }
+  for (const player of data.players) {
+    const ids = playerClubs.get(String(player.id));
+    if (!ids) continue;
+    const merged = new Set([...(player.clubIds || []), ...ids]);
+    player.clubIds = [...merged];
+    const careerIds = new Set((player.careers || []).map((career) => +career.clubId));
+    player.careers = player.careers || [];
+    for (const clubId of ids) if (!careerIds.has(clubId)) player.careers.push({
+      clubId, startDate: null, endDate: null, firstTeam: true,
+    });
+  }
   data.version = 6;
   data.generatedAt = new Date().toISOString();
   data.statistics = {
@@ -111,6 +162,15 @@ async function main() {
     unavailableFields: ["nationalAssists", "completeCareerMinutes"],
   };
   fs.writeFileSync(webFile, JSON.stringify(data));
+  const sorted = [...data.players].sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name, "tr"));
+  const header = "transfermarkt_id\tfutbolcu\tgol\tmac\tistatistik_durumu\tkulup_sayisi\taciklama";
+  const line = (p) => [p.id, p.name, p.goals, p.appearances,
+    p.statisticsComplete ? "GUNCEL" : "EKSIK",
+    p.clubIds.length, p.statisticsCoverage].join("\t");
+  fs.writeFileSync(path.join(root, "data", "players-current.txt"),
+    [header, ...sorted.filter((p) => p.statisticsComplete).map(line)].join("\n") + "\n");
+  fs.writeFileSync(path.join(root, "data", "players-needs-review.txt"),
+    [header, ...sorted.filter((p) => !p.statisticsComplete).map(line)].join("\n") + "\n");
   console.log(`Tam kariyer istatistikleri: ${totals.size} futbolcu`);
 }
 main().catch((error) => { console.error(error); process.exitCode = 1; });
