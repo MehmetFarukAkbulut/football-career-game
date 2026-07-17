@@ -1,6 +1,7 @@
 node_modules/
 dist/
 cache/
+assets/.tmp/
 logs/
 data/import-cache/
 data/football.db

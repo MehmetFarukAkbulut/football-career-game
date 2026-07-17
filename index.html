@@ -1,13 +1,322 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071525"><meta name="description" content="Kulüp kariyerlerini karşılaştır, futbol hafızanı test et."><title>İki Forma — Futbol Kariyer Oyunu</title><link rel="preconnect" href="https://tmssl.akamaized.net"><link rel="stylesheet" href="web/app.css"></head><body>
-<div class="ambient one"></div><div class="ambient two"></div><header class="topbar"><button class="brand" data-view="home"><span class="brand-ball">⚽</span><span><strong>İki Forma</strong><small>Futbol kariyer oyunu</small></span></button><nav><button data-view="home">Ana Sayfa</button><button data-view="catalog">Futbolcular</button><button data-view="compare">Karşılaştır</button></nav><div class="score-pill"><span>Skor</span><b id="score">0</b></div></header>
-<main>
-<section id="loading" class="view active loading"><div class="loader-ball">⚽</div><h1>Futbol dünyası hazırlanıyor</h1><p id="loadingText">Yerel veri paketi yükleniyor…</p></section>
-<section id="home" class="view"><div class="hero"><div><span class="kicker">50 BİN+ FUTBOLCU • ÇEVRİMDIŞI VERİ</span><h1>İki kulüp.<br><em>Tek kariyer.</em></h1><p>Futbol hafızanı test et, oyuncu kariyerlerini keşfet ve arkadaşlarınla yarış.</p><button class="cta" data-view="classicSetup">Hemen oyna <span>→</span></button></div><div class="hero-art"><div class="orbit"><span>⚽</span><i></i><i></i><i></i></div><div class="stat"><b id="heroPlayers">—</b><small>futbolcu</small></div></div></div><div class="mode-grid"><button class="mode-card featured" data-view="classicSetup"><span class="icon">⚔️</span><span><b>İki Forma</b><small>İki kulüpte de oynamış futbolcuyu bul.</small></span><i>Oyna →</i></button><button class="mode-card" data-view="countrySetup"><span class="icon">🌍</span><span><b>Ülke × Kulüp</b><small>Vatandaşlık ve kulüp kariyerini eşleştir.</small></span><i>Oyna →</i></button><button class="mode-card" data-view="grid"><span class="icon">#️⃣</span><span><b>Kulüp Izgarası</b><small>Dokuz kesişimi doğru isimlerle doldur.</small></span><i>Oyna →</i></button><button class="mode-card" data-view="compare"><span class="icon">🔎</span><span><b>Kulüp Karşılaştır</b><small>Tüm ortak oyuncuları anında listele.</small></span><i>Keşfet →</i></button><button class="mode-card" data-view="catalog"><span class="icon">📚</span><span><b>Futbolcu Kataloğu</b><small>Ara, filtrele ve kariyerleri sırala.</small></span><i>Keşfet →</i></button><button class="mode-card" data-view="travelers"><span class="icon">✈️</span><span><b>Gezgin Futbolcular</b><small>En fazla kulüpte oynayan futbolcular.</small></span><i>Keşfet →</i></button></div></section>
-<section id="classicSetup" class="view setup"></section><section id="countrySetup" class="view setup"></section>
-<section id="game" class="view"><div class="game-top"><button class="back" data-view="home">← Oyundan çık</button><div><b id="gameRound">Tur 1/5</b><span id="timer">30</span></div></div><div class="versus"><article id="sideA" class="club-panel"></article><span class="vs">VS</span><article id="sideB" class="club-panel"></article></div><div class="timebar"><i id="timebar"></i></div><div class="answer-box"><input id="answerInput" autocomplete="off" placeholder="Futbolcu adını yaz…"><div id="answerSuggestions" class="suggestions"></div></div><div class="game-actions"><button id="pass" class="secondary">Pas geç</button></div><p id="gameMessage" class="message"></p></section>
-<section id="results" class="view"><div class="surface narrow"><span class="trophy">🏆</span><h2>Oyun tamamlandı</h2><p id="finalScore"></p><div id="roundResults" class="round-results"></div><button class="cta" data-view="home">Ana sayfa</button></div></section>
-<section id="catalog" class="view"><div class="section-head"><div><span class="kicker">OYUNCU VERİTABANI</span><h2>Futbolcu Kataloğu</h2><p>Forma giyme sayısına göre sıralanmış doğrulanmış kariyerler.</p></div><b id="catalogCount" class="counter"></b></div><div class="toolbar"><input id="catalogSearch" placeholder="Oyuncu adı ara…"><select id="catalogClub"><option value="">Tüm kulüpler</option></select><select id="catalogNationality"><option value="">Tüm milliyetler</option></select><select id="catalogSort"><option value="appearances">En çok forma giyme</option><option value="clubs">En çok kulüp</option><option value="name">İsme göre</option><option value="birth">En genç</option></select></div><div id="catalogList" class="player-list"></div><div class="pager"><button id="catalogPrev">← Önceki</button><span id="catalogPage"></span><button id="catalogNext">Sonraki →</button></div></section>
-<section id="travelers" class="view"><div class="section-head"><div><span class="kicker">KARİYER ROTASI</span><h2>Gezgin Futbolcular</h2><p>En fazla farklı A takım kulübünde forma giyen oyuncular.</p></div></div><div class="toolbar single"><input id="travelerSearch" placeholder="Oyuncu veya kulüp ara…"></div><div id="travelerList" class="player-list"></div></section>
-<section id="compare" class="view"><div class="section-head"><div><span class="kicker">KARİYER KESİŞİMİ</span><h2>Kulüp Karşılaştırma</h2><p>Ülke ve lig filtreleriyle kulüpleri daralt, ortak futbolcuların tamamını gör.</p></div></div><div class="surface"><div class="compare-filters"><label>Ülke<select id="compareCountry"><option value="">Tüm ülkeler</option></select></label><label>Lig<select id="compareLeague"><option value="">Tüm ligler</option></select></label></div><div class="compare-selects"><label>Birinci kulüp<select id="compareA"></select></label><span>↔</span><label>İkinci kulüp<select id="compareB"></select></label></div><button id="compareButton" class="cta">Ortak oyuncuları göster</button><p id="compareMessage" class="message"></p></div><div id="compareList" class="player-list"></div></section>
-<section id="grid" class="view"><div class="section-head"><div><span class="kicker">3 × 3 MEYDAN OKUMA</span><h2>Kulüp Izgarası</h2><p>Bir hücre seç ve iki kulüpte de oynayan ismi yaz.</p></div><button id="newGrid" class="cta">Yeni ızgara</button></div><div id="gridBoard" class="grid-board"></div><div id="gridEntry" class="grid-entry" hidden><div><b id="gridPrompt"></b><small>Her iki kulüpte de A takım forması giymiş futbolcu</small></div><div class="grid-answer"><input id="gridInput" autocomplete="off" placeholder="Futbolcu adı yaz…"><div id="gridSuggestions" class="suggestions"></div></div><button id="gridCancel" class="secondary">Vazgeç</button></div><p id="gridMessage" class="message"></p></section>
-</main><footer><span>⚽ İki Forma</span><p>Futbol verileri yerel veri paketinden çalışır.</p></footer><div id="toast" class="toast"></div><script src="web/app.js" defer></script></body></html>
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#071525" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self'; connect-src 'self'"
+    />
+    <meta
+      name="description"
+      content="Kulüp kariyerlerini karşılaştır, futbol hafızanı test et."
+    />
+    <title>İki Forma — Futbol Kariyer Oyunu</title>
+    <link rel="preconnect" href="https://tmssl.akamaized.net" />
+    <link rel="stylesheet" href="web/app.css" />
+  </head>
+  <body>
+    <div class="ambient one"></div>
+    <div class="ambient two"></div>
+    <header class="topbar">
+      <button class="brand" data-view="home">
+        <span class="brand-ball">⚽</span
+        ><span
+          ><strong>İki Forma</strong><small>Futbol kariyer oyunu</small></span
+        >
+      </button>
+      <nav>
+        <button data-view="home">Ana Sayfa</button
+        ><button data-view="catalog">Futbolcular</button
+        ><button data-view="compare">Karşılaştır</button>
+      </nav>
+      <div class="score-pill"><span>Skor</span><b id="score">0</b></div>
+    </header>
+    <main>
+      <section id="loading" class="view active loading">
+        <div class="loader-ball">⚽</div>
+        <h1>Futbol dünyası hazırlanıyor</h1>
+        <p id="loadingText">Yerel veri paketi yükleniyor…</p>
+      </section>
+      <section id="home" class="view">
+        <div class="hero">
+          <div>
+            <span class="kicker">50 BİN+ FUTBOLCU • ÇEVRİMDIŞI VERİ</span>
+            <h1>İki kulüp.<br /><em>Tek kariyer.</em></h1>
+            <p>
+              Futbol hafızanı test et, oyuncu kariyerlerini keşfet ve
+              arkadaşlarınla yarış.
+            </p>
+            <button class="cta" data-view="classicSetup">
+              Hemen oyna <span>→</span>
+            </button>
+          </div>
+          <div class="hero-art">
+            <div class="orbit"><span>⚽</span><i></i><i></i><i></i></div>
+            <div class="stat">
+              <b id="heroPlayers">—</b><small>futbolcu</small>
+            </div>
+          </div>
+        </div>
+        <div class="mode-grid">
+          <button class="mode-card featured" data-view="classicSetup">
+            <span class="icon">⚔️</span
+            ><span
+              ><b>İki Forma</b
+              ><small>İki kulüpte de oynamış futbolcuyu bul.</small></span
+            ><i>Oyna →</i></button
+          ><button class="mode-card" data-view="countrySetup">
+            <span class="icon">🌍</span
+            ><span
+              ><b>Ülke × Kulüp</b
+              ><small>Vatandaşlık ve kulüp kariyerini eşleştir.</small></span
+            ><i>Oyna →</i></button
+          ><button class="mode-card" data-view="grid">
+            <span class="icon">#️⃣</span
+            ><span
+              ><b>Kulüp Izgarası</b
+              ><small>Dokuz kesişimi doğru isimlerle doldur.</small></span
+            ><i>Oyna →</i></button
+          ><button class="mode-card" data-view="compare">
+            <span class="icon">🔎</span
+            ><span
+              ><b>Kulüp Karşılaştır</b
+              ><small>Tüm ortak oyuncuları anında listele.</small></span
+            ><i>Keşfet →</i></button
+          ><button class="mode-card" data-view="catalog">
+            <span class="icon">📚</span
+            ><span
+              ><b>Futbolcu Kataloğu</b
+              ><small>Ara, filtrele ve kariyerleri sırala.</small></span
+            ><i>Keşfet →</i></button
+          ><button class="mode-card" data-view="travelers">
+            <span class="icon">✈️</span
+            ><span
+              ><b>Gezgin Futbolcular</b
+              ><small>En fazla kulüpte oynayan futbolcular.</small></span
+            ><i>Keşfet →</i>
+          </button>
+        </div>
+      </section>
+      <section id="classicSetup" class="view setup"></section>
+      <section id="countrySetup" class="view setup"></section>
+      <section id="game" class="view">
+        <div class="game-top">
+          <button class="back" data-view="home">← Oyundan çık</button>
+          <div><b id="gameRound">Tur 1/5</b><span id="timer">30</span></div>
+        </div>
+        <div class="versus">
+          <article id="sideA" class="club-panel"></article>
+          <span class="vs">VS</span>
+          <article id="sideB" class="club-panel"></article>
+        </div>
+        <div class="timebar"><i id="timebar"></i></div>
+        <div class="answer-box">
+          <input
+            id="answerInput"
+            autocomplete="off"
+            placeholder="Futbolcu adını yaz…"
+          />
+          <div id="answerSuggestions" class="suggestions"></div>
+        </div>
+        <div class="game-actions">
+          <button id="pass" class="secondary">Pas geç</button>
+        </div>
+        <p id="gameMessage" class="message"></p>
+      </section>
+      <section id="results" class="view">
+        <div class="surface narrow">
+          <span class="trophy">🏆</span>
+          <h2>Oyun tamamlandı</h2>
+          <p id="finalScore"></p>
+          <div id="roundResults" class="round-results"></div>
+          <button class="cta" data-view="home">Ana sayfa</button>
+        </div>
+      </section>
+      <section id="catalog" class="view">
+        <div class="section-head">
+          <div>
+            <span class="kicker">OYUNCU VERİTABANI</span>
+            <h2>Futbolcu Kataloğu</h2>
+            <p>Forma giyme sayısına göre sıralanmış doğrulanmış kariyerler.</p>
+          </div>
+          <b id="catalogCount" class="counter"></b>
+        </div>
+        <div class="toolbar">
+          <input id="catalogSearch" placeholder="Oyuncu adı ara…" /><select
+            id="catalogClub"
+          >
+            <option value="">Tüm kulüpler</option></select
+          ><select id="catalogNationality">
+            <option value="">Tüm milliyetler</option></select
+          ><select id="catalogSort">
+            <option value="appearances">En çok forma giyme</option>
+            <option value="clubs">En çok kulüp</option>
+            <option value="name">İsme göre</option>
+            <option value="birth">En genç</option>
+          </select>
+        </div>
+        <div id="catalogList" class="player-list"></div>
+        <div class="pager">
+          <button id="catalogPrev">← Önceki</button
+          ><span id="catalogPage"></span
+          ><button id="catalogNext">Sonraki →</button>
+        </div>
+      </section>
+      <section id="travelers" class="view">
+        <div class="section-head">
+          <div>
+            <span class="kicker">KARİYER ROTASI</span>
+            <h2>Gezgin Futbolcular</h2>
+            <p>En fazla farklı A takım kulübünde forma giyen oyuncular.</p>
+          </div>
+        </div>
+        <div class="toolbar single">
+          <input id="travelerSearch" placeholder="Oyuncu veya kulüp ara…" />
+        </div>
+        <div id="travelerList" class="player-list"></div>
+      </section>
+      <section id="compare" class="view">
+        <div class="section-head">
+          <div>
+            <span class="kicker">KARİYER KESİŞİMİ</span>
+            <h2>Kulüp Karşılaştırma</h2>
+            <p>
+              Ülke ve lig filtreleriyle kulüpleri daralt, ortak futbolcuların
+              tamamını gör.
+            </p>
+          </div>
+        </div>
+        <div class="surface">
+          <div class="compare-filters">
+            <label
+              >Ülke<select id="compareCountry">
+                <option value="">Tüm ülkeler</option>
+              </select></label
+            ><label
+              >Lig<select id="compareLeague">
+                <option value="">Tüm ligler</option>
+              </select></label
+            >
+          </div>
+          <div class="compare-selects">
+            <label>Birinci kulüp<select id="compareA"></select></label
+            ><span>↔</span
+            ><label>İkinci kulüp<select id="compareB"></select></label>
+          </div>
+          <button id="compareButton" class="cta">
+            Ortak oyuncuları göster
+          </button>
+          <p id="compareMessage" class="message"></p>
+        </div>
+        <div id="compareList" class="player-list"></div>
+      </section>
+      <section id="grid" class="view">
+        <div class="section-head">
+          <div>
+            <span class="kicker">3 × 3 MEYDAN OKUMA</span>
+            <h2>Kulüp Izgarası</h2>
+            <p>Bir oyun modu seç ve dokuz kariyer kesişiminde yarış.</p>
+          </div>
+        </div>
+        <div id="gridSetup" class="surface grid-setup">
+          <fieldset>
+            <legend>Oyun modu</legend>
+            <div class="segmented">
+              <label
+                ><input
+                  type="radio"
+                  name="gridMode"
+                  value="computer"
+                  checked
+                /><span>Bilgisayara karşı</span></label
+              ><label
+                ><input type="radio" name="gridMode" value="duo" /><span
+                  >İki oyunculu</span
+                ></label
+              >
+            </div>
+          </fieldset>
+          <label id="gridDifficultyWrap"
+            >Bilgisayar zorluğu<select id="gridDifficulty">
+              <option value="easy">Kolay</option>
+              <option value="normal" selected>Normal</option>
+              <option value="hard">Zor</option>
+            </select></label
+          >
+          <div id="gridNames" hidden>
+            <label
+              >Oyuncu 1<input
+                id="gridNameOne"
+                maxlength="24"
+                placeholder="Oyuncu 1" /></label
+            ><label
+              >Oyuncu 2<input
+                id="gridNameTwo"
+                maxlength="24"
+                placeholder="Oyuncu 2"
+            /></label>
+          </div>
+          <details class="rules">
+            <summary>Nasıl oynanır?</summary>
+            <p>
+              Bir hücre seçip iki kulübün A takımında oynamış bir futbolcu gir.
+              Doğru veya yanlış her tahminden sonra sıra değişir. Kiralık A
+              takım kariyerleri geçerlidir; altyapı ve rezerv takımlar
+              geçersizdir. Bir futbolcu oyun boyunca yalnız bir kez
+              kullanılabilir.
+            </p>
+          </details>
+          <button id="startGrid" class="cta">Izgarayı başlat</button>
+        </div>
+        <div id="gridGame" hidden>
+          <div class="grid-status" aria-live="polite">
+            <div id="gridTurn"></div>
+            <div id="gridScores"></div>
+          </div>
+          <div
+            id="gridBoard"
+            class="grid-board"
+            role="grid"
+            aria-label="Kulüp kariyer ızgarası"
+          ></div>
+          <div id="gridEntry" class="grid-entry" hidden>
+            <div>
+              <b id="gridPrompt"></b
+              ><small>Her iki kulüpte de A takım forması giymiş futbolcu</small>
+            </div>
+            <div class="grid-answer">
+              <input
+                id="gridInput"
+                autocomplete="off"
+                placeholder="Futbolcu adı yaz…"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-controls="gridSuggestions"
+                aria-expanded="false"
+              />
+              <div
+                id="gridSuggestions"
+                class="suggestions"
+                role="listbox"
+              ></div>
+            </div>
+            <button id="gridCancel" class="secondary">Vazgeç</button>
+          </div>
+          <p id="gridMessage" class="message" aria-live="polite"></p>
+          <div id="gridHistory" class="grid-history"></div>
+          <button id="newGrid" class="secondary">Yeni oyun</button>
+        </div>
+        <div id="gridResults" class="surface" hidden></div>
+      </section>
+    </main>
+    <footer>
+      <span>⚽ İki Forma</span>
+      <p>Futbol verileri yerel veri paketinden çalışır.</p>
+    </footer>
+    <div id="toast" class="toast"></div>
+    <script src="web/game-core.js" defer></script>
+    <script src="web/app.js" defer></script>
+  </body>
+</html>
