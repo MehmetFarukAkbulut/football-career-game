@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=11">',
+  '<link rel="stylesheet" href="web/grid.css?v=12">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -345,11 +345,11 @@ function finishGame() {
 $("#answerInput").oninput = (e) => {
   const q = norm(e.target.value);
   if (q.length < 2) return ($("#answerSuggestions").innerHTML = "");
-  const hits = players.filter((p) => norm(p.name).includes(q)).slice(0, 10);
+  const hits = (game.current?.answers || []).filter((p) => norm(p.name).includes(q)).slice(0, 10);
   $("#answerSuggestions").innerHTML = hits
     .map(
       (p) =>
-        `<button data-id="${p.id}">${esc(p.name)} <small>• ${esc(p.nationality || "")}</small></button>`,
+        `<button class="player-suggestion" data-id="${p.id}">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "")}</small></span></button>`,
     )
     .join("");
   $$("#answerSuggestions button").forEach(
@@ -794,7 +794,7 @@ $("#gridInput").oninput = (e) => {
     hits
       .map(
         (p) =>
-          `<button role="option" data-grid-player="${p.id}">${esc(p.name)} <small>${esc(p.nationality || "")} • ${p.clubIds.length} kulüp</small></button>`,
+          `<button class="player-suggestion" role="option" data-grid-player="${p.id}">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "")} • ${p.clubIds.length} kulüp</small></span></button>`,
       )
       .join("") || "<button disabled>Eşleşen futbolcu yok</button>";
   $$("[data-grid-player]").forEach(
@@ -900,10 +900,9 @@ function renderRandomFiveRound() {
   $("#randomFiveInput").focus();
 }
 function submitRandomFiveGuess(player) {
-  const turn = randomFive.guesses.length;
   if (!player) return;
-  if (randomFive.used[turn].has(player.id)) return toast("Bu futbolcuyu daha önce kullandın.");
-  randomFive.used[turn].add(player.id);
+  const ids = randomFive.sets[randomFive.round].map((club) => club.id);
+  if (!IkiFormaCore.randomFiveScore(player, ids)) return toast("Bu futbolcu gösterilen kulüplerin hiçbirinde oynamadı.");
   randomFive.guesses.push(player);
   $("#randomFiveInput").value = "";
   $("#randomFiveSuggestions").innerHTML = "";
@@ -912,8 +911,8 @@ function submitRandomFiveGuess(player) {
     return $("#randomFiveInput").focus();
   }
   if (randomFive.mode === "computer" && randomFive.guesses.length === 1) {
-    const guess = IkiFormaCore.chooseRandomFiveComputer({ pool: randomFive.pool, clubIds: randomFive.sets[randomFive.round].map((club) => club.id), difficulty: randomFive.difficulty, excluded: randomFive.used[1] });
-    if (guess) { randomFive.used[1].add(guess.player.id); randomFive.guesses.push(guess.player); }
+    const guess = IkiFormaCore.chooseRandomFiveComputer({ pool: randomFive.pool, clubIds: ids, difficulty: randomFive.difficulty });
+    if (guess) randomFive.guesses.push(guess.player);
   }
   revealRandomFiveRound();
 }
@@ -942,13 +941,13 @@ function nextRandomFiveRound() {
   $("#randomFiveNext").hidden = true;
 }
 $("#randomFiveInput").oninput = (event) => {
-  const q = norm(event.target.value), turn = randomFive.guesses?.length || 0;
+  const q = norm(event.target.value), ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [];
   if (q.length < 2) return ($("#randomFiveSuggestions").innerHTML = "");
-  const hits = (randomFive.pool || []).filter((player) => !randomFive.used?.[turn]?.has(player.id) && norm(player.name).includes(q)).slice(0, 10);
-  $("#randomFiveSuggestions").innerHTML = hits.map((player) => `<button data-random-five-player="${player.id}">${esc(player.name)} <small>${esc(player.nationality || "")}</small></button>`).join("") || "<button disabled>Eşleşen futbolcu yok</button>";
+  const hits = (randomFive.pool || []).filter((player) => IkiFormaCore.randomFiveScore(player, ids) > 0 && norm(player.name).includes(q)).slice(0, 10);
+  $("#randomFiveSuggestions").innerHTML = hits.map((player) => `<button class="player-suggestion" data-random-five-player="${player.id}">${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")} • ${IkiFormaCore.randomFiveScore(player, ids)} kulüp</small></span></button>`).join("") || "<button disabled>Eşleşen geçerli futbolcu yok</button>";
   $$('[data-random-five-player]').forEach((button) => button.onclick = () => submitRandomFiveGuess(indexes.playerById.get(+button.dataset.randomFivePlayer)));
 };
-$("#randomFiveInput").onkeydown = (event) => { if (event.key === "Enter") { const player = (randomFive.pool || []).find((item) => norm(item.name) === norm(event.target.value)); if (player) submitRandomFiveGuess(player); } };
+$("#randomFiveInput").onkeydown = (event) => { if (event.key === "Enter") { const ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [], player = (randomFive.pool || []).find((item) => norm(item.name) === norm(event.target.value) && IkiFormaCore.randomFiveScore(item, ids) > 0); if (player) submitRandomFiveGuess(player); else toast("Gösterilen kulüplerden en az birinde oynamış bir futbolcu seç."); } };
 $("#randomFiveNext").onclick = nextRandomFiveRound;
 $("#startRandomFive").onclick = startRandomFiveGame;
 $$('input[name="randomFiveMode"]').forEach((radio) => radio.onchange = () => { const duo = $('input[name="randomFiveMode"]:checked').value === "duo"; $("#randomFiveDifficultyWrap").hidden = duo; $("#randomFiveNameTwoWrap").hidden = !duo; });
@@ -997,10 +996,7 @@ function renderTwinTurn() {
   $("#twinNext").hidden = true;
 }
 function submitTwinGuess(player) {
-  const turn = twin.guesses.length;
   if (!player || player.id === twin.targets[twin.round].id) return toast("Hedef futbolcu tahmin edilemez.");
-  if (twin.used[turn].has(player.id)) return toast("Bu futbolcuyu daha önce kullandın.");
-  twin.used[turn].add(player.id);
   twin.guesses.push(player);
   $("#twinInput").value = "";
   $("#twinSuggestions").innerHTML = "";
@@ -1010,8 +1006,8 @@ function submitTwinGuess(player) {
     return;
   }
   if (twin.mode === "computer" && twin.guesses.length === 1) {
-    const guess = IkiFormaCore.chooseTwinComputerGuess({ target: twin.targets[twin.round], pool: twin.pool, metric: IkiFormaCore.TWIN_METRICS[twin.metric].key, difficulty: twin.difficulty, excluded: twin.used[1] });
-    if (guess) { twin.used[1].add(guess.player.id); twin.guesses.push(guess.player); }
+    const guess = IkiFormaCore.chooseTwinComputerGuess({ target: twin.targets[twin.round], pool: twin.pool, metric: IkiFormaCore.TWIN_METRICS[twin.metric].key, difficulty: twin.difficulty });
+    if (guess) twin.guesses.push(guess.player);
   }
   revealTwinMetric();
 }
@@ -1042,10 +1038,10 @@ function nextTwinStep() {
   $("#twinNext").hidden = true;
 }
 $("#twinInput").oninput = (event) => {
-  const q = norm(event.target.value), turn = twin.guesses?.length || 0;
+  const q = norm(event.target.value);
   if (q.length < 2) return ($("#twinSuggestions").innerHTML = "");
-  const hits = (twin.pool || []).filter((p) => p.id !== twin.targets?.[twin.round]?.id && !twin.used?.[turn]?.has(p.id) && norm(p.name).includes(q)).slice(0, 10);
-  $("#twinSuggestions").innerHTML = hits.map((p) => `<button data-twin-player="${p.id}">${esc(p.name)} <small>${esc(p.nationality || "")}</small></button>`).join("") || "<button disabled>Eşleşen futbolcu yok</button>";
+  const hits = (twin.pool || []).filter((p) => p.id !== twin.targets?.[twin.round]?.id && norm(p.name).includes(q)).slice(0, 10);
+  $("#twinSuggestions").innerHTML = hits.map((p) => `<button class="player-suggestion" data-twin-player="${p.id}">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "")}</small></span></button>`).join("") || "<button disabled>Eşleşen futbolcu yok</button>";
   $$('[data-twin-player]').forEach((button) => button.onclick = () => submitTwinGuess(indexes.playerById.get(+button.dataset.twinPlayer)));
 };
 $("#twinInput").onkeydown = (event) => { if (event.key === "Enter") { const p = (twin.pool || []).find((x) => norm(x.name) === norm(event.target.value)); if (p) submitTwinGuess(p); } };

@@ -485,6 +485,24 @@
   scrollbar-width: thin;
   scrollbar-color: var(--cyan) rgba(6, 17, 30, 0.6);
 }
+.suggestions .player-suggestion {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+}
+.suggestions .player-suggestion > img,
+.suggestions .player-suggestion > .avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #244d76;
+}
+.suggestions .player-suggestion > span { min-width: 0; }
+.suggestions .player-suggestion b,
+.suggestions .player-suggestion small { display: block; }
+.suggestions .player-suggestion small { color: var(--muted); }
 .league-list::-webkit-scrollbar,
 .suggestions::-webkit-scrollbar {
   width: 9px;
