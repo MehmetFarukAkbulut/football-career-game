@@ -620,8 +620,9 @@ function renderGrid() {
     grid.grid.cols.forEach((c, ci) => {
       const i = ri * 3 + ci,
         m = grid.grid.marks[i],
-        p = m && indexes.playerById.get(m.playerId);
-      html += `<button class="grid-cell ${m ? `owner-${m.owner}` : ""} ${grid.selectedCell === i ? "selected" : ""}" data-cell="${i}" role="gridcell" aria-label="${esc(r.name)} ve ${esc(c.name)}" ${m || grid.thinking ? "disabled" : ""}>${m ? `<b>${m.owner ? "O" : "X"}</b><small>${esc(p.name)}</small>` : "?"}</button>`;
+        p = m && indexes.playerById.get(m.playerId),
+        winning = grid.winningLine?.includes(i) ? "winning" : "";
+      html += `<button class="grid-cell ${m ? `owner-${m.owner}` : ""} ${grid.selectedCell === i ? "selected" : ""} ${winning}" data-cell="${i}" role="gridcell" aria-label="${esc(r.name)} ve ${esc(c.name)}" ${m || grid.thinking ? "disabled" : ""}>${m ? `<b>${m.owner ? "O" : "X"}</b><small>${esc(p.name)}</small>` : "?"}</button>`;
     });
   });
   $("#gridBoard").innerHTML = html;
@@ -727,15 +728,26 @@ function computerMove() {
 function finishGrid() {
   clearTimeout(computerTimer);
   grid = { ...grid, status: "finished", thinking: false };
-  const winner =
-    grid.scores[0] === grid.scores[1]
-      ? "Berabere"
-      : `${grid.players[grid.scores[0] > grid.scores[1] ? 0 : 1].name} kazandı`;
+  const hasLineWinner = Number.isInteger(grid.winner),
+    winnerIndex = hasLineWinner
+      ? grid.winner
+      : grid.scores[0] === grid.scores[1]
+        ? null
+        : grid.scores[0] > grid.scores[1]
+          ? 0
+          : 1,
+    winner =
+      winnerIndex === null
+        ? "Berabere"
+        : `${grid.players[winnerIndex].name} kazandı`,
+    outcome = hasLineWinner
+      ? `<p><strong>${esc(grid.players[winnerIndex ? 0 : 1].name)} kaybetti.</strong> Üçlü XOX çizgisi tamamlandı.</p>`
+      : "<p>Geçerli hamleler tamamlandı; sonuç skora göre belirlendi.</p>";
   $("#gridGame").hidden = true;
   $("#gridResults").hidden = false;
   setGridPlaying(true);
   $("#gridResults").innerHTML =
-    `<span class="trophy">🏆</span><h2>${esc(winner)}</h2><p>${esc(grid.players[0].name)}: ${grid.scores[0]} • ${esc(grid.players[1].name)}: ${grid.scores[1]}</p><p>Doğru: ${grid.correct.join(" / ")} • Yanlış: ${grid.wrong.join(" / ")}</p><button id="gridAgain" class="cta">Yeni oyun</button>`;
+    `<span class="trophy">🏆</span><h2>${esc(winner)}</h2>${outcome}<p>${esc(grid.players[0].name)}: ${grid.scores[0]} • ${esc(grid.players[1].name)}: ${grid.scores[1]}</p><p>Doğru: ${grid.correct.join(" / ")} • Yanlış: ${grid.wrong.join(" / ")}</p><button id="gridAgain" class="cta">Yeni oyun</button>`;
   $("#gridAgain").onclick = showGridSetup;
   localStorage.removeItem("iki-forma-grid");
 }

@@ -179,6 +179,19 @@
   );
   border-color: #45bce8;
 }
+.grid-cell.winning {
+  z-index: 1;
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 3px rgba(255, 190, 69, 0.8) inset,
+    0 0 22px rgba(255, 190, 69, 0.38);
+  animation: winning-cell 700ms ease-in-out 2 alternate;
+}
+@keyframes winning-cell {
+  to {
+    filter: brightness(1.3);
+  }
+}
 .grid-cell b {
   font-size: 16px;
 }
