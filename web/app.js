@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=10">',
+  '<link rel="stylesheet" href="web/grid.css?v=11">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -1067,7 +1067,6 @@ async function init() {
     $("#heroPlayers").textContent = players.length.toLocaleString("tr-TR");
     $(".hero .kicker").textContent =
       `${Math.floor(players.length / 1000)} BİN+ KARİYER • ÇEVRİMDIŞI VERİ`;
-    $(".vs").textContent = "KARŞI";
     const options = clubs
       .map(
         (c) =>
