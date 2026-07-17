@@ -132,6 +132,7 @@ async function main() {
       ];
       const code = countryCode(meta[1]);
       const curated = curatedBySlug.get(c.club_code);
+      const fallbackLogo = `https://tmssl.akamaized.net/images/wappen/head/${+c.club_id}.png`;
       return {
         id: +c.club_id,
         clubId: +c.club_id,
@@ -144,8 +145,9 @@ async function main() {
         league: meta[0],
         leagueId: c.domestic_competition_id,
         leagueLevel: 1,
-        logo: curated?.logo || null,
-        logoAsset: curated?.logo || null,
+        logo: curated?.logo || fallbackLogo,
+        logoAsset: curated?.logo || fallbackLogo,
+        logoSource: curated?.logo ? "curated" : "transfermarkt-cdn",
         transfermarktClubId: +c.club_id,
         transfermarktUrl: c.url || null,
         active: +c.last_season === maxSeason[c.domestic_competition_id],

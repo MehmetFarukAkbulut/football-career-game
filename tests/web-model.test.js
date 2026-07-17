@@ -34,3 +34,4 @@ test("kulüp ve oyuncu kaynak kimlikleri geriye uyumlu alanlarla aynıdır", () 
     ),
   );
 });
+test("tüm kulüpler lazy-load edilebilir arma URL'si ve fallback metadata'sı taşır",()=>{assert.ok(data.clubs.every(c=>/^https:\/\//.test(c.logoAsset)&&c.logoSource));});

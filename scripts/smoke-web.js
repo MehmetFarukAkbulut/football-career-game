@@ -50,7 +50,7 @@ app.whenReady().then(() =>
     await win.loadURL(`http://127.0.0.1:${server.address().port}/`);
     await new Promise((resolve) => setTimeout(resolve, 2500));
     const state = await win.webContents.executeJavaScript(
-      `(async()=>{const base={title:document.title,home:document.querySelector('#home')?.classList.contains('active'),cards:document.querySelectorAll('.mode-card').length};document.querySelector('[data-view="grid"]').click();document.querySelector('#startGrid').click();await new Promise(r=>setTimeout(r,250));return {...base,gridVisible:!document.querySelector('#gridGame').hidden,cells:document.querySelectorAll('[data-cell]').length,turn:document.querySelector('#gridTurn').textContent}})()`,
+      `(async()=>{const base={title:document.title,home:document.querySelector('#home')?.classList.contains('active'),cards:document.querySelectorAll('.mode-card').length};document.querySelector('[data-view="classicSetup"]').click();const leagueFlags=document.querySelectorAll('.league-list .flag').length;document.querySelector('[data-view="grid"]').click();const gameModes=document.querySelectorAll('input[name="gridMode"]').length;document.querySelector('#startGrid').click();await new Promise(r=>setTimeout(r,250));return {...base,leagueFlags,gameModes,gridVisible:!document.querySelector('#gridGame').hidden,cells:document.querySelectorAll('[data-cell]').length,crests:document.querySelectorAll('.grid-head img').length,turn:document.querySelector('#gridTurn').textContent}})()`,
     );
     console.log(JSON.stringify(state));
     if (
@@ -58,6 +58,9 @@ app.whenReady().then(() =>
       state.cards < 6 ||
       !state.gridVisible ||
       state.cells !== 9 ||
+      state.gameModes !== 2 ||
+      state.leagueFlags < 30 ||
+      state.crests !== 6 ||
       !state.turn
     )
       failed = true;
