@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=9">',
+  '<link rel="stylesheet" href="web/grid.css?v=10">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -383,7 +383,7 @@ function playerRow(p, i, showStats = true) {
       .sort()
       .join(" • "),
     clubStats = showStats
-      ? `${p.goals || 0} gol • ${p.assists || 0} asist • `
+      ? `${p.careerGoals ?? (p.goals || 0) + (p.nationalGoals || 0)} toplam gol • ${p.assists || 0} asist • `
       : "",
     national = `<small>Milli: ${p.nationalCaps || 0} maç • ${p.nationalGoals || 0} gol • asist: kaynakta yok</small>`,
     marketValue = Number.isFinite(p.marketValueInEur)
@@ -396,7 +396,7 @@ function playerRow(p, i, showStats = true) {
       : "Piyasa değeri yok",
     coverage = p.statisticsComplete ? "Tam kulüp kariyeri" : "Sınırlı tarihsel kapsam",
     stats = showStats
-      ? `<small class="player-stats">${p.appearances || 0} maç • ${p.goals || 0} gol • ${p.assists || 0} asist • ${p.yellowCards || 0} sarı • ${p.redCards || 0} kırmızı • ${esc(marketValue)} • ${coverage}</small>`
+      ? `<small class="player-stats">${p.appearances || 0} maç • ${p.goals || 0} kulüp golü • ${p.careerGoals ?? (p.goals || 0) + (p.nationalGoals || 0)} toplam gol • ${p.assists || 0} asist • ${p.yellowCards || 0} sarı • ${p.redCards || 0} kırmızı • ${esc(marketValue)} • ${coverage}</small>`
       : "";
   return `<article class="player-row"><span class="rank">${i}</span><div class="person">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "Milliyet bilinmiyor")}${p.birthDate ? ` • ${p.birthDate.slice(0, 4)}` : ""}</small>${national}</span></div><div class="clubs">${esc(career)}${stats}</div><span class="badge">${clubStats}${p.clubIds.length} kulüp</span></article>`;
 }
@@ -419,7 +419,10 @@ function renderCatalog(reset = false) {
         ? (a, b) =>
             b.clubIds.length - a.clubIds.length || b.appearances - a.appearances
         : sort === "goals"
-          ? (a, b) => b.goals - a.goals || b.appearances - a.appearances
+          ? (a, b) =>
+              (b.careerGoals ?? b.goals + (b.nationalGoals || 0)) -
+                (a.careerGoals ?? a.goals + (a.nationalGoals || 0)) ||
+              b.appearances - a.appearances
         : sort === "birth"
           ? (a, b) => String(b.birthDate).localeCompare(String(a.birthDate))
           : (a, b) =>

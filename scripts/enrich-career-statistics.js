@@ -168,6 +168,14 @@ async function main() {
       clubId, startDate: null, endDate: null, firstTeam: true,
     });
   }
+  const goalOverrides = JSON.parse(fs.readFileSync(path.join(root, "data", "career-goal-overrides.json"), "utf8")),
+    goalOverrideMap = new Map(goalOverrides.map((row) => [+row.playerId, row]));
+  for (const player of data.players) {
+    const override = goalOverrideMap.get(+player.id);
+    player.careerGoals = override?.careerGoals ?? (player.goals || 0) + (player.nationalGoals || 0);
+    player.careerGoalsSource = override?.source || "Club goals plus senior national-team goals";
+    player.careerGoalsAsOf = override?.asOf || null;
+  }
   data.version = 6;
   data.generatedAt = new Date().toISOString();
   data.statistics = {
@@ -176,9 +184,9 @@ async function main() {
     unavailableFields: ["nationalAssists", "completeCareerMinutes"],
   };
   fs.writeFileSync(webFile, JSON.stringify(data));
-  const sorted = [...data.players].sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name, "tr"));
+  const sorted = [...data.players].sort((a, b) => b.careerGoals - a.careerGoals || a.name.localeCompare(b.name, "tr"));
   const header = "transfermarkt_id\tfutbolcu\tgol\tmac\tistatistik_durumu\tkulup_sayisi\taciklama";
-  const line = (p) => [p.id, p.name, p.goals, p.appearances,
+  const line = (p) => [p.id, p.name, p.careerGoals, p.appearances,
     p.statisticsComplete ? "GUNCEL" : "EKSIK",
     p.clubIds.length, p.statisticsCoverage].join("\t");
   fs.writeFileSync(path.join(root, "data", "players-current.txt"),
