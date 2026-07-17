@@ -97,10 +97,41 @@
               ><small>En fazla kulüpte oynayan futbolcular.</small></span
             ><i>Keşfet →</i>
           </button>
+          <button class="mode-card twin-card" data-view="twinSetup">
+            <span class="icon">🧬</span><span><b>Kariyer İkizi</b><small>Dört kariyer metriğinde en yakın futbolcuyu bul.</small></span><i>Oyna →</i>
+          </button>
         </div>
       </section>
       <section id="classicSetup" class="view setup"></section>
       <section id="countrySetup" class="view setup"></section>
+      <section id="twinSetup" class="view">
+        <button class="back" data-view="home">← Ana sayfa</button>
+        <div class="surface twin-setup">
+          <span class="kicker">YENİ OYUN MODU</span><h2>Kariyer İkizi</h2>
+          <p>Hedef futbolcunun her metriğine en yakın kariyeri tahmin et. En çok metriği bilen kazanır.</p>
+          <fieldset><legend>Oyun modu</legend><div class="segmented">
+            <label><input type="radio" name="twinMode" value="computer" checked /><span>Bilgisayara karşı</span></label>
+            <label><input type="radio" name="twinMode" value="duo" /><span>İki oyunculu</span></label>
+          </div></fieldset>
+          <div class="twin-settings">
+            <label>Hedef futbolcu sayısı<select id="twinRounds"><option>3</option><option selected>5</option><option>10</option></select></label>
+            <label id="twinDifficultyWrap">Bilgisayar zorluğu<select id="twinDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label>
+          </div>
+          <div id="twinNames" class="twin-settings"><label>Oyuncu 1<input id="twinNameOne" maxlength="24" value="Oyuncu 1" /></label><label id="twinNameTwoWrap" hidden>Oyuncu 2<input id="twinNameTwo" maxlength="24" value="Oyuncu 2" /></label></div>
+          <details class="rules"><summary>Nasıl oynanır?</summary><p>Her hedefte kulüp maçı, kulüp golü, asist ve milli takım golü ayrı ayrı oynanır. Tahminin hedef değere rakibinden daha yakınsa puanı sen alırsın.</p></details>
+          <button id="startTwin" class="cta">Oyunu başlat →</button>
+        </div>
+      </section>
+      <section id="twinGame" class="view">
+        <div class="game-top twin-top"><button class="back" data-view="home">← Oyundan çık</button><b id="twinRound"></b><div id="twinScore"></div></div>
+        <div id="twinTarget" class="twin-target"></div>
+        <div class="surface twin-play">
+          <span id="twinMetricStep" class="kicker"></span><h2 id="twinPrompt"></h2><p id="twinTurn"></p>
+          <div class="answer-box twin-answer"><input id="twinInput" autocomplete="off" placeholder="Futbolcu adı yaz…" /><div id="twinSuggestions" class="suggestions"></div></div>
+          <p id="twinMessage" class="message" aria-live="polite"></p><div id="twinReveal" class="twin-reveal" hidden></div>
+          <button id="twinNext" class="cta" hidden>Sonraki metrik →</button>
+        </div>
+      </section>
       <section id="game" class="view">
         <div class="game-top">
           <button class="back" data-view="home">← Oyundan çık</button>

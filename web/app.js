@@ -44,6 +44,7 @@ let DATA,
   game = {},
   timer,
   grid = {},
+  twin = {},
   computerTimer;
 function toast(message) {
   $("#toast").textContent = message;
@@ -821,6 +822,117 @@ $$('input[name="gridMode"]').forEach(
       $("#gridDifficultyWrap").hidden = duo;
     }),
 );
+
+function twinPool() {
+  return players.filter(
+    (p) =>
+      p.statisticsComplete &&
+      p.appearances >= 50 &&
+      IkiFormaCore.TWIN_METRICS.every((metric) =>
+        Number.isFinite(Number(p[metric.key])),
+      ),
+  );
+}
+function startTwinGame() {
+  const mode = $('input[name="twinMode"]:checked').value,
+    pool = twinPool(),
+    targets = pool.filter((p) => p.appearances >= 200 && p.goals >= 15);
+  if (targets.length < 2) return toast("Yeterli doğrulanmış kariyer bulunamadı.");
+  twin = {
+    mode,
+    difficulty: $("#twinDifficulty").value,
+    names: [$("#twinNameOne").value.trim() || "Oyuncu 1", mode === "duo" ? $("#twinNameTwo").value.trim() || "Oyuncu 2" : "Bilgisayar"],
+    scores: [0, 0],
+    round: 0,
+    rounds: +$("#twinRounds").value,
+    metric: 0,
+    guesses: [],
+    used: [new Set(), new Set()],
+    pool,
+    targets: [...targets].sort(() => Math.random() - 0.5).slice(0, +$("#twinRounds").value),
+  };
+  show("twinGame");
+  beginTwinRound();
+}
+function beginTwinRound() {
+  twin.metric = 0;
+  twin.guesses = [];
+  twin.used = [new Set(), new Set()];
+  renderTwinTurn();
+}
+function renderTwinTurn() {
+  const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric];
+  $("#twinRound").textContent = `Futbolcu ${twin.round + 1}/${twin.rounds}`;
+  $("#twinScore").innerHTML = `<b>${esc(twin.names[0])} ${twin.scores[0]}</b><span>—</span><b>${twin.scores[1]} ${esc(twin.names[1])}</b>`;
+  $("#twinTarget").innerHTML = `${person(target)}<div><span class="kicker">HEDEF FUTBOLCU</span><h2>${esc(target.name)}</h2><p>${esc(target.nationality || "")}</p></div><div class="twin-metrics">${IkiFormaCore.TWIN_METRICS.map((m, i) => `<div class="${i === twin.metric ? "active" : ""}"><small>${esc(m.label)}</small><b>${Number(target[m.key]).toLocaleString("tr-TR")}</b></div>`).join("")}</div>`;
+  $("#twinMetricStep").textContent = `METRİK ${twin.metric + 1}/4`;
+  $("#twinPrompt").textContent = `${metric.label} değerine en yakın futbolcu kim?`;
+  $("#twinTurn").textContent = `${twin.names[0]} tahminini girsin.`;
+  $("#twinInput").value = "";
+  $("#twinInput").disabled = false;
+  $("#twinGame .twin-answer").hidden = false;
+  $("#twinInput").focus();
+  $("#twinSuggestions").innerHTML = "";
+  $("#twinMessage").textContent = "";
+  $("#twinReveal").hidden = true;
+  $("#twinNext").hidden = true;
+}
+function submitTwinGuess(player) {
+  const turn = twin.guesses.length;
+  if (!player || player.id === twin.targets[twin.round].id) return toast("Hedef futbolcu tahmin edilemez.");
+  if (twin.used[turn].has(player.id)) return toast("Bu futbolcuyu daha önce kullandın.");
+  twin.used[turn].add(player.id);
+  twin.guesses.push(player);
+  $("#twinInput").value = "";
+  $("#twinSuggestions").innerHTML = "";
+  if (twin.mode === "duo" && twin.guesses.length === 1) {
+    $("#twinTurn").textContent = `${twin.names[1]} tahminini girsin. İlk tahmin gizlendi.`;
+    $("#twinInput").focus();
+    return;
+  }
+  if (twin.mode === "computer" && twin.guesses.length === 1) {
+    const guess = IkiFormaCore.chooseTwinComputerGuess({ target: twin.targets[twin.round], pool: twin.pool, metric: IkiFormaCore.TWIN_METRICS[twin.metric].key, difficulty: twin.difficulty, excluded: twin.used[1] });
+    if (guess) { twin.used[1].add(guess.player.id); twin.guesses.push(guess.player); }
+  }
+  revealTwinMetric();
+}
+function revealTwinMetric() {
+  const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric], result = IkiFormaCore.scoreTwinGuesses(target, metric.key, twin.guesses[0], twin.guesses[1]);
+  if (result.winner === null) twin.scores = twin.scores.map((x) => x + 1);
+  else twin.scores[result.winner]++;
+  $("#twinInput").disabled = true;
+  $("#twinTurn").textContent = result.winner === null ? "Eşit yakınlık: iki taraf da puan aldı." : `${twin.names[result.winner]} bu metriği kazandı!`;
+  $("#twinReveal").innerHTML = twin.guesses.map((p, i) => `<article class="${result.winner === null || result.winner === i ? "winner" : ""}">${person(p)}<div><small>${esc(twin.names[i])}</small><b>${esc(p.name)}</b><span>${Number(p[metric.key]).toLocaleString("tr-TR")} · fark ${result.distances[i].toLocaleString("tr-TR")}</span></div></article>`).join("");
+  $("#twinReveal").hidden = false;
+  $("#twinNext").textContent = twin.metric === 3 ? (twin.round + 1 === twin.rounds ? "Sonucu gör →" : "Sonraki futbolcu →") : "Sonraki metrik →";
+  $("#twinNext").hidden = false;
+  $("#twinScore").innerHTML = `<b>${esc(twin.names[0])} ${twin.scores[0]}</b><span>—</span><b>${twin.scores[1]} ${esc(twin.names[1])}</b>`;
+}
+function nextTwinStep() {
+  if (twin.metric < 3) { twin.metric++; twin.guesses = []; return renderTwinTurn(); }
+  twin.round++;
+  if (twin.round < twin.rounds) return beginTwinRound();
+  const winner = twin.scores[0] === twin.scores[1] ? "Berabere!" : `${twin.names[twin.scores[0] > twin.scores[1] ? 0 : 1]} kazandı!`;
+  $("#twinTarget").innerHTML = "";
+  $("#twinMetricStep").textContent = "OYUN TAMAMLANDI";
+  $("#twinPrompt").textContent = `🏆 ${winner}`;
+  $("#twinTurn").textContent = `${twin.names[0]}: ${twin.scores[0]} · ${twin.names[1]}: ${twin.scores[1]}`;
+  $("#twinGame .twin-answer").hidden = true;
+  $("#twinReveal").innerHTML = '<button class="cta" data-view="twinSetup">Yeniden oyna</button>';
+  $("#twinReveal").hidden = false;
+  $("#twinNext").hidden = true;
+}
+$("#twinInput").oninput = (event) => {
+  const q = norm(event.target.value), turn = twin.guesses?.length || 0;
+  if (q.length < 2) return ($("#twinSuggestions").innerHTML = "");
+  const hits = (twin.pool || []).filter((p) => p.id !== twin.targets?.[twin.round]?.id && !twin.used?.[turn]?.has(p.id) && norm(p.name).includes(q)).slice(0, 10);
+  $("#twinSuggestions").innerHTML = hits.map((p) => `<button data-twin-player="${p.id}">${esc(p.name)} <small>${esc(p.nationality || "")}</small></button>`).join("") || "<button disabled>Eşleşen futbolcu yok</button>";
+  $$('[data-twin-player]').forEach((button) => button.onclick = () => submitTwinGuess(indexes.playerById.get(+button.dataset.twinPlayer)));
+};
+$("#twinInput").onkeydown = (event) => { if (event.key === "Enter") { const p = (twin.pool || []).find((x) => norm(x.name) === norm(event.target.value)); if (p) submitTwinGuess(p); } };
+$("#twinNext").onclick = nextTwinStep;
+$("#startTwin").onclick = startTwinGame;
+$$('input[name="twinMode"]').forEach((radio) => radio.onchange = () => { const duo = $('input[name="twinMode"]:checked').value === "duo"; $("#twinDifficultyWrap").hidden = duo; $("#twinNameTwoWrap").hidden = !duo; });
 async function init() {
   try {
     const response = await fetch("data/web-data.json");
