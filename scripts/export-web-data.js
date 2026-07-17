@@ -176,8 +176,20 @@ async function main() {
       appearances: 0,
       goals: 0,
       assists: 0,
+      minutesPlayed: 0,
+      yellowCards: 0,
+      redCards: 0,
       nationalCaps: +p.international_caps || 0,
       nationalGoals: +p.international_goals || 0,
+      nationalAssists: null,
+      marketValueInEur: p.market_value_in_eur && Number.isFinite(+p.market_value_in_eur)
+        ? +p.market_value_in_eur
+        : null,
+      highestMarketValueInEur:
+        p.highest_market_value_in_eur &&
+        Number.isFinite(+p.highest_market_value_in_eur)
+        ? +p.highest_market_value_in_eur
+        : null,
       clubIds: [],
     }),
   );
@@ -191,12 +203,18 @@ async function main() {
         appearances: 0,
         goals: 0,
         assists: 0,
+        minutesPlayed: 0,
+        yellowCards: 0,
+        redCards: 0,
         startDate: null,
         endDate: null,
       };
     career.appearances++;
     career.goals += +a.goals || 0;
     career.assists += +a.assists || 0;
+    career.minutesPlayed += +a.minutes_played || 0;
+    career.yellowCards += +a.yellow_cards || 0;
+    career.redCards += +a.red_cards || 0;
     const date = a.date?.slice(0, 10) || null;
     if (date && (!career.startDate || date < career.startDate))
       career.startDate = date;
@@ -250,6 +268,9 @@ async function main() {
     p.appearances += stats.appearances;
     p.goals += stats.goals;
     p.assists += stats.assists;
+    p.minutesPlayed += stats.minutesPlayed || 0;
+    p.yellowCards += stats.yellowCards || 0;
+    p.redCards += stats.redCards || 0;
     if (!p.careers) p.careers = [];
     p.careers.push({
       clubId: cid,
@@ -271,9 +292,14 @@ async function main() {
     logoAsset: null,
   }));
   const payload = {
-    version: 4,
+    version: 5,
     generatedAt: new Date().toISOString(),
-    source: "Transfermarkt identities and verified first-team appearances",
+    source: "dcaribou/transfermarkt-datasets (CC0-1.0)",
+    statistics: {
+      sourceUrl: "https://github.com/dcaribou/transfermarkt-datasets",
+      scope: "Available first-team match appearances in the source dataset",
+      unavailableFields: ["nationalAssists"],
+    },
     leagues,
     clubs,
     players,
