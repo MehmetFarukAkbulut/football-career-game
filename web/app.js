@@ -392,8 +392,9 @@ function playerRow(p, i, showStats = true) {
           notation: "compact",
         }).format(p.marketValueInEur)
       : "Piyasa değeri yok",
+    coverage = p.statisticsComplete ? "Tam kulüp kariyeri" : "Sınırlı tarihsel kapsam",
     stats = showStats
-      ? `<small class="player-stats">${p.appearances || 0} maç • ${p.minutesPlayed || 0} dk • ${p.goals || 0} gol • ${p.assists || 0} asist • ${p.yellowCards || 0} sarı • ${p.redCards || 0} kırmızı • ${esc(marketValue)}</small>`
+      ? `<small class="player-stats">${p.appearances || 0} maç • ${p.goals || 0} gol • ${p.assists || 0} asist • ${p.yellowCards || 0} sarı • ${p.redCards || 0} kırmızı • ${esc(marketValue)} • ${coverage}</small>`
       : "";
   return `<article class="player-row"><span class="rank">${i}</span><div class="person">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "Milliyet bilinmiyor")}${p.birthDate ? ` • ${p.birthDate.slice(0, 4)}` : ""}</small>${national}</span></div><div class="clubs">${esc(career)}${stats}</div><span class="badge">${clubStats}${p.clubIds.length} kulüp</span></article>`;
 }
@@ -415,6 +416,8 @@ function renderCatalog(reset = false) {
       : sort === "clubs"
         ? (a, b) =>
             b.clubIds.length - a.clubIds.length || b.appearances - a.appearances
+        : sort === "goals"
+          ? (a, b) => b.goals - a.goals || b.appearances - a.appearances
         : sort === "birth"
           ? (a, b) => String(b.birthDate).localeCompare(String(a.birthDate))
           : (a, b) =>
