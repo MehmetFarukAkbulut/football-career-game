@@ -383,10 +383,19 @@ function playerRow(p, i, showStats = true) {
     clubStats = showStats
       ? `${p.goals || 0} gol • ${p.assists || 0} asist • `
       : "",
-    national = p.nationalGoals
-      ? `<small>Milli takım: ${p.nationalGoals} gol</small>`
+    national = `<small>Milli: ${p.nationalCaps || 0} maç • ${p.nationalGoals || 0} gol • asist: kaynakta yok</small>`,
+    marketValue = Number.isFinite(p.marketValueInEur)
+      ? new Intl.NumberFormat("tr-TR", {
+          style: "currency",
+          currency: "EUR",
+          maximumFractionDigits: 0,
+          notation: "compact",
+        }).format(p.marketValueInEur)
+      : "Piyasa değeri yok",
+    stats = showStats
+      ? `<small class="player-stats">${p.appearances || 0} maç • ${p.minutesPlayed || 0} dk • ${p.goals || 0} gol • ${p.assists || 0} asist • ${p.yellowCards || 0} sarı • ${p.redCards || 0} kırmızı • ${esc(marketValue)}</small>`
       : "";
-  return `<article class="player-row"><span class="rank">${i}</span><div class="person">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "Milliyet bilinmiyor")}${p.birthDate ? ` • ${p.birthDate.slice(0, 4)}` : ""}</small>${national}</span></div><div class="clubs">${esc(career)}</div><span class="badge">${clubStats}${p.clubIds.length} kulüp</span></article>`;
+  return `<article class="player-row"><span class="rank">${i}</span><div class="person">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "Milliyet bilinmiyor")}${p.birthDate ? ` • ${p.birthDate.slice(0, 4)}` : ""}</small>${national}</span></div><div class="clubs">${esc(career)}${stats}</div><span class="badge">${clubStats}${p.clubIds.length} kulüp</span></article>`;
 }
 function renderCatalog(reset = false) {
   if (reset) catalogPage = 1;

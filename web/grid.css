@@ -468,6 +468,13 @@
   }
 }
 
+.clubs .player-stats {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .league-list,
 .suggestions {
   scrollbar-width: thin;
