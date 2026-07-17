@@ -199,6 +199,41 @@ function chooseComputerMove({
   };
 }
 
+const TWIN_METRICS = Object.freeze([
+  { key: "appearances", label: "Kulüp maçı" },
+  { key: "goals", label: "Kulüp golü" },
+  { key: "assists", label: "Asist" },
+  { key: "nationalGoals", label: "Milli takım golü" },
+]);
+
+function careerTwinRanking(target, pool, metric, excluded = new Set()) {
+  const targetValue = Number(target?.[metric]);
+  if (!Number.isFinite(targetValue)) return [];
+  return pool
+    .filter((player) => player?.id !== target.id && !excluded.has(player?.id) && Number.isFinite(Number(player?.[metric])))
+    .map((player) => ({ player, value: Number(player[metric]), distance: Math.abs(Number(player[metric]) - targetValue) }))
+    .sort((a, b) => a.distance - b.distance || (Number(b.player.appearances) || 0) - (Number(a.player.appearances) || 0) || String(a.player.name).localeCompare(String(b.player.name)));
+}
+
+function chooseTwinComputerGuess({ target, pool, metric, difficulty = "normal", excluded = new Set(), rng = Math.random }) {
+  const ranking = careerTwinRanking(target, pool, metric, excluded);
+  if (!ranking.length) return null;
+  let start = 0, end = Math.min(3, ranking.length);
+  if (difficulty === "normal") {
+    start = Math.min(3, ranking.length - 1);
+    end = Math.min(ranking.length, Math.max(start + 1, Math.ceil(ranking.length * 0.12)));
+  } else if (difficulty === "easy") {
+    start = Math.min(Math.floor(ranking.length * 0.15), ranking.length - 1);
+    end = Math.min(ranking.length, Math.max(start + 1, Math.ceil(ranking.length * 0.45)));
+  }
+  return ranking[start + Math.floor(rng() * (end - start))];
+}
+
+function scoreTwinGuesses(target, metric, first, second) {
+  const targetValue = Number(target?.[metric]), firstDistance = Math.abs(Number(first?.[metric]) - targetValue), secondDistance = Math.abs(Number(second?.[metric]) - targetValue);
+  return { targetValue, distances: [firstDistance, secondDistance], winner: firstDistance === secondDistance ? null : firstDistance < secondDistance ? 0 : 1 };
+}
+
 const api = {
   DIFFICULTIES,
   WINNING_LINES,
@@ -210,6 +245,10 @@ const api = {
   createGridState,
   applyAttempt,
   chooseComputerMove,
+  TWIN_METRICS,
+  careerTwinRanking,
+  chooseTwinComputerGuess,
+  scoreTwinGuesses,
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;
