@@ -164,15 +164,25 @@ function enhanceLeagueSelector(root) {
   for (const league of orderedLeagues) {
     const label = document.createElement("label"),
       input = document.createElement("input"),
-      flag = document.createElement("span"),
+      flag = document.createElement("img"),
       text = document.createElement("span"),
       name = document.createElement("b"),
       meta = document.createElement("small");
     input.type = "checkbox";
     input.value = league.id;
     flag.className = "flag";
-    flag.textContent = countryFlag(league.countryCode);
-    flag.setAttribute("aria-hidden", "true");
+    flag.src = countryFlag(league.countryCode);
+    flag.alt = "";
+    flag.width = 28;
+    flag.height = 28;
+    flag.loading = "lazy";
+    flag.addEventListener("error", () => {
+      const fallback = document.createElement("span");
+      fallback.className = "flag flag-fallback";
+      fallback.textContent = league.countryCode || "?";
+      fallback.setAttribute("aria-hidden", "true");
+      flag.replaceWith(fallback);
+    });
     name.textContent = league.name;
     meta.textContent = `${league.countryName} • ${league.level || 1}. seviye`;
     text.append(name, meta);
@@ -203,8 +213,8 @@ function enhanceLeagueSelector(root) {
 }
 function countryFlag(code) {
   return /^[A-Z]{2}$/.test(code || "")
-    ? String.fromCodePoint(...[...code].map((x) => 127397 + x.charCodeAt()))
-    : "🏳️";
+    ? `web/assets/flags/${code.toLowerCase()}.svg`
+    : "web/assets/flags/gb.svg";
 }
 function buildPairs(mode, difficulty, selectedLeagues) {
   const pairs = [],

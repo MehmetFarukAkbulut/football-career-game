@@ -256,7 +256,19 @@
   height: 20px;
 }
 .league-list .flag {
-  font-size: 22px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  font-size: 12px;
+  font-weight: 900;
+}
+.league-list .flag-fallback {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #0b1d30;
+  color: var(--text);
 }
 .league-list b,
 .league-list small {
@@ -511,4 +523,48 @@
     padding-block: 9px;
     margin-bottom: 9px;
   }
+}
+
+/* Keep the complete landing page visible on desktop without page scrolling. */
+@media (min-width: 901px) {
+  body:has(#home.active) { overflow-y: hidden; }
+  body:has(#home.active) footer { display: none; }
+  #home.active {
+    display: grid;
+    grid-template-rows: minmax(270px, 1.05fr) minmax(230px, 0.72fr);
+    gap: 14px;
+    height: calc(100dvh - 82px);
+    min-height: 0;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+  #home .hero { min-height: 0; gap: 28px; }
+  #home .hero h1 {
+    margin: 10px 0;
+    font-size: clamp(44px, 5.1vw, 68px);
+  }
+  #home .hero p { margin: 8px 0; font-size: 16px; }
+  #home .hero .cta {
+    margin-top: 8px;
+    padding: 11px 18px;
+    font-size: 15px;
+  }
+  #home .orbit {
+    width: clamp(190px, 23dvh, 250px);
+    height: clamp(190px, 23dvh, 250px);
+  }
+  #home .orbit > span { font-size: 74px; }
+  #home .orbit i:nth-child(2) { transform: translate(clamp(92px, 11.5dvh, 122px)); }
+  #home .orbit i:nth-child(3) { transform: rotate(120deg) translate(clamp(92px, 11.5dvh, 122px)); }
+  #home .orbit i:nth-child(4) { transform: rotate(240deg) translate(clamp(92px, 11.5dvh, 122px)); }
+  #home .mode-grid {
+    align-self: stretch;
+    gap: 10px;
+    padding-bottom: 0;
+  }
+  #home .mode-card { min-height: 0; padding: 13px 16px; gap: 12px; }
+  #home .mode-card .icon { font-size: 25px; }
+  #home .mode-card b { font-size: 16px; }
+  #home .mode-card small { margin-top: 3px; font-size: 12px; }
+  #home .mode-card i { font-size: 12px; }
 }
