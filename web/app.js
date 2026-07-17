@@ -147,12 +147,21 @@ function enhanceLeagueSelector(root) {
   const list = document.createElement("div");
   list.className = "league-list";
   fieldset.append(list);
-  for (const league of leagues.sort((a, b) =>
-    `${a.countryName}${a.name}`.localeCompare(
+  const popularLeagueIds = ["GB1", "ES1", "IT1", "FR1", "L1", "TR1"];
+  const orderedLeagues = [...leagues].sort((a, b) => {
+    const rankA = popularLeagueIds.indexOf(a.id),
+      rankB = popularLeagueIds.indexOf(b.id);
+    if (rankA !== -1 || rankB !== -1)
+      return (
+        (rankA === -1 ? popularLeagueIds.length : rankA) -
+        (rankB === -1 ? popularLeagueIds.length : rankB)
+      );
+    return `${a.countryName}${a.name}`.localeCompare(
       `${b.countryName}${b.name}`,
       "tr",
-    ),
-  )) {
+    );
+  });
+  for (const league of orderedLeagues) {
     const label = document.createElement("label"),
       input = document.createElement("input"),
       flag = document.createElement("span"),
@@ -527,8 +536,11 @@ function resetGridSetup() {
   localStorage.removeItem("iki-forma-grid");
   showGridSetup();
 }
-function generateGrid() {
-  const active = clubs.filter((c) => c.active),
+function generateGrid(selectedLeagues = new Set()) {
+  const active = clubs.filter(
+      (c) =>
+        c.active && (!selectedLeagues.size || selectedLeagues.has(c.leagueId)),
+    ),
     ids = new Set(active.map((c) => c.id)),
     near = new Map(active.map((c) => [c.id, new Set()]));
   for (const p of players) {
@@ -562,7 +574,12 @@ function generateGrid() {
   return null;
 }
 function startGridGame() {
-  const board = generateGrid();
+  const selectedLeagues = new Set(
+    [
+      ...$("#gridSetup").querySelectorAll(".grid-league-options input:checked"),
+    ].map((input) => input.value),
+  );
+  const board = generateGrid(selectedLeagues);
   if (!board)
     return toast("Geçerli bir ızgara üretilemedi. Lig seçimini genişletin.");
   grid = IkiFormaCore.createGridState({
@@ -816,6 +833,7 @@ async function init() {
     );
     enhanceLeagueSelector($("#classicSetup"));
     enhanceLeagueSelector($("#countrySetup"));
+    enhanceLeagueSelector($("#gridSetup"));
     const requested = location.hash.slice(1);
     show(
       document.getElementById(requested)?.classList.contains("view")

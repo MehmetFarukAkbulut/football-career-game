@@ -50,7 +50,7 @@ app.whenReady().then(() =>
     await win.loadURL(`http://127.0.0.1:${server.address().port}/`);
     await new Promise((resolve) => setTimeout(resolve, 2500));
     const desktop = await win.webContents.executeJavaScript(
-      `(async()=>{const base={title:document.title,home:document.querySelector('#home')?.classList.contains('active'),cards:document.querySelectorAll('.mode-card').length};document.querySelector('[data-view="classicSetup"]').click();const list=document.querySelector('.league-list'),field=document.querySelector('.league-options'),surface=document.querySelector('.setup.active .surface');const setup={leagueFlags:document.querySelectorAll('.league-list .flag').length,pageOverflow:document.documentElement.scrollHeight-innerHeight,bodyOverflow:getComputedStyle(document.body).overflowY,listScroll:list.scrollHeight>list.clientHeight,outerOverflow:getComputedStyle(field).overflow,cardBottom:surface.getBoundingClientRect().bottom};document.querySelector('[data-view="grid"]').click();const gameModes=document.querySelectorAll('input[name="gridMode"]').length;document.querySelector('#startGrid').click();await new Promise(r=>setTimeout(r,250));return {...base,...setup,gameModes,gridVisible:!document.querySelector('#gridGame').hidden,cells:document.querySelectorAll('[data-cell]').length,crests:document.querySelectorAll('.grid-head img').length,turn:document.querySelector('#gridTurn').textContent}})()`,
+      `(async()=>{const base={title:document.title,home:document.querySelector('#home')?.classList.contains('active'),cards:document.querySelectorAll('.mode-card').length};document.querySelector('[data-view="classicSetup"]').click();const list=document.querySelector('.league-list'),field=document.querySelector('.league-options'),surface=document.querySelector('.setup.active .surface');const setup={leagueFlags:document.querySelectorAll('.league-list .flag').length,popularOrder:[...list.querySelectorAll('input[type="checkbox"]')].slice(0,6).map(x=>x.value),pageOverflow:document.documentElement.scrollHeight-innerHeight,bodyOverflow:getComputedStyle(document.body).overflowY,listScroll:list.scrollHeight>list.clientHeight,outerOverflow:getComputedStyle(field).overflow,cardBottom:surface.getBoundingClientRect().bottom};document.querySelector('[data-view="grid"]').click();const gameModes=document.querySelectorAll('input[name="gridMode"]').length,gridChecks=[...document.querySelectorAll('.grid-league-options input[type="checkbox"]')],gridLeagueCount=gridChecks.length,gridPopularOrder=gridChecks.slice(0,6).map(x=>x.value);gridChecks.slice(0,6).forEach(x=>x.checked=true);document.querySelector('#startGrid').click();await new Promise(r=>setTimeout(r,250));return {...base,...setup,gameModes,gridLeagueCount,gridPopularOrder,gridVisible:!document.querySelector('#gridGame').hidden,cells:document.querySelectorAll('[data-cell]').length,crests:document.querySelectorAll('.grid-head img').length,turn:document.querySelector('#gridTurn').textContent}})()`,
     );
     win.setSize(390, 844);
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -65,6 +65,9 @@ app.whenReady().then(() =>
       !state.gridVisible ||
       state.cells !== 9 ||
       state.gameModes !== 2 ||
+      state.gridLeagueCount < 30 ||
+      state.popularOrder.join(",") !== "GB1,ES1,IT1,FR1,L1,TR1" ||
+      state.gridPopularOrder.join(",") !== "GB1,ES1,IT1,FR1,L1,TR1" ||
       state.leagueFlags < 30 ||
       (state.pageOverflow > 2 && state.bodyOverflow !== "hidden") ||
       !state.listScroll ||
