@@ -105,6 +105,7 @@ function setupScreen(id, title, description, mode) {
   ].sort();
   $(id).innerHTML =
     `<button class="back" data-view="home">← Ana sayfa</button><div class="surface classic-setup"><span class="kicker">OYUN AYARLARI</span><h2>${title}</h2><p>${description}</p><fieldset><legend>Oyun biçimi</legend><div class="segmented game-format"><label><input type="radio" name="${mode}Format" value="solo" checked><span>Tek oyunculu</span></label><label><input type="radio" name="${mode}Format" value="duo"><span>Aynı cihazda iki oyunculu</span></label><label><input type="radio" name="${mode}Format" value="online"><span>Online iki oyunculu</span></label><label><input type="radio" name="${mode}Format" value="computer"><span>Bilgisayara karşı</span></label></div></fieldset><div class="setup-grid"><label>Tur sayısı<select class="rounds"><option>3</option><option selected>5</option><option>10</option><option>15</option></select></label><label>Tur süresi<select class="seconds"><option>15</option><option selected>30</option><option>45</option></select></label><label>Zorluk<select class="difficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select><small class="difficulty-help">Bilinen ve orta seviye kulüplerden dengeli sorular.</small></label><label>Cevap yöntemi<select class="answer-method"><option value="text" selected>Serbest metin</option><option value="multiple">Çoktan seçmeli</option></select><small>Çoktan seçmelide dört ilişkili seçenek gösterilir.</small></label><label>Oyuncu tekrar kullanımı<select class="repeat-players"><option value="no" selected>Her futbolcu bir kez</option><option value="yes">Tekrar kullanılabilir</option></select></label></div><fieldset class="league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend>${leagues.map((league) => `<label><input type="checkbox" value="${esc(league)}"><span>${esc(league)}</span></label>`).join("")}</fieldset><button class="cta start">Oyunu başlat →</button></div>`;
+  $(id).querySelector(".repeat-players")?.closest("label").remove();
   const difficulty = $(id).querySelector(".difficulty"), answer = $(id).querySelector(".answer-method"), help = $(id).querySelector(".difficulty-help");
   difficulty.onchange = () => {
     help.textContent = difficulty.value === "easy" ? "Tanınmış kulüpler, bilinen futbolcular ve daha ayırt edilebilir seçenekler." : difficulty.value === "hard" ? "Daha az bilinen kulüpler, eski kariyerler ve birbirine yakın seçenekler." : "Bilinen ve orta seviye kulüplerden dengeli sorular.";
@@ -358,7 +359,7 @@ function onlineSettingsFromScreen(mode, screen) {
     difficulty: screen.querySelector(".difficulty").value,
     answerMethod: screen.querySelector(".answer-method").value,
     optionCount: 4,
-    repeatPlayers: screen.querySelector(".repeat-players").value === "yes",
+    repeatPlayers: true,
     leagueIds: [...screen.querySelectorAll(".league-options input:checked")].map((input) => input.value),
   };
 }
@@ -370,6 +371,12 @@ function openOnlineLobby(mode, screen) {
   $("#onlineModeNotice").textContent = IkiFormaOnlineService.isLocal
     ? "Geliştirme mock'u etkin: yalnızca bu site adresindeki sekmeler arasında çalışır; internet oyunu değildir."
     : IkiFormaOnlineService.configured ? "Supabase Realtime ile iki farklı cihazdan bağlanabilirsiniz." : "Online servis henüz yapılandırılmadı. README'deki Supabase adımlarını uygulayın veya geliştirme için ?onlineMock=1 kullanın.";
+  show("onlineLobby");
+}
+function openSpecialOnlineLobby(settings) {
+  online = { settings: { ...settings, repeatPlayers: true }, state: null, service: null };
+  $("#onlineEntry").hidden = false; $("#onlineRoomState").hidden = true;
+  $("#onlineModeNotice").textContent = IkiFormaOnlineService.isLocal ? "Geliştirme mock'u etkin; gerçek internet oyunu değildir." : IkiFormaOnlineService.configured ? "Supabase Realtime ile iki farklı cihazdan bağlanabilirsiniz." : "Online servis yapılandırılmadı. README içindeki Supabase adımlarını uygulayın.";
   show("onlineLobby");
 }
 
@@ -465,10 +472,44 @@ $("#onlineStart").onclick = async () => {
 };
 
 function startOnlineMatch() {
+  if (["grid", "twin", "randomFive"].includes(online.state.settings.gameType)) return startOnlineSpecialMatch();
   online.pairs = buildPairs(online.state.settings.gameType, online.state.settings.difficulty, new Set(online.state.settings.leagueIds || []));
   online.usedPlayerIds = new Set();
   show("game");
   if (online.playerIndex === 0) publishNextOnlineQuestion();
+}
+async function startOnlineSpecialMatch() {
+  const settings = online.state.settings;
+  if (online.playerIndex === 0 && !online.state.modeState) {
+    let modeState;
+    if (settings.gameType === "grid") modeState = { kind: "grid", value: settings.initialState };
+    if (settings.gameType === "twin") modeState = { kind: "twin", value: settings.initialState };
+    if (settings.gameType === "randomFive") modeState = { kind: "randomFive", value: settings.initialState };
+    await mutateOnline({ type: "mode_state", modeState, currentTurn: 0, scores: [0, 0] });
+  }
+  handleOnlineSpecialState();
+}
+function handleOnlineSpecialState() {
+  const snapshot = online.state?.modeState;
+  if (!snapshot) return;
+  if (snapshot.kind === "grid") {
+    show("grid"); grid = snapshot.value; grid.mode = "online"; grid.online = true;
+    grid.players = online.state.players.map((player, index) => ({ ...grid.players[index], name: player.name, computer: false }));
+    $("#gridSetup").hidden = true; $("#gridGame").hidden = false; $("#gridResults").hidden = true; setGridPlaying(true); renderGrid(); announceTurn();
+    if (grid.status === "finished") finishGrid();
+  } else if (snapshot.kind === "twin") {
+    hydrateOnlineTwin(snapshot.value); show("twinGame"); if (snapshot.value.finished) return renderOnlineSpecialFinished("twin"); renderTwinTurn(); if (twin.guesses.length === 2) renderTwinSnapshotReveal();
+  } else if (snapshot.kind === "randomFive") {
+    hydrateOnlineRandomFive(snapshot.value); show("randomFiveGame"); if (snapshot.value.finished) return renderOnlineSpecialFinished("randomFive"); renderRandomFiveRound(); if (randomFive.guesses.length === 2) renderRandomFiveSnapshotReveal();
+  }
+}
+function renderOnlineSpecialFinished(kind) {
+  const state = kind === "twin" ? twin : randomFive, winner = state.scores[0] === state.scores[1] ? "Berabere!" : `${state.names[state.scores[0] > state.scores[1] ? 0 : 1]} kazandı!`;
+  const prompt = kind === "twin" ? $("#twinPrompt") : $("#randomFivePrompt"), turn = kind === "twin" ? $("#twinTurn") : $("#randomFiveTurn");
+  prompt.textContent = `🏆 ${winner}`; turn.textContent = `${state.names[0]}: ${state.scores[0]} · ${state.names[1]}: ${state.scores[1]}`;
+}
+async function syncSpecialState(kind, value, currentTurn, scores) {
+  online.state = await online.service.mutate(online.state.roomCode, online.token, online.state.stateVersion, { type: "mode_state", modeState: { kind, value }, currentTurn, scores });
 }
 
 async function publishNextOnlineQuestion() {
@@ -503,6 +544,7 @@ async function publishNextOnlineQuestion() {
 function handleOnlineState() {
   const state = online.state;
   if (!state) return;
+  if (["grid", "twin", "randomFive"].includes(state.settings.gameType)) return handleOnlineSpecialState();
   if (state.status === "finished") {
     clearInterval(timer);
     const names = state.players.map((player) => player.name), winner = state.scores[0] === state.scores[1] ? "Berabere" : `${names[state.scores[0] > state.scores[1] ? 0 : 1]} kazandı`;
@@ -913,6 +955,10 @@ function startGridGame() {
     names: [$("#gridNameOne").value, $("#gridNameTwo").value],
   });
   grid.grid = board;
+  if (grid.mode === "online") {
+    grid.mode = "duo"; grid.players[1].computer = false;
+    return openSpecialOnlineLobby({ gameType: "grid", difficulty: grid.difficulty, leagueIds: [...selectedLeagues], initialState: grid });
+  }
   $("#gridSetup").hidden = true;
   $("#gridGame").hidden = false;
   $("#gridResults").hidden = true;
@@ -961,6 +1007,7 @@ function renderGridStatus() {
 }
 function openGridEntry(i) {
   if (grid.thinking || grid.players[grid.currentTurn].computer) return;
+  if (grid.online && online.state.currentTurn !== online.playerIndex) return toast("Sıra rakibinizde.");
   grid.selectedCell = i;
   const r = grid.grid.rows[Math.floor(i / 3)],
     c = grid.grid.cols[i % 3];
@@ -971,7 +1018,7 @@ function openGridEntry(i) {
   renderGrid();
   $("#gridInput").focus();
 }
-function submitGridPlayer(player) {
+async function submitGridPlayer(player) {
   if (!player || grid.selectedCell == null) return;
   const i = grid.selectedCell,
     r = grid.grid.rows[Math.floor(i / 3)],
@@ -997,7 +1044,10 @@ function submitGridPlayer(player) {
   $("#gridMessage").textContent = valid
     ? `${player.name}: Doğru!`
     : `${player.name} ortak oyuncu değil. Sıra değişti.`;
-  saveGrid();
+  if (grid.online) {
+    await syncSpecialState("grid", grid, grid.currentTurn, grid.scores);
+    online.state.modeState.value = grid;
+  } else saveGrid();
   renderGrid();
   grid.status === "finished" ? finishGrid() : announceTurn();
 }
@@ -1141,6 +1191,11 @@ function shuffle(items) {
   }
   return result;
 }
+function renderPlayerChoices(root, choices, callback) {
+  root.classList.add("inline-choices");
+  root.innerHTML = choices.map((player, index) => `<button class="player-suggestion" data-choice="${player.id}"><span class="choice-key">${index + 1}</span>${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")}</small></span></button>`).join("");
+  root.querySelectorAll("[data-choice]").forEach((button) => button.onclick = () => callback(indexes.playerById.get(+button.dataset.choice)));
+}
 function buildRandomFiveSet(allowedClubs, pool) {
   const availableIds = new Set(allowedClubs.map((club) => club.id)),
     anchors = pool.filter((player) => player.clubIds.filter((id) => availableIds.has(id)).length >= 2),
@@ -1161,33 +1216,46 @@ function startRandomFiveGame() {
   if (allowedClubs.length < 5) return toast("Bu lig seçiminde en az beş kulüp gerekli.");
   randomFive = {
     mode,
+    answerMethod: $("#randomFiveAnswerMethod").value,
     difficulty: $("#randomFiveDifficulty").value,
     names: [$("#randomFiveNameOne").value.trim() || "Oyuncu 1", mode === "duo" ? $("#randomFiveNameTwo").value.trim() || "Oyuncu 2" : "Bilgisayar"],
     scores: [0, 0], round: 0, guesses: [], used: [new Set(), new Set()], pool,
     sets: Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool)),
   };
+  if (mode === "online") {
+    const initialState = { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: [0, 0], round: 0, guesses: [], setIds: randomFive.sets.map((set) => set.map((club) => club.id)) };
+    return openSpecialOnlineLobby({ gameType: "randomFive", difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, rounds: 5, leagueIds: [...context.selected], initialState });
+  }
   if (randomFive.sets.some((set) => set.length < 5)) return toast("Beşli kulüp seti oluşturulamadı.");
   show("randomFiveGame");
   renderRandomFiveRound();
 }
 function renderRandomFiveRound() {
   const set = randomFive.sets[randomFive.round];
-  randomFive.guesses = [];
+  if (!randomFive.online) randomFive.guesses = [];
   $("#randomFiveRound").textContent = `Set ${randomFive.round + 1}/5`;
   $("#randomFiveScore").innerHTML = `<b>${esc(randomFive.names[0])} ${randomFive.scores[0]}</b><span>—</span><b>${randomFive.scores[1]} ${esc(randomFive.names[1])}</b>`;
   $("#randomFiveClubs").innerHTML = set.map((club) => `<article>${logo(club)}<b>${esc(club.name)}</b><small>${esc(club.league || "")}</small></article>`).join("");
   $("#randomFivePrompt").textContent = "Bu beşlinin kaçında oynayan bir futbolcu bulabilirsin?";
   $("#randomFiveTurn").textContent = `${randomFive.names[0]} tahminini girsin.`;
+  if (randomFive.online) $("#randomFiveTurn").textContent = `${randomFive.names[online.state.currentTurn]} tahminini girsin.`;
   $("#randomFiveInput").value = "";
   $("#randomFiveInput").disabled = false;
+  $("#randomFiveInput").hidden = randomFive.answerMethod === "multiple";
   $("#randomFiveGame .random-five-answer").hidden = false;
   $("#randomFiveSuggestions").innerHTML = "";
+  $("#randomFiveSuggestions").classList.toggle("inline-choices", randomFive.answerMethod === "multiple");
+  if (randomFive.answerMethod === "multiple") {
+    const choices = IkiFormaCore.randomFiveRanking(randomFive.pool, set.map((club) => club.id)).slice(0, 4).map((entry) => entry.player);
+    renderPlayerChoices($("#randomFiveSuggestions"), choices, submitRandomFiveGuess);
+  }
   $("#randomFiveReveal").hidden = true;
   $("#randomFiveNext").hidden = true;
   $("#randomFiveInput").focus();
 }
-function submitRandomFiveGuess(player) {
+async function submitRandomFiveGuess(player) {
   if (!player) return;
+  if (randomFive.online && online.state.currentTurn !== online.playerIndex) return toast("Sıra rakibinizde.");
   const ids = randomFive.sets[randomFive.round].map((club) => club.id);
   if (!IkiFormaCore.randomFiveScore(player, ids)) return toast("Bu futbolcu gösterilen kulüplerin hiçbirinde oynamadı.");
   randomFive.guesses.push(player);
@@ -1197,11 +1265,16 @@ function submitRandomFiveGuess(player) {
     $("#randomFiveTurn").textContent = `${randomFive.names[1]} tahminini girsin. İlk tahmin gizlendi.`;
     return $("#randomFiveInput").focus();
   }
+  if (randomFive.online && randomFive.guesses.length === 1) {
+    await syncSpecialState("randomFive", serializeOnlineRandomFive(), 1, randomFive.scores);
+    return handleOnlineSpecialState();
+  }
   if (randomFive.mode === "computer" && randomFive.guesses.length === 1) {
     const guess = IkiFormaCore.chooseRandomFiveComputer({ pool: randomFive.pool, clubIds: ids, difficulty: randomFive.difficulty });
     if (guess) randomFive.guesses.push(guess.player);
   }
   revealRandomFiveRound();
+  if (randomFive.online) await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores);
 }
 function revealRandomFiveRound() {
   const ids = randomFive.sets[randomFive.round].map((club) => club.id),
@@ -1215,9 +1288,10 @@ function revealRandomFiveRound() {
   $("#randomFiveNext").hidden = false;
   $("#randomFiveScore").innerHTML = `<b>${esc(randomFive.names[0])} ${randomFive.scores[0]}</b><span>—</span><b>${randomFive.scores[1]} ${esc(randomFive.names[1])}</b>`;
 }
-function nextRandomFiveRound() {
+async function nextRandomFiveRound() {
+  if (randomFive.online && online.playerIndex !== 0) return toast("Sonraki seti oda sahibi açar.");
   randomFive.round++;
-  if (randomFive.round < 5) return renderRandomFiveRound();
+  if (randomFive.round < 5) { randomFive.guesses = []; if (randomFive.online) await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores); return renderRandomFiveRound(); }
   const winner = randomFive.scores[0] === randomFive.scores[1] ? "Berabere!" : `${randomFive.names[randomFive.scores[0] > randomFive.scores[1] ? 0 : 1]} kazandı!`;
   $("#randomFiveClubs").innerHTML = "";
   $("#randomFivePrompt").textContent = `🏆 ${winner}`;
@@ -1226,6 +1300,17 @@ function nextRandomFiveRound() {
   $("#randomFiveReveal").innerHTML = '<button class="cta" data-view="randomFiveSetup">Yeniden oyna</button>';
   $("#randomFiveReveal").hidden = false;
   $("#randomFiveNext").hidden = true;
+  if (randomFive.online) await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores);
+}
+function renderRandomFiveSnapshotReveal() {
+  const ids = randomFive.sets[randomFive.round].map((club) => club.id), points = randomFive.guesses.map((player) => IkiFormaCore.randomFiveScore(player, ids));
+  $("#randomFiveReveal").innerHTML = randomFive.guesses.map((player, index) => `<article class="${points[index] === Math.max(...points) ? "winner" : ""}">${person(player)}<div><small>${esc(randomFive.names[index])}</small><b>${esc(player.name)}</b><span>${points[index]} kulüp</span></div></article>`).join("");
+  $("#randomFiveReveal").hidden = false; $("#randomFiveNext").hidden = online.playerIndex !== 0; $("#randomFiveInput").disabled = true;
+}
+function serializeOnlineRandomFive() { return { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: randomFive.scores, round: randomFive.round, guesses: randomFive.guesses.map((player) => player.id), setIds: randomFive.sets.map((set) => set.map((club) => club.id)), finished: randomFive.round >= 5 }; }
+function hydrateOnlineRandomFive(value) {
+  const selected = new Set(online.state.settings.leagueIds || []), clubIds = new Set(clubs.filter((club) => !selected.size || selected.has(club.leagueId)).map((club) => club.id));
+  randomFive = { ...value, online: true, mode: "online", names: online.state.players.map((player) => player.name), pool: players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), sets: value.setIds.map((set) => set.map((id) => clubMap.get(+id))), guesses: value.guesses.map((id) => indexes.playerById.get(+id)).filter(Boolean), used: [new Set(), new Set()] };
 }
 $("#randomFiveInput").oninput = (event) => {
   const q = norm(event.target.value), ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [];
@@ -1245,6 +1330,7 @@ function startTwinGame() {
   if (targets.length < 2) return toast("Yeterli doğrulanmış kariyer bulunamadı.");
   twin = {
     mode,
+    answerMethod: $("#twinAnswerMethod").value,
     difficulty: $("#twinDifficulty").value,
     names: [$("#twinNameOne").value.trim() || "Oyuncu 1", mode === "duo" ? $("#twinNameTwo").value.trim() || "Oyuncu 2" : "Bilgisayar"],
     scores: [0, 0],
@@ -1256,6 +1342,10 @@ function startTwinGame() {
     pool,
     targets: [...targets].sort(() => Math.random() - 0.5).slice(0, +$("#twinRounds").value),
   };
+  if (mode === "online") {
+    const initialState = { difficulty: twin.difficulty, answerMethod: twin.answerMethod, scores: [0, 0], round: 0, rounds: twin.rounds, metric: 0, guesses: [], targetIds: twin.targets.map((player) => player.id) };
+    return openSpecialOnlineLobby({ gameType: "twin", difficulty: twin.difficulty, answerMethod: twin.answerMethod, rounds: twin.rounds, leagueIds: [...selectedLeagueContext($("#twinSetup")).selected], initialState });
+  }
   show("twinGame");
   beginTwinRound();
 }
@@ -1273,17 +1363,26 @@ function renderTwinTurn() {
   $("#twinMetricStep").textContent = `METRİK ${twin.metric + 1}/4`;
   $("#twinPrompt").textContent = `${metric.label} değerine en yakın futbolcu kim?`;
   $("#twinTurn").textContent = `${twin.names[0]} tahminini girsin.`;
+  if (twin.online) $("#twinTurn").textContent = `${twin.names[online.state.currentTurn]} tahminini girsin.`;
   $("#twinInput").value = "";
   $("#twinInput").disabled = false;
+  $("#twinInput").hidden = twin.answerMethod === "multiple";
   $("#twinGame .twin-answer").hidden = false;
   $("#twinInput").focus();
   $("#twinSuggestions").innerHTML = "";
+  $("#twinSuggestions").classList.toggle("inline-choices", twin.answerMethod === "multiple");
+  if (twin.answerMethod === "multiple") {
+    const ranked = IkiFormaCore.careerTwinRanking(target, twin.pool, metric.key);
+    const choices = [ranked[0], ranked[3], ranked[7], ranked[12]].filter(Boolean).map((entry) => entry.player);
+    renderPlayerChoices($("#twinSuggestions"), choices, submitTwinGuess);
+  }
   $("#twinMessage").textContent = "";
   $("#twinReveal").hidden = true;
   $("#twinNext").hidden = true;
 }
-function submitTwinGuess(player) {
+async function submitTwinGuess(player) {
   if (!player || player.id === twin.targets[twin.round].id) return toast("Hedef futbolcu tahmin edilemez.");
+  if (twin.online && online.state.currentTurn !== online.playerIndex) return toast("Sıra rakibinizde.");
   twin.guesses.push(player);
   $("#twinInput").value = "";
   $("#twinSuggestions").innerHTML = "";
@@ -1292,11 +1391,16 @@ function submitTwinGuess(player) {
     $("#twinInput").focus();
     return;
   }
+  if (twin.online && twin.guesses.length === 1) {
+    await syncSpecialState("twin", serializeOnlineTwin(), 1, twin.scores);
+    return handleOnlineSpecialState();
+  }
   if (twin.mode === "computer" && twin.guesses.length === 1) {
     const guess = IkiFormaCore.chooseTwinComputerGuess({ target: twin.targets[twin.round], pool: twin.pool, metric: IkiFormaCore.TWIN_METRICS[twin.metric].key, difficulty: twin.difficulty });
     if (guess) twin.guesses.push(guess.player);
   }
   revealTwinMetric();
+  if (twin.online) await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores);
 }
 function revealTwinMetric() {
   const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric], result = IkiFormaCore.scoreTwinGuesses(target, metric.key, twin.guesses[0], twin.guesses[1]);
@@ -1310,10 +1414,11 @@ function revealTwinMetric() {
   $("#twinNext").hidden = false;
   $("#twinScore").innerHTML = `<b>${esc(twin.names[0])} ${twin.scores[0]}</b><span>—</span><b>${twin.scores[1]} ${esc(twin.names[1])}</b>`;
 }
-function nextTwinStep() {
-  if (twin.metric < 3) { twin.metric++; twin.guesses = []; return renderTwinTurn(); }
+async function nextTwinStep() {
+  if (twin.online && online.playerIndex !== 0) return toast("Sonraki adımı oda sahibi açar.");
+  if (twin.metric < 3) { twin.metric++; twin.guesses = []; if (twin.online) await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores); return renderTwinTurn(); }
   twin.round++;
-  if (twin.round < twin.rounds) return beginTwinRound();
+  if (twin.round < twin.rounds) { beginTwinRound(); if (twin.online) await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores); return; }
   const winner = twin.scores[0] === twin.scores[1] ? "Berabere!" : `${twin.names[twin.scores[0] > twin.scores[1] ? 0 : 1]} kazandı!`;
   $("#twinTarget").innerHTML = "";
   $("#twinMetricStep").textContent = "OYUN TAMAMLANDI";
@@ -1323,6 +1428,18 @@ function nextTwinStep() {
   $("#twinReveal").innerHTML = '<button class="cta" data-view="twinSetup">Yeniden oyna</button>';
   $("#twinReveal").hidden = false;
   $("#twinNext").hidden = true;
+  if (twin.online) await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores);
+}
+function renderTwinSnapshotReveal() {
+  const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric], result = IkiFormaCore.scoreTwinGuesses(target, metric.key, twin.guesses[0], twin.guesses[1]);
+  $("#twinReveal").innerHTML = twin.guesses.map((player, index) => `<article class="${result.winner === null || result.winner === index ? "winner" : ""}">${person(player)}<div><small>${esc(twin.names[index])}</small><b>${esc(player.name)}</b><span>${Number(player[metric.key]).toLocaleString("tr-TR")} · fark ${result.distances[index].toLocaleString("tr-TR")}</span></div></article>`).join("");
+  $("#twinReveal").hidden = false; $("#twinNext").hidden = online.playerIndex !== 0; $("#twinInput").disabled = true;
+}
+function serializeOnlineTwin() { return { difficulty: twin.difficulty, answerMethod: twin.answerMethod, scores: twin.scores, round: twin.round, rounds: twin.rounds, metric: twin.metric, guesses: twin.guesses.map((player) => player.id), targetIds: twin.targets.map((player) => player.id), finished: twin.round >= twin.rounds }; }
+function hydrateOnlineTwin(value) {
+  const selected = new Set(online.state.settings.leagueIds || []), clubIds = new Set(clubs.filter((club) => !selected.size || selected.has(club.leagueId)).map((club) => club.id));
+  const pool = players.filter((player) => player.statisticsComplete && player.appearances >= 50 && player.clubIds.some((id) => clubIds.has(id)) && IkiFormaCore.TWIN_METRICS.every((metric) => Number.isFinite(Number(player[metric.key]))));
+  twin = { ...value, online: true, mode: "online", names: online.state.players.map((player) => player.name), pool, targets: value.targetIds.map((id) => indexes.playerById.get(+id)), guesses: value.guesses.map((id) => indexes.playerById.get(+id)).filter(Boolean), used: [new Set(), new Set()] };
 }
 $("#twinInput").oninput = (event) => {
   const q = norm(event.target.value);

@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://tmssl.akamaized.net" />
     <link rel="stylesheet" href="web/app.css" />
     <link rel="stylesheet" href="web/multiple-choice.css?v=1" />
+    <link rel="stylesheet" href="web/setup-fixes.css?v=1" />
   </head>
   <body>
     <div class="ambient one"></div>
@@ -135,11 +136,13 @@
           <fieldset><legend>Oyun modu</legend><div class="segmented">
             <label><input type="radio" name="twinMode" value="computer" checked /><span>Bilgisayara karşı</span></label>
             <label><input type="radio" name="twinMode" value="duo" /><span>İki oyunculu</span></label>
+            <label><input type="radio" name="twinMode" value="online" /><span>Online iki oyunculu</span></label>
           </div></fieldset>
           <div class="twin-settings">
             <label>Hedef futbolcu sayısı<select id="twinRounds"><option>3</option><option selected>5</option><option>10</option></select></label>
             <label id="twinDifficultyWrap">Bilgisayar zorluğu<select id="twinDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label>
           </div>
+          <label>Cevap yöntemi<select id="twinAnswerMethod"><option value="text">Serbest metin</option><option value="multiple">Çoktan seçmeli</option></select></label>
           <div id="twinNames" class="twin-settings"><label>Oyuncu 1<input id="twinNameOne" maxlength="24" value="Oyuncu 1" /></label><label id="twinNameTwoWrap" hidden>Oyuncu 2<input id="twinNameTwo" maxlength="24" value="Oyuncu 2" /></label></div>
           <fieldset class="league-options twin-league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend></fieldset>
           <details class="rules"><summary>Nasıl oynanır?</summary><p>Her hedefte kulüp maçı, kulüp golü, asist ve milli takım golü ayrı ayrı oynanır. Tahminin hedef değere rakibinden daha yakınsa puanı sen alırsın.</p></details>
@@ -164,12 +167,14 @@
           <fieldset><legend>Oyun modu</legend><div class="segmented">
             <label><input type="radio" name="randomFiveMode" value="computer" checked /><span>Bilgisayara karşı</span></label>
             <label><input type="radio" name="randomFiveMode" value="duo" /><span>İki oyunculu</span></label>
+            <label><input type="radio" name="randomFiveMode" value="online" /><span>Online iki oyunculu</span></label>
           </div></fieldset>
           <div class="twin-settings">
             <label id="randomFiveDifficultyWrap">Bilgisayar zorluğu<select id="randomFiveDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label>
             <label>Oyuncu 1<input id="randomFiveNameOne" maxlength="24" value="Oyuncu 1" /></label>
             <label id="randomFiveNameTwoWrap" hidden>Oyuncu 2<input id="randomFiveNameTwo" maxlength="24" value="Oyuncu 2" /></label>
           </div>
+          <label>Cevap yöntemi<select id="randomFiveAnswerMethod"><option value="text">Serbest metin</option><option value="multiple">Çoktan seçmeli</option></select></label>
           <fieldset class="league-options random-five-league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend></fieldset>
           <details class="rules"><summary>Nasıl oynanır?</summary><p>Her sette beş farklı kulüp gelir. Tahmin ettiğin futbolcu bu kulüplerden kaçının A takımında oynadıysa o kadar puan kazanırsın. Beş set sonunda toplam puanı yüksek olan kazanır.</p></details>
           <button id="startRandomFive" class="cta">Oyunu başlat →</button>
@@ -320,6 +325,7 @@
                   >İki oyunculu</span
                 ></label
               >
+              <label><input type="radio" name="gridMode" value="online" /><span>Online iki oyunculu</span></label>
             </div>
           </fieldset>
           <label id="gridDifficultyWrap"

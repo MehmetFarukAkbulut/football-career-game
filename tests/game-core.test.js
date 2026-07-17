@@ -94,22 +94,20 @@ test("yanlış tahmin hücreyi doldurmadan sırayı değiştirir", () => {
   assert.equal(next.grid.marks[0], null);
   assert.equal(next.wrong[0], 1);
 });
-test("doğru tahmin skor ve kullanılan kimlikleri günceller", () => {
+test("doğru tahmin skoru günceller ve oyuncuyu tekrar kullanılabilir bırakır", () => {
   const state = createGridState();
   state.grid = { marks: Array(9).fill(null) };
   const next = applyAttempt(state, { cellIndex: 0, playerId: 10, valid: true });
   assert.equal(next.scores[0], 1);
-  assert.deepEqual(next.usedPlayerIds, [10]);
+  assert.deepEqual(next.usedPlayerIds, []);
   assert.equal(next.grid.marks[0].owner, 0);
 });
-test("kullanılan oyuncu tekrar kullanılamaz", () => {
+test("kullanılan oyuncu farklı hücrede tekrar kullanılabilir", () => {
   const state = createGridState();
   state.grid = { marks: Array(9).fill(null) };
   state.usedPlayerIds = [10];
-  assert.throws(
-    () => applyAttempt(state, { cellIndex: 1, playerId: 10, valid: true }),
-    /PLAYER_USED/,
-  );
+  const next = applyAttempt(state, { cellIndex: 1, playerId: 10, valid: true });
+  assert.equal(next.grid.marks[1].playerId, 10);
 });
 test("yatay üçlü XOX çizgisi oyunu anında bitirir", () => {
   let state = createGridState({ mode: "duo" });

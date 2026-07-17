@@ -2,6 +2,8 @@
 
 GitHub Pages üzerinde çalışan, 28 binden fazla doğrulanmış oyuncu kariyerini kullanan futbol bilgi oyunu. İki Forma ve Ülke × Forma oyunları serbest metin veya dört seçenekli oynanabilir; tek oyuncu, aynı cihazda iki oyuncu, bilgisayara karşı ve Supabase destekli online iki oyuncu biçimleri bulunur.
 
+Kulüp Izgarası, Kariyer İkizi ve Rastgele Beşler de aynı oda kodlu online altyapıyı kullanır. Kariyer İkizi ve Rastgele Beşler serbest metin veya dört seçenekli oynanabilir. Futbolcular farklı sorularda ve hücrelerde tekrar kullanılabilir; bunun için ayrıca bir ayar gösterilmez.
+
 ## Oyun ve soru kuralları
 
 - İki Forma doğru cevabı iki hedef kulübün de A takımında oynamıştır. Yanlış seçeneklerin her biri kulüplerden tam olarak birinde oynamıştır.

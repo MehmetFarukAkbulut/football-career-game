@@ -279,7 +279,6 @@ function createGridState({
 function applyAttempt(state, { cellIndex, playerId, valid }) {
   if (state.status !== "playing" || state.thinking)
     throw new Error("GAME_LOCKED");
-  if (state.usedPlayerIds.includes(playerId)) throw new Error("PLAYER_USED");
   const key = String(cellIndex),
     attempted = state.attempts[key] || [];
   if (attempted.includes(playerId)) throw new Error("ATTEMPT_REPEATED");
@@ -297,7 +296,6 @@ function applyAttempt(state, { cellIndex, playerId, valid }) {
   if (valid) {
     next.scores[turn]++;
     next.correct[turn]++;
-    next.usedPlayerIds.push(playerId);
     next.grid = { ...state.grid, marks: [...state.grid.marks] };
     next.grid.marks[cellIndex] = { owner: turn, playerId };
   } else next.wrong[turn]++;

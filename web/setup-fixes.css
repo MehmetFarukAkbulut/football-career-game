@@ -1,0 +1,4 @@
+.setup .surface,.grid-setup,.twin-setup,.random-five-setup{position:relative}
+.setup .cta.start,#startGrid,#startTwin,#startRandomFive{position:sticky;bottom:12px;z-index:25;margin-top:16px;box-shadow:0 12px 32px #020a12e6}
+@media(max-width:620px){.setup .cta.start,#startGrid,#startTwin,#startRandomFive{width:100%;bottom:8px}}
+.suggestions.inline-choices{position:static;display:grid;grid-template-columns:repeat(2,1fr);max-height:none;margin-top:10px}.suggestions.inline-choices .player-suggestion{display:grid;grid-template-columns:28px 48px 1fr;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px}.suggestions.inline-choices .choice-key{font-weight:900;color:var(--mint)}@media(max-width:620px){.suggestions.inline-choices{grid-template-columns:1fr}}
