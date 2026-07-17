@@ -9,7 +9,7 @@ function generateRoomCode(bytes = secureRandomBytes(6)) {
   return [...bytes].map((byte) => ROOM_CODE_ALPHABET[byte % ROOM_CODE_ALPHABET.length]).join("").slice(0, 6);
 }
 function createOnlineRoom({ code, hostName = "Oyuncu 1", settings, now = Date.now() }) {
-  return { roomCode: code || generateRoomCode(), stateVersion: 1, status: "waiting", createdAt: now, expiresAt: now + ROOM_TTL_MS, questionSequence: 0, settings: { ...settings, locked: false }, currentTurn: 0, scores: [0, 0], players: [{ name: hostName.trim() || "Oyuncu 1", ready: false, connected: true, host: true }, null], question: null, answeredBy: null, selectedPlayerId: null, answerResult: null };
+  return { roomCode: code || generateRoomCode(), stateVersion: 1, status: "waiting", createdAt: now, expiresAt: now + ROOM_TTL_MS, questionSequence: 0, settings: { ...settings, locked: false }, currentTurn: 0, scores: [0, 0], usedPlayerIds: [], players: [{ name: hostName.trim() || "Oyuncu 1", ready: false, connected: true, host: true }, null], question: null, answeredBy: null, selectedPlayerId: null, answerResult: null };
 }
 function assertMutable(state, expectedVersion, now = Date.now()) {
   if (!state) throw new Error("ROOM_NOT_FOUND");
@@ -54,10 +54,12 @@ function submitOnlineAnswer(state, { playerIndex, questionId, selectedPlayerId, 
   if (state.answeredBy !== null) throw new Error("QUESTION_ALREADY_ANSWERED");
   if (state.question.questionId !== questionId) throw new Error("STALE_QUESTION");
   if (state.question.optionPlayerIds?.length && !state.question.optionPlayerIds.map(Number).includes(+selectedPlayerId)) throw new Error("INVALID_OPTION");
+  if (!state.settings.repeatPlayers && state.usedPlayerIds.includes(+selectedPlayerId)) throw new Error("PLAYER_USED");
   const correctIds = (state.question.validPlayerIds || [state.question.correctPlayerId]).map(Number);
   const correct = correctIds.includes(+selectedPlayerId), scores = [...state.scores];
   if (correct) scores[playerIndex] += 1;
-  return advance(state, { scores, answeredBy: playerIndex, selectedPlayerId: +selectedPlayerId, answerResult: correct ? "correct" : "wrong", currentTurn: correct ? playerIndex : playerIndex ? 0 : 1 });
+  const usedPlayerIds = state.settings.repeatPlayers ? state.usedPlayerIds : [...state.usedPlayerIds, +selectedPlayerId];
+  return advance(state, { scores, usedPlayerIds, answeredBy: playerIndex, selectedPlayerId: +selectedPlayerId, answerResult: correct ? "correct" : "wrong", currentTurn: correct ? playerIndex : playerIndex ? 0 : 1 });
 }
 function passOnlineTurn(state, { playerIndex, questionId, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
