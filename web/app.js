@@ -505,6 +505,7 @@ $("#compareCountry").onchange = () => {
 $("#compareLeague").onchange = renderCompareOptions;
 function showGridSetup() {
   clearTimeout(computerTimer);
+  setGridPlaying(false);
   $("#gridSetup").hidden = false;
   $("#gridGame").hidden = true;
   $("#gridResults").hidden = true;
@@ -524,6 +525,7 @@ function openGrid() {
       $("#gridSetup").hidden = true;
       $("#gridGame").hidden = false;
       $("#gridResults").hidden = true;
+      setGridPlaying(true);
       renderGrid();
       announceTurn();
       return;
@@ -535,6 +537,15 @@ function openGrid() {
 function resetGridSetup() {
   localStorage.removeItem("iki-forma-grid");
   showGridSetup();
+}
+function setGridPlaying(active) {
+  const view = $("#grid");
+  if (active) {
+    view.classList.remove("grid-playing");
+    window.scrollTo({ top: 0, behavior: "auto" });
+    view.classList.add("grid-playing");
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
+  } else view.classList.remove("grid-playing");
 }
 function generateGrid(selectedLeagues = new Set()) {
   const active = clubs.filter(
@@ -591,6 +602,7 @@ function startGridGame() {
   $("#gridSetup").hidden = true;
   $("#gridGame").hidden = false;
   $("#gridResults").hidden = true;
+  setGridPlaying(true);
   renderGrid();
   announceTurn();
 }
@@ -721,6 +733,7 @@ function finishGrid() {
       : `${grid.players[grid.scores[0] > grid.scores[1] ? 0 : 1].name} kazandı`;
   $("#gridGame").hidden = true;
   $("#gridResults").hidden = false;
+  setGridPlaying(true);
   $("#gridResults").innerHTML =
     `<span class="trophy">🏆</span><h2>${esc(winner)}</h2><p>${esc(grid.players[0].name)}: ${grid.scores[0]} • ${esc(grid.players[1].name)}: ${grid.scores[1]}</p><p>Doğru: ${grid.correct.join(" / ")} • Yanlış: ${grid.wrong.join(" / ")}</p><button id="gridAgain" class="cta">Yeni oyun</button>`;
   $("#gridAgain").onclick = showGridSetup;
