@@ -7,7 +7,7 @@ const data = JSON.parse(
   fs.readFileSync(path.join(__dirname, "..", "data", "web-data.json"), "utf8"),
 );
 test("web verisi lig ve ülke metadata alanlarını içerir", () => {
-  assert.equal(data.version, 5);
+  assert.equal(data.version, 6);
   assert.ok(data.leagues.length >= 30);
   assert.ok(
     data.leagues.every(
