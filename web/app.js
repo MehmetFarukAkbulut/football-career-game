@@ -45,6 +45,7 @@ let DATA,
   timer,
   grid = {},
   twin = {},
+  randomFive = {},
   computerTimer;
 function toast(message) {
   $("#toast").textContent = message;
@@ -823,16 +824,131 @@ $$('input[name="gridMode"]').forEach(
     }),
 );
 
-function twinPool() {
+function selectedLeagueContext(root) {
+  const selected = new Set([...root.querySelectorAll(".league-options input:checked")].map((input) => input.value)),
+    allowedClubs = clubs.filter((club) => !selected.size || selected.has(club.leagueId || `${club.country}:${club.league}`)),
+    clubIds = new Set(allowedClubs.map((club) => club.id));
+  return { selected, allowedClubs, clubIds };
+}
+function twinPool(root = $("#twinSetup")) {
+  const { clubIds } = selectedLeagueContext(root);
   return players.filter(
     (p) =>
       p.statisticsComplete &&
       p.appearances >= 50 &&
+      p.clubIds.some((id) => clubIds.has(id)) &&
       IkiFormaCore.TWIN_METRICS.every((metric) =>
         Number.isFinite(Number(p[metric.key])),
       ),
   );
 }
+
+function shuffle(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+function buildRandomFiveSet(allowedClubs, pool) {
+  const availableIds = new Set(allowedClubs.map((club) => club.id)),
+    anchors = pool.filter((player) => player.clubIds.filter((id) => availableIds.has(id)).length >= 2),
+    anchor = anchors[Math.floor(Math.random() * anchors.length)],
+    linked = shuffle((anchor?.clubIds || []).filter((id) => availableIds.has(id))).slice(0, 2 + Math.floor(Math.random() * 3)),
+    chosen = new Set(linked);
+  for (const club of shuffle(allowedClubs)) {
+    if (chosen.size >= 5) break;
+    chosen.add(club.id);
+  }
+  return [...chosen].slice(0, 5).map((id) => clubMap.get(id));
+}
+function startRandomFiveGame() {
+  const mode = $('input[name="randomFiveMode"]:checked').value,
+    context = selectedLeagueContext($("#randomFiveSetup")),
+    allowedClubs = context.allowedClubs.filter((club) => club.active !== false),
+    pool = players.filter((player) => player.clubIds.some((id) => context.clubIds.has(id)));
+  if (allowedClubs.length < 5) return toast("Bu lig seçiminde en az beş kulüp gerekli.");
+  randomFive = {
+    mode,
+    difficulty: $("#randomFiveDifficulty").value,
+    names: [$("#randomFiveNameOne").value.trim() || "Oyuncu 1", mode === "duo" ? $("#randomFiveNameTwo").value.trim() || "Oyuncu 2" : "Bilgisayar"],
+    scores: [0, 0], round: 0, guesses: [], used: [new Set(), new Set()], pool,
+    sets: Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool)),
+  };
+  if (randomFive.sets.some((set) => set.length < 5)) return toast("Beşli kulüp seti oluşturulamadı.");
+  show("randomFiveGame");
+  renderRandomFiveRound();
+}
+function renderRandomFiveRound() {
+  const set = randomFive.sets[randomFive.round];
+  randomFive.guesses = [];
+  $("#randomFiveRound").textContent = `Set ${randomFive.round + 1}/5`;
+  $("#randomFiveScore").innerHTML = `<b>${esc(randomFive.names[0])} ${randomFive.scores[0]}</b><span>—</span><b>${randomFive.scores[1]} ${esc(randomFive.names[1])}</b>`;
+  $("#randomFiveClubs").innerHTML = set.map((club) => `<article>${logo(club)}<b>${esc(club.name)}</b><small>${esc(club.league || "")}</small></article>`).join("");
+  $("#randomFivePrompt").textContent = "Bu beşlinin kaçında oynayan bir futbolcu bulabilirsin?";
+  $("#randomFiveTurn").textContent = `${randomFive.names[0]} tahminini girsin.`;
+  $("#randomFiveInput").value = "";
+  $("#randomFiveInput").disabled = false;
+  $("#randomFiveGame .random-five-answer").hidden = false;
+  $("#randomFiveSuggestions").innerHTML = "";
+  $("#randomFiveReveal").hidden = true;
+  $("#randomFiveNext").hidden = true;
+  $("#randomFiveInput").focus();
+}
+function submitRandomFiveGuess(player) {
+  const turn = randomFive.guesses.length;
+  if (!player) return;
+  if (randomFive.used[turn].has(player.id)) return toast("Bu futbolcuyu daha önce kullandın.");
+  randomFive.used[turn].add(player.id);
+  randomFive.guesses.push(player);
+  $("#randomFiveInput").value = "";
+  $("#randomFiveSuggestions").innerHTML = "";
+  if (randomFive.mode === "duo" && randomFive.guesses.length === 1) {
+    $("#randomFiveTurn").textContent = `${randomFive.names[1]} tahminini girsin. İlk tahmin gizlendi.`;
+    return $("#randomFiveInput").focus();
+  }
+  if (randomFive.mode === "computer" && randomFive.guesses.length === 1) {
+    const guess = IkiFormaCore.chooseRandomFiveComputer({ pool: randomFive.pool, clubIds: randomFive.sets[randomFive.round].map((club) => club.id), difficulty: randomFive.difficulty, excluded: randomFive.used[1] });
+    if (guess) { randomFive.used[1].add(guess.player.id); randomFive.guesses.push(guess.player); }
+  }
+  revealRandomFiveRound();
+}
+function revealRandomFiveRound() {
+  const ids = randomFive.sets[randomFive.round].map((club) => club.id),
+    points = randomFive.guesses.map((player) => IkiFormaCore.randomFiveScore(player, ids));
+  randomFive.scores = randomFive.scores.map((score, index) => score + points[index]);
+  $("#randomFiveInput").disabled = true;
+  $("#randomFiveTurn").textContent = points[0] === points[1] ? `Bu set ${points[0]}-${points[1]} berabere.` : `${randomFive.names[points[0] > points[1] ? 0 : 1]} sette daha çok kulüp buldu.`;
+  $("#randomFiveReveal").innerHTML = randomFive.guesses.map((player, index) => `<article class="${points[index] === Math.max(...points) ? "winner" : ""}">${person(player)}<div><small>${esc(randomFive.names[index])}</small><b>${esc(player.name)}</b><span>${points[index]} kulüp · +${points[index]} puan</span></div></article>`).join("");
+  $("#randomFiveReveal").hidden = false;
+  $("#randomFiveNext").textContent = randomFive.round === 4 ? "Sonucu gör →" : "Sonraki set →";
+  $("#randomFiveNext").hidden = false;
+  $("#randomFiveScore").innerHTML = `<b>${esc(randomFive.names[0])} ${randomFive.scores[0]}</b><span>—</span><b>${randomFive.scores[1]} ${esc(randomFive.names[1])}</b>`;
+}
+function nextRandomFiveRound() {
+  randomFive.round++;
+  if (randomFive.round < 5) return renderRandomFiveRound();
+  const winner = randomFive.scores[0] === randomFive.scores[1] ? "Berabere!" : `${randomFive.names[randomFive.scores[0] > randomFive.scores[1] ? 0 : 1]} kazandı!`;
+  $("#randomFiveClubs").innerHTML = "";
+  $("#randomFivePrompt").textContent = `🏆 ${winner}`;
+  $("#randomFiveTurn").textContent = `${randomFive.names[0]}: ${randomFive.scores[0]} · ${randomFive.names[1]}: ${randomFive.scores[1]}`;
+  $("#randomFiveGame .random-five-answer").hidden = true;
+  $("#randomFiveReveal").innerHTML = '<button class="cta" data-view="randomFiveSetup">Yeniden oyna</button>';
+  $("#randomFiveReveal").hidden = false;
+  $("#randomFiveNext").hidden = true;
+}
+$("#randomFiveInput").oninput = (event) => {
+  const q = norm(event.target.value), turn = randomFive.guesses?.length || 0;
+  if (q.length < 2) return ($("#randomFiveSuggestions").innerHTML = "");
+  const hits = (randomFive.pool || []).filter((player) => !randomFive.used?.[turn]?.has(player.id) && norm(player.name).includes(q)).slice(0, 10);
+  $("#randomFiveSuggestions").innerHTML = hits.map((player) => `<button data-random-five-player="${player.id}">${esc(player.name)} <small>${esc(player.nationality || "")}</small></button>`).join("") || "<button disabled>Eşleşen futbolcu yok</button>";
+  $$('[data-random-five-player]').forEach((button) => button.onclick = () => submitRandomFiveGuess(indexes.playerById.get(+button.dataset.randomFivePlayer)));
+};
+$("#randomFiveInput").onkeydown = (event) => { if (event.key === "Enter") { const player = (randomFive.pool || []).find((item) => norm(item.name) === norm(event.target.value)); if (player) submitRandomFiveGuess(player); } };
+$("#randomFiveNext").onclick = nextRandomFiveRound;
+$("#startRandomFive").onclick = startRandomFiveGame;
+$$('input[name="randomFiveMode"]').forEach((radio) => radio.onchange = () => { const duo = $('input[name="randomFiveMode"]:checked').value === "duo"; $("#randomFiveDifficultyWrap").hidden = duo; $("#randomFiveNameTwoWrap").hidden = !duo; });
 function startTwinGame() {
   const mode = $('input[name="twinMode"]:checked').value,
     pool = twinPool(),
@@ -993,6 +1109,8 @@ async function init() {
     enhanceLeagueSelector($("#classicSetup"));
     enhanceLeagueSelector($("#countrySetup"));
     enhanceLeagueSelector($("#gridSetup"));
+    enhanceLeagueSelector($("#twinSetup"));
+    enhanceLeagueSelector($("#randomFiveSetup"));
     const requested = location.hash.slice(1);
     show(
       document.getElementById(requested)?.classList.contains("view")

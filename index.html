@@ -100,6 +100,9 @@
           <button class="mode-card twin-card" data-view="twinSetup">
             <span class="icon">🧬</span><span><b>Kariyer İkizi</b><small>Dört kariyer metriğinde en yakın futbolcuyu bul.</small></span><i>Oyna →</i>
           </button>
+          <button class="mode-card random-five-card" data-view="randomFiveSetup">
+            <span class="icon">5️⃣</span><span><b>Rastgele Beşler</b><small>Beş kulübün ortak kariyer avcısını bul.</small></span><i>Oyna →</i>
+          </button>
         </div>
       </section>
       <section id="classicSetup" class="view setup"></section>
@@ -118,6 +121,7 @@
             <label id="twinDifficultyWrap">Bilgisayar zorluğu<select id="twinDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label>
           </div>
           <div id="twinNames" class="twin-settings"><label>Oyuncu 1<input id="twinNameOne" maxlength="24" value="Oyuncu 1" /></label><label id="twinNameTwoWrap" hidden>Oyuncu 2<input id="twinNameTwo" maxlength="24" value="Oyuncu 2" /></label></div>
+          <fieldset class="league-options twin-league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend></fieldset>
           <details class="rules"><summary>Nasıl oynanır?</summary><p>Her hedefte kulüp maçı, kulüp golü, asist ve milli takım golü ayrı ayrı oynanır. Tahminin hedef değere rakibinden daha yakınsa puanı sen alırsın.</p></details>
           <button id="startTwin" class="cta">Oyunu başlat →</button>
         </div>
@@ -130,6 +134,34 @@
           <div class="answer-box twin-answer"><input id="twinInput" autocomplete="off" placeholder="Futbolcu adı yaz…" /><div id="twinSuggestions" class="suggestions"></div></div>
           <p id="twinMessage" class="message" aria-live="polite"></p><div id="twinReveal" class="twin-reveal" hidden></div>
           <button id="twinNext" class="cta" hidden>Sonraki metrik →</button>
+        </div>
+      </section>
+      <section id="randomFiveSetup" class="view">
+        <button class="back" data-view="home">← Ana sayfa</button>
+        <div class="surface random-five-setup">
+          <span class="kicker">5 KULÜP · 5 SET</span><h2>Rastgele Beşler</h2>
+          <p>Ekrandaki beş kulübün mümkün olduğunca çoğunda oynamış bir futbolcu bul. Oynadığı her kulüp bir puan.</p>
+          <fieldset><legend>Oyun modu</legend><div class="segmented">
+            <label><input type="radio" name="randomFiveMode" value="computer" checked /><span>Bilgisayara karşı</span></label>
+            <label><input type="radio" name="randomFiveMode" value="duo" /><span>İki oyunculu</span></label>
+          </div></fieldset>
+          <div class="twin-settings">
+            <label id="randomFiveDifficultyWrap">Bilgisayar zorluğu<select id="randomFiveDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label>
+            <label>Oyuncu 1<input id="randomFiveNameOne" maxlength="24" value="Oyuncu 1" /></label>
+            <label id="randomFiveNameTwoWrap" hidden>Oyuncu 2<input id="randomFiveNameTwo" maxlength="24" value="Oyuncu 2" /></label>
+          </div>
+          <fieldset class="league-options random-five-league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend></fieldset>
+          <details class="rules"><summary>Nasıl oynanır?</summary><p>Her sette beş farklı kulüp gelir. Tahmin ettiğin futbolcu bu kulüplerden kaçının A takımında oynadıysa o kadar puan kazanırsın. Beş set sonunda toplam puanı yüksek olan kazanır.</p></details>
+          <button id="startRandomFive" class="cta">Oyunu başlat →</button>
+        </div>
+      </section>
+      <section id="randomFiveGame" class="view">
+        <div class="game-top twin-top"><button class="back" data-view="home">← Oyundan çık</button><b id="randomFiveRound"></b><div id="randomFiveScore"></div></div>
+        <div id="randomFiveClubs" class="random-five-clubs"></div>
+        <div class="surface twin-play random-five-play">
+          <span class="kicker">EN ÇOK KULÜPTE OYNAYANI BUL</span><h2 id="randomFivePrompt"></h2><p id="randomFiveTurn"></p>
+          <div class="answer-box random-five-answer"><input id="randomFiveInput" autocomplete="off" placeholder="Futbolcu adı yaz…" /><div id="randomFiveSuggestions" class="suggestions"></div></div>
+          <div id="randomFiveReveal" class="twin-reveal" hidden></div><button id="randomFiveNext" class="cta" hidden>Sonraki set →</button>
         </div>
       </section>
       <section id="game" class="view">

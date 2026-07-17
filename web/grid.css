@@ -577,13 +577,13 @@
 }
 
 /* Career Twin */
-.twin-setup { max-width: 780px; margin: 12px auto; display: grid; gap: 18px; }
+.twin-setup, .random-five-setup { max-width: 980px; margin: 12px auto; display: grid; gap: 18px; }
 .twin-setup h2 { margin: 0; font-size: clamp(32px, 5vw, 52px); }
 .twin-setup > p { margin: -10px 0 4px; color: var(--muted); }
 .twin-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .twin-settings label { display: grid; gap: 7px; color: var(--muted); }
 .twin-top { align-items: center; }
-#twinScore { display: flex; align-items: center; gap: 12px; padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px; background: #071b2f; }
+#twinScore, #randomFiveScore { display: flex; align-items: center; gap: 12px; padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px; background: #071b2f; }
 .twin-target { display: grid; grid-template-columns: auto minmax(170px, .65fr) 1.6fr; align-items: center; gap: 20px; max-width: 1040px; margin: 10px auto 16px; padding: 18px 22px; border: 1px solid #2a5676; border-radius: 20px; background: linear-gradient(135deg, #12395a, #09243b); }
 .twin-target > img, .twin-target > .avatar { width: 94px; height: 94px; border-radius: 50%; object-fit: cover; background: #163d5d; }
 .twin-target h2 { margin: 3px 0; font-size: 25px; }
@@ -604,6 +604,16 @@
 .twin-reveal article div { display: grid; gap: 2px; }
 .twin-reveal small, .twin-reveal span { color: var(--muted); }
 .twin-reveal > .cta { grid-column: 1 / -1; justify-self: center; }
+.twin-setup .league-options, .random-five-setup .league-options { max-height: 390px; }
+.twin-setup .league-list, .random-five-setup .league-list { max-height: 230px; overflow-y: auto; }
+.random-five-setup h2 { margin: 0; font-size: clamp(32px, 5vw, 52px); }
+.random-five-setup > p { margin: -10px 0 4px; color: var(--muted); }
+.random-five-clubs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; max-width: 1040px; margin: 12px auto 18px; }
+.random-five-clubs article { min-width: 0; display: grid; justify-items: center; align-content: center; gap: 6px; min-height: 150px; padding: 12px 8px; text-align: center; border: 1px solid #2a5676; border-radius: 16px; background: linear-gradient(160deg, #12395a, #081c30); }
+.random-five-clubs .club-logo-wrap, .random-five-clubs .club-logo { width: 58px; height: 58px; }
+.random-five-clubs .club-logo-wrap img { width: 58px; height: 58px; object-fit: contain; }
+.random-five-clubs article b { overflow: hidden; max-width: 100%; text-overflow: ellipsis; white-space: nowrap; }
+.random-five-clubs article small { color: var(--muted); overflow: hidden; max-width: 100%; text-overflow: ellipsis; white-space: nowrap; }
 
 @media (min-width: 1100px) {
   #home .mode-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -616,4 +626,7 @@
   .twin-metrics div { padding: 9px 5px; }
   .twin-top { flex-wrap: wrap; }
   #twinScore { width: 100%; justify-content: center; }
+  .random-five-clubs { grid-template-columns: repeat(5, minmax(105px, 1fr)); overflow-x: auto; padding-bottom: 6px; }
+  .random-five-clubs article { min-height: 125px; }
+  #randomFiveScore { width: 100%; justify-content: center; }
 }
