@@ -17,6 +17,9 @@
     "data:curated": "node scripts/import-curated-careers.js",
     "data:verify": "node scripts/verify-data.js",
     "web:export": "node scripts/export-web-data.js",
+    "assets:update": "node scripts/update-assets.js",
+    "assets:dry-run": "node scripts/update-assets.js --dry-run",
+    "web:smoke": "node scripts/launch-smoke.js",
     "web:serve": "npx serve .",
     "build": "npm run build:portable",
     "build:portable": "npm test && npm run lint && electron-builder --win portable"
@@ -24,7 +27,8 @@
   "devDependencies": {
     "electron": "^43.1.1",
     "electron-builder": "^26.0.12",
-    "i18n-iso-countries": "^7.14.0"
+    "i18n-iso-countries": "^7.14.0",
+    "prettier": "^3.6.2"
   },
   "build": {
     "appId": "com.ikiforma.app",
