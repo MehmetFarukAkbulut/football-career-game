@@ -64,6 +64,7 @@
       else if (action.type === "answer") next = global.IkiFormaOnlineCore.submitOnlineAnswer(state, args);
       else if (action.type === "pass") next = global.IkiFormaOnlineCore.passOnlineTurn(state, args);
       else if (action.type === "finish") next = global.IkiFormaOnlineCore.finishOnlineGame(state, args);
+      else if (action.type === "mode_state") next = global.IkiFormaOnlineCore.syncOnlineModeState(state, args);
       else if (action.type === "connection") next = global.IkiFormaOnlineCore.updateConnection(state, args);
       else throw new Error("UNKNOWN_ACTION");
       return this.write(next);

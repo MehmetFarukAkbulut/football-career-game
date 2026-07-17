@@ -104,14 +104,12 @@ begin
     if room.state->'answeredBy' <> 'null'::jsonb then raise exception 'QUESTION_ALREADY_ANSWERED'; end if;
     if room.state#>>'{question,questionId}' <> p_action->>'questionId' then raise exception 'STALE_QUESTION'; end if;
     if jsonb_array_length(coalesce(room.state#>'{question,optionPlayerIds}', '[]'::jsonb)) > 0 and not (room.state#>'{question,optionPlayerIds}') @> jsonb_build_array((p_action->>'selectedPlayerId')::bigint) then raise exception 'INVALID_OPTION'; end if;
-    if coalesce((room.state#>>'{settings,repeatPlayers}')::boolean, false) is false and (room.state->'usedPlayerIds') @> jsonb_build_array((p_action->>'selectedPlayerId')::bigint) then raise exception 'PLAYER_USED'; end if;
     correct := room.answer_keys @> jsonb_build_array((p_action->>'selectedPlayerId')::bigint);
     if correct then score := (room.state#>>array['scores',slot::text])::integer + 1; next_state := jsonb_set(next_state, array['scores',slot::text], to_jsonb(score));
     else next_state := jsonb_set(next_state, '{currentTurn}', to_jsonb(case when slot = 0 then 1 else 0 end)); end if;
     next_state := jsonb_set(next_state, '{answeredBy}', to_jsonb(slot));
     next_state := jsonb_set(next_state, '{selectedPlayerId}', to_jsonb((p_action->>'selectedPlayerId')::bigint));
     next_state := jsonb_set(next_state, '{answerResult}', to_jsonb(case when correct then 'correct' else 'wrong' end));
-    if coalesce((room.state#>>'{settings,repeatPlayers}')::boolean, false) is false then next_state := jsonb_set(next_state, '{usedPlayerIds}', (room.state->'usedPlayerIds') || jsonb_build_array((p_action->>'selectedPlayerId')::bigint)); end if;
     next_state := jsonb_set(next_state, '{question,correctPlayerId}', room.answer_keys->0);
   elsif action_type = 'pass' then
     if room.state->>'status' <> 'playing' or (room.state->>'currentTurn')::integer <> slot then raise exception 'NOT_YOUR_TURN'; end if;
@@ -121,6 +119,13 @@ begin
     if slot <> 0 then raise exception 'HOST_ONLY'; end if;
     if room.state->>'status' <> 'playing' or room.state->'answeredBy' = 'null'::jsonb then raise exception 'FINISH_NOT_ALLOWED'; end if;
     next_state := jsonb_set(next_state, '{status}', '"finished"'); next_state := jsonb_set(next_state, '{finishedAt}', to_jsonb(floor(extract(epoch from now()) * 1000)));
+  elsif action_type = 'mode_state' then
+    if room.state->>'status' <> 'playing' then raise exception 'GAME_NOT_STARTED'; end if;
+    if coalesce(room.state->'modeState', 'null'::jsonb) <> 'null'::jsonb and (room.state->>'currentTurn')::integer <> slot then raise exception 'NOT_YOUR_TURN'; end if;
+    if coalesce(room.state->'modeState', 'null'::jsonb) = 'null'::jsonb and slot <> 0 then raise exception 'HOST_ONLY'; end if;
+    next_state := jsonb_set(next_state, '{modeState}', p_action->'modeState');
+    next_state := jsonb_set(next_state, '{currentTurn}', to_jsonb(coalesce((p_action->>'currentTurn')::integer, 0)));
+    next_state := jsonb_set(next_state, '{scores}', coalesce(p_action->'scores', room.state->'scores'));
   else raise exception 'UNKNOWN_ACTION'; end if;
 
   next_state := jsonb_set(next_state, '{stateVersion}', to_jsonb(room.state_version + 1));
