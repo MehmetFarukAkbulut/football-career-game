@@ -1,56 +1,50 @@
 # İki Forma
 
-İki Forma; futbolcu kariyerlerini keşfetmeye ve futbol hafızasını sınamaya yönelik, tamamen tarayıcıda çalışan statik bir web sitesidir.
+İki Forma, futbolcu kariyerlerini keşfetmeye ve futbol hafızasını sınamaya yönelik, sunucu gerektirmeden tarayıcıda çalışan bir futbol oyunudur.
 
-## Özellikler
+## Oyunlar
 
-- İki kulüpte de oynamış futbolcuyu bulma oyunu
-- Vatandaşlık × kulüp kariyeri oyunu (milli maç şartı yoktur)
-- 3×3 kulüp ızgarası
-- İki kulübün tüm ortak oyuncularını karşılaştırma
-- 100 oyunculuk sayfalar, isim/kulüp/milliyet filtresi ve çoklu sıralama içeren katalog
-- En fazla farklı kulüpte oynayan futbolcular sıralaması
-- Responsive, erişilebilir ve animasyonlu web arayüzü
-- Sunucu veya API anahtarı gerektirmeyen statik çalışma
+- İki kulüpte de oynamış futbolcuyu bulma
+- Vatandaşlık ve kulüp kariyeri eşleştirme
+- Bilgisayara karşı veya aynı cihazda iki oyunculu 3×3 kulüp ızgarası
+- Kulüp karşılaştırma, futbolcu kataloğu ve gezgin futbolcular
 
-## Siteyi yerelde çalıştırma
+Izgarada doğru ve yanlış her tahminden sonra sıra değişir. Bir futbolcu oyun boyunca yalnız bir kez kullanılabilir. Doğrulanmış kiralık A takım kariyerleri geçerli; altyapı ve rezerv takım kariyerleri geçersizdir.
 
-Tarayıcıların yerel JSON dosyası güvenlik kısıtlaması nedeniyle dosyayı doğrudan çift tıklamak yerine küçük bir HTTP sunucusu kullanın:
+Bilgisayar rakibi statik veri paketindeki gerçek oyunculardan seçim yapar. Kolay, normal ve zor modları sırasıyla yaklaşık %52, %72 ve %90 doğruluk ile farklı düşünme süreleri kullanır. Yanlış cevaplar da iki kulüpten en az biriyle ilişkili gerçek oyunculardır.
+
+## Yerelde çalıştırma
 
 ```bash
-npx serve .
+npm install
+npm run web:serve
 ```
 
-Ardından terminalde gösterilen adrese gidin.
-
-## Web verisini güncelleme
-
-Kaynak SQLite veritabanı hazırken:
+## Veri ve asset iş akışı
 
 ```bash
-node scripts/export-web-data.js
+npm run web:export
+npm run assets:dry-run
+npm run assets:update
 ```
 
-Bu komut `data/web-data.json` dosyasını üretir. Web sitesi bu statik dosyayı okuyarak çalışır.
+`data/web-data.json`; benzersiz Transfermarkt kaynak kimlikleri, lig/ülke metadata'sı ve doğrulanmış A takım kariyerlerini taşır. Manuel denetlenen kariyerler `data/web-career-overrides.json` içinde tutulur. Aynı adlı oyuncular isimle birleştirilmez.
 
-Tarihsel maç veri setinde bulunmayan fakat kaynak oyuncu kimliğiyle doğrulanan kariyerler `data/web-career-overrides.json` dosyasında tutulur. Bu kayıtlar yalnızca kesin Transfermarkt oyuncu ve kulüp ID'leriyle eklenir.
+Kulüp armaları yalnız kaynak ve lisansı kaydedilebilen resmî kulüp veya Wikimedia Commons girdilerinden kademeli eklenir. `data/club-assets.json` kaynak URL'si ve lisans manifestidir; eksik veya kırık görseller baş harf avatarına düşer. Transfermarkt toplu görsel kaynağı olarak scrape edilmez.
 
-## Teknoloji
+## Test
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- Statik JSON veri paketi
-- GitHub Pages
+```bash
+npm test
+npm run lint
+```
 
-## Veri yaklaşımı
+Manuel kontrol matrisi masaüstü, tablet, mobil; iki oyun modu; üç zorluk; klavye kullanımı; kırık görsel ve çevrimdışı senaryoları kapsar.
 
-Oyuncular kaynak oyuncu kimlikleriyle tutulur; benzer adlara göre kişi veya kulüp birleştirilmez. Web paketinde yalnızca doğrulanmış A takım kariyerleri bulunur. Vatandaşlık bilgisi kaynak oyuncu profilindeki vatandaşlık alanıdır; milli takımda oynama şartı anlamına gelmez.
+## GitHub Pages
 
-## Dağıtım
+`main` branch'ine push, test ve lint başarılı olduktan sonra `.github/workflows/pages.yml` ile statik siteyi dağıtır. Asset yolları repository alt yoluyla uyumlu göreli yollardır.
 
-`main` dalına yapılan her push, `.github/workflows/pages.yml` üzerinden GitHub Pages dağıtımını tetikler.
+## Veri kapsamı
 
-## Lisans ve veri kaynağı
-
-Uygulama kodu proje sahibine aittir. Açık veri paketi, projedeki veri üretim betiklerinde belirtilen kaynaklardan türetilmiştir. Yeniden kullanım öncesinde kaynak veri lisanslarını ayrıca kontrol edin.
+Kariyer paketi açık maç verileri ve kimlik doğrulamasından türetilir. Her tarihsel kariyer veya her kulüp/oyuncu görseli kapsanmayabilir; eksik metadata oyunun çalışmasını engellemez.
