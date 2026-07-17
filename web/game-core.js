@@ -96,6 +96,157 @@ function controlledWrongIds(rowId, colId, indexes, used = new Set()) {
   return out;
 }
 
+function playerNationalityCode(player) {
+  return String(
+    player?.nationalityCode || player?.countryCode || player?.nationality?.code || "",
+  ).toUpperCase();
+}
+
+function getValidPlayersForTwoClubs(clubAId, clubBId, indexes, used = new Set()) {
+  return [...indexes.commonPlayerIds(clubAId, clubBId)]
+    .filter((id) => !used.has(id) && indexes.playerById.has(id))
+    .map((id) => indexes.playerById.get(id));
+}
+
+function getOneClubOnlyPlayers(clubAId, clubBId, indexes, used = new Set()) {
+  const a = indexes.clubPlayerIds.get(+clubAId) || new Set();
+  const b = indexes.clubPlayerIds.get(+clubBId) || new Set();
+  return [...new Set([...a, ...b])]
+    .filter((id) => a.has(id) !== b.has(id) && !used.has(id))
+    .map((id) => indexes.playerById.get(id))
+    .filter(Boolean);
+}
+
+function getValidPlayersForCountryClub(countryCode, clubId, indexes, used = new Set()) {
+  const club = indexes.clubPlayerIds.get(+clubId) || new Set();
+  const code = String(countryCode || "").toUpperCase();
+  return [...club]
+    .map((id) => indexes.playerById.get(id))
+    .filter((player) => player && !used.has(+player.id) && playerNationalityCode(player) === code);
+}
+
+function getCountryOnlyDistractors(countryCode, clubId, indexes, used = new Set()) {
+  const club = indexes.clubPlayerIds.get(+clubId) || new Set();
+  const code = String(countryCode || "").toUpperCase();
+  return [...indexes.playerById.values()].filter(
+    (player) =>
+      !used.has(+player.id) &&
+      playerNationalityCode(player) === code &&
+      !club.has(+player.id),
+  );
+}
+
+function getClubOnlyDistractors(countryCode, clubId, indexes, used = new Set()) {
+  const club = indexes.clubPlayerIds.get(+clubId) || new Set();
+  const code = String(countryCode || "").toUpperCase();
+  return [...club]
+    .map((id) => indexes.playerById.get(id))
+    .filter(
+      (player) =>
+        player &&
+        !used.has(+player.id) &&
+        playerNationalityCode(player) !== code,
+    );
+}
+
+function shuffled(values, rng = Math.random) {
+  const result = [...values];
+  for (let index = result.length - 1; index > 0; index--) {
+    const swap = Math.floor(rng() * (index + 1));
+    [result[index], result[swap]] = [result[swap], result[index]];
+  }
+  return result;
+}
+
+function optionRelation(question, player, indexes) {
+  const clubs = indexes.playerClubIds.get(+player?.id) || new Set();
+  if (question.mode === "clubs")
+    return [clubs.has(+question.clubAId), clubs.has(+question.clubBId)];
+  return [
+    playerNationalityCode(player) === String(question.countryCode).toUpperCase(),
+    clubs.has(+question.clubId),
+  ];
+}
+
+function validateQuestionOptions(question, indexes, used = new Set()) {
+  if (!question || !Array.isArray(question.optionPlayerIds))
+    return { valid: false, reason: "OPTIONS_MISSING" };
+  const ids = question.optionPlayerIds.map(Number);
+  if (new Set(ids).size !== ids.length)
+    return { valid: false, reason: "DUPLICATE_OPTION" };
+  if (ids.some((id) => used.has(id)))
+    return { valid: false, reason: "PLAYER_REUSED" };
+  const players = ids.map((id) => indexes.playerById.get(id));
+  if (players.some((player) => !player?.name || !(player.clubIds || []).length))
+    return { valid: false, reason: "BROKEN_PLAYER_DATA" };
+  const relations = players.map((player) => optionRelation(question, player, indexes));
+  const correct = relations
+    .map((conditions, index) => ({ conditions, id: ids[index] }))
+    .filter(({ conditions }) => conditions[0] && conditions[1]);
+  if (correct.length !== 1 || correct[0].id !== +question.correctPlayerId)
+    return { valid: false, reason: "CORRECT_COUNT" };
+  if (relations.some((conditions, index) => ids[index] !== +question.correctPlayerId && conditions.filter(Boolean).length !== 1))
+    return { valid: false, reason: "INVALID_DISTRACTOR" };
+  return { valid: true };
+}
+
+function playerDifficultyScore(player) {
+  return Number(player?.popularityScore) || Math.min(100, Math.log10(1 + Number(player?.appearances || 0)) * 28);
+}
+
+function selectPlayerByDifficulty(players, difficulty = "normal", rng = Math.random) {
+  if (!players?.length) return null;
+  const sorted = [...players].sort((a, b) => playerDifficultyScore(b) - playerDifficultyScore(a));
+  const portion = difficulty === "easy" ? 0.35 : difficulty === "hard" ? 1 : 0.7;
+  const pool = sorted.slice(0, Math.max(1, Math.ceil(sorted.length * portion)));
+  return pool[Math.floor(rng() * pool.length)];
+}
+
+function clubAllowedByDifficulty(club, difficulty) {
+  const tier = club?.popularityTier || "standard";
+  if (difficulty === "easy") return tier === "elite" || tier === "popular";
+  if (difficulty === "normal") return tier !== "obscure";
+  return true;
+}
+
+function selectClubByDifficulty(clubs, difficulty = "normal", rng = Math.random) {
+  const pool = (clubs || []).filter((club) => clubAllowedByDifficulty(club, difficulty));
+  return pool.length ? pool[Math.floor(rng() * pool.length)] : null;
+}
+
+function makeQuestionId(rng) {
+  return `q-${Date.now().toString(36)}-${Math.floor(rng() * 0x1000000).toString(36)}`;
+}
+
+function generateTwoClubMultipleChoiceQuestion({ clubAId, clubBId, indexes, used = new Set(), difficulty = "normal", optionCount = 4, rng = Math.random }) {
+  const valid = getValidPlayersForTwoClubs(clubAId, clubBId, indexes, used);
+  const wrong = getOneClubOnlyPlayers(clubAId, clubBId, indexes, used);
+  if (!valid.length || wrong.length < optionCount - 1) return null;
+  const correct = selectPlayerByDifficulty(valid, difficulty, rng);
+  const distractors = shuffled(wrong, rng).slice(0, optionCount - 1);
+  const question = {
+    questionId: makeQuestionId(rng), mode: "clubs", clubAId: +clubAId,
+    clubBId: +clubBId, correctPlayerId: +correct.id,
+    optionPlayerIds: shuffled([correct, ...distractors], rng).map((player) => +player.id),
+  };
+  return validateQuestionOptions(question, indexes, used).valid ? question : null;
+}
+
+function generateCountryClubMultipleChoiceQuestion({ countryCode, clubId, indexes, used = new Set(), difficulty = "normal", optionCount = 4, rng = Math.random }) {
+  const valid = getValidPlayersForCountryClub(countryCode, clubId, indexes, used);
+  const countryOnly = getCountryOnlyDistractors(countryCode, clubId, indexes, used);
+  const clubOnly = getClubOnlyDistractors(countryCode, clubId, indexes, used);
+  const wrong = shuffled([...countryOnly, ...clubOnly], rng);
+  if (!valid.length || wrong.length < optionCount - 1) return null;
+  const correct = selectPlayerByDifficulty(valid, difficulty, rng);
+  const question = {
+    questionId: makeQuestionId(rng), mode: "country", countryCode: String(countryCode).toUpperCase(),
+    clubId: +clubId, correctPlayerId: +correct.id,
+    optionPlayerIds: shuffled([correct, ...wrong.slice(0, optionCount - 1)], rng).map((player) => +player.id),
+  };
+  return validateQuestionOptions(question, indexes, used).valid ? question : null;
+}
+
 function createGridState({
   mode = "computer",
   difficulty = "normal",
@@ -265,6 +416,17 @@ const api = {
   cellKey,
   buildIndexes,
   controlledWrongIds,
+  playerNationalityCode,
+  getValidPlayersForTwoClubs,
+  getOneClubOnlyPlayers,
+  getValidPlayersForCountryClub,
+  getCountryOnlyDistractors,
+  getClubOnlyDistractors,
+  validateQuestionOptions,
+  selectClubByDifficulty,
+  selectPlayerByDifficulty,
+  generateTwoClubMultipleChoiceQuestion,
+  generateCountryClubMultipleChoiceQuestion,
   createGridState,
   applyAttempt,
   chooseComputerMove,

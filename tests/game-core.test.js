@@ -8,6 +8,15 @@ const {
   applyAttempt,
   chooseComputerMove,
   normalizeText,
+  getValidPlayersForTwoClubs,
+  getOneClubOnlyPlayers,
+  getValidPlayersForCountryClub,
+  getCountryOnlyDistractors,
+  getClubOnlyDistractors,
+  generateTwoClubMultipleChoiceQuestion,
+  generateCountryClubMultipleChoiceQuestion,
+  validateQuestionOptions,
+  selectClubByDifficulty,
 } = require("../web/game-core");
 const data = {
   clubs: [
@@ -16,11 +25,12 @@ const data = {
     { id: 3, league: "B", country: "DE" },
   ],
   players: [
-    { id: 10, name: "Uğur", clubIds: [1, 2], appearances: 2 },
-    { id: 11, name: "Solo A", clubIds: [1], appearances: 9 },
-    { id: 12, name: "Solo B", clubIds: [2], appearances: 1 },
-    { id: 13, name: "Adaş", clubIds: [1] },
-    { id: 14, name: "Adaş", clubIds: [2] },
+    { id: 10, name: "Uğur", clubIds: [1, 2], appearances: 2, nationalityCode: "TR" },
+    { id: 11, name: "Solo A", clubIds: [1], appearances: 9, nationalityCode: "TR" },
+    { id: 12, name: "Solo B", clubIds: [2], appearances: 1, nationalityCode: "DE" },
+    { id: 13, name: "Adaş", clubIds: [1], nationalityCode: "FR" },
+    { id: 14, name: "Adaş", clubIds: [2], nationalityCode: "IT" },
+    { id: 15, name: "Diğer Türk", clubIds: [3], appearances: 5, nationalityCode: "TR" },
   ],
 };
 test("indeks ortak oyuncuyu kimlikle bulur ve aynı adlı kişileri birleştirmez", () => {
@@ -34,6 +44,43 @@ test("kontrollü yanlış havuzu iki kulüpten biriyle ilişkili gerçek oyuncul
     new Set(controlledWrongIds(1, 2, buildIndexes(data))),
     new Set([11, 12, 13, 14]),
   );
+});
+test("iki forma havuzları ortak ve yalnızca tek kulüplü oyuncuları ayırır", () => {
+  const indexes = buildIndexes(data);
+  assert.deepEqual(getValidPlayersForTwoClubs(1, 2, indexes).map((p) => p.id), [10]);
+  assert.deepEqual(new Set(getOneClubOnlyPlayers(1, 2, indexes).map((p) => p.id)), new Set([11, 12, 13, 14]));
+});
+test("ülke forma havuzları iki koşul, ülke-only ve kulüp-only olarak ayrılır", () => {
+  const indexes = buildIndexes(data);
+  assert.deepEqual(getValidPlayersForCountryClub("TR", 1, indexes).map((p) => p.id), [10, 11]);
+  assert.deepEqual(getCountryOnlyDistractors("TR", 1, indexes).map((p) => p.id), [15]);
+  assert.deepEqual(new Set(getClubOnlyDistractors("TR", 1, indexes).map((p) => p.id)), new Set([13]));
+});
+test("iki forma çoktan seçmeli sorusu tek doğru ve üç kontrollü yanlış üretir", () => {
+  const indexes = buildIndexes(data);
+  const question = generateTwoClubMultipleChoiceQuestion({ clubAId: 1, clubBId: 2, indexes, rng: () => 0 });
+  assert.equal(question.optionPlayerIds.length, 4);
+  assert.deepEqual(validateQuestionOptions(question, indexes), { valid: true });
+  assert.equal(question.correctPlayerId, 10);
+});
+test("ülke forma çoktan seçmeli sorusu ilgisiz oyuncuyu kabul etmez", () => {
+  const countryData = { ...data, players: [...data.players, { id: 16, name: "Kulüp Alman", clubIds: [1], nationalityCode: "DE" }, { id: 17, name: "Kulüp İtalyan", clubIds: [1], nationalityCode: "IT" }] };
+  const indexes = buildIndexes(countryData);
+  const question = generateCountryClubMultipleChoiceQuestion({ countryCode: "TR", clubId: 1, indexes, rng: () => 0 });
+  assert.deepEqual(validateQuestionOptions(question, indexes), { valid: true });
+  assert.ok(!question.optionPlayerIds.includes(12));
+});
+test("doğrulama duplicate seçenekleri ve aynı isimli farklı ID'leri doğru ele alır", () => {
+  const indexes = buildIndexes(data);
+  const duplicate = { mode: "clubs", clubAId: 1, clubBId: 2, correctPlayerId: 10, optionPlayerIds: [10, 11, 12, 12] };
+  assert.equal(validateQuestionOptions(duplicate, indexes).reason, "DUPLICATE_OPTION");
+  const valid = { ...duplicate, optionPlayerIds: [10, 11, 13, 14] };
+  assert.deepEqual(validateQuestionOptions(valid, indexes), { valid: true });
+});
+test("kolay havuz obscure kulüpleri dışarıda bırakır, zor havuz geniştir", () => {
+  const sample = [{ id: 1, popularityTier: "elite" }, { id: 2, popularityTier: "obscure" }];
+  assert.equal(selectClubByDifficulty(sample, "easy", () => 0.99).id, 1);
+  assert.equal(selectClubByDifficulty(sample, "hard", () => 0.99).id, 2);
 });
 test("yanlış tahmin hücreyi doldurmadan sırayı değiştirir", () => {
   const state = createGridState({ mode: "duo" });
