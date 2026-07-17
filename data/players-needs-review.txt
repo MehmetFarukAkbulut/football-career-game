@@ -1,29 +1,4 @@
 transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
-120785	Knowledge Musona	41	144	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-146805	Majeed Waris	41	192	EKSIK	7	Weekly match dataset only; historical aggregate unavailable
-4673	Wesley Sneijder	41	165	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-60517	Yacine Brahimi	41	224	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-35245	Matheus	40	127	EKSIK	1	Weekly match dataset only; historical aggregate unavailable
-39426	Nicolai Müller	40	177	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-81588	Nicolas Diguiny	40	163	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-9836	Dimitrios Papadopoulos	39	141	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-59187	Oleg Shatov	39	292	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-15076	Aleksandr Samedov	38	206	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-69838	El Fardou Ben	38	120	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
-79127	Mitchell Te Vrede	38	114	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-84318	Paolo Hurtado	38	174	EKSIK	3	Weekly match dataset only; historical aggregate unavailable
-9794	Oleg Gusev	37	154	EKSIK	1	Weekly match dataset only; historical aggregate unavailable
-339808	Theo Hernández	37	351	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-14119	Danny	36	162	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-162261	Dimitrios Kolovos	36	188	EKSIK	6	Weekly match dataset only; historical aggregate unavailable
-18900	Hatem Ben Arfa	36	192	EKSIK	8	Weekly match dataset only; historical aggregate unavailable
-7427	Ivica Olic	36	120	EKSIK	2	Weekly match dataset only; historical aggregate unavailable
-106675	Kirill Panchenko	36	223	EKSIK	7	Weekly match dataset only; historical aggregate unavailable
-173589	Viktor Klonaridis	36	225	EKSIK	6	Weekly match dataset only; historical aggregate unavailable
-83946	Youness Mokhtar	36	188	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-107665	Filip Novak	35	220	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
-182392	Pieros Sotiriou	35	100	EKSIK	1	Weekly match dataset only; historical aggregate unavailable
-35026	Selcuk Inan	35	245	EKSIK	1	Weekly match dataset only; historical aggregate unavailable
 132671	Thomas Nazlidis	35	177	EKSIK	5	Weekly match dataset only; historical aggregate unavailable
 28947	Gonzalo Castro	34	288	EKSIK	4	Weekly match dataset only; historical aggregate unavailable
 22378	Léo Matos	34	276	EKSIK	3	Weekly match dataset only; historical aggregate unavailable

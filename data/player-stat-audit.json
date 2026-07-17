@@ -30,6 +30,35 @@
     },
     "status": "verified"
   },
+  "4673": {
+    "id": 4673,
+    "name": "Wesley Sneijder",
+    "verifiedAt": "2026-07-17T14:14:28.731Z",
+    "source": "https://tmapi.transfermarkt.technology/player/4673/performance-game",
+    "appearances": 577,
+    "goals": 154,
+    "assists": 145,
+    "minutesPlayed": 44133,
+    "clubIds": [
+      6297,
+      417,
+      141,
+      46,
+      418,
+      610,
+      8817
+    ],
+    "clubAppearances": {
+      "46": 116,
+      "141": 175,
+      "417": 8,
+      "418": 66,
+      "610": 180,
+      "6297": 30,
+      "8817": 2
+    },
+    "status": "verified"
+  },
   "5878": {
     "id": 5878,
     "name": "Alberto Gilardino",
@@ -116,6 +145,97 @@
     },
     "status": "verified"
   },
+  "7427": {
+    "id": 7427,
+    "name": "Ivica Olic",
+    "verifiedAt": "2026-07-17T14:14:47.294Z",
+    "source": "https://tmapi.transfermarkt.technology/player/7427/performance-game",
+    "appearances": 504,
+    "goals": 169,
+    "assists": 70,
+    "minutesPlayed": 33881,
+    "clubIds": [
+      72,
+      41,
+      82,
+      27,
+      2410,
+      419,
+      45,
+      44
+    ],
+    "clubAppearances": {
+      "27": 80,
+      "41": 143,
+      "44": 3,
+      "45": 30,
+      "72": 33,
+      "82": 94,
+      "419": 5,
+      "2410": 116
+    },
+    "status": "verified"
+  },
+  "9794": {
+    "id": 9794,
+    "name": "Oleg Gusev",
+    "verifiedAt": "2026-07-17T14:14:41.667Z",
+    "source": "https://tmapi.transfermarkt.technology/player/9794/performance-game",
+    "appearances": 472,
+    "goals": 98,
+    "assists": 67,
+    "minutesPlayed": 30912,
+    "clubIds": [
+      338,
+      9007,
+      3593
+    ],
+    "clubAppearances": {
+      "338": 443,
+      "3593": 1,
+      "9007": 28
+    },
+    "status": "verified"
+  },
+  "9836": {
+    "id": 9836,
+    "name": "Dimitrios Papadopoulos",
+    "verifiedAt": "2026-07-17T14:14:34.682Z",
+    "source": "https://tmapi.transfermarkt.technology/player/9836/performance-game",
+    "appearances": 476,
+    "goals": 130,
+    "assists": 56,
+    "minutesPlayed": 28655,
+    "clubIds": [
+      6418,
+      3060,
+      6676,
+      1091,
+      7185,
+      2672,
+      940,
+      419,
+      1005,
+      265,
+      1132,
+      1119
+    ],
+    "clubAppearances": {
+      "265": 177,
+      "419": 23,
+      "940": 26,
+      "1005": 14,
+      "1091": 32,
+      "1119": 31,
+      "1132": 46,
+      "2672": 10,
+      "3060": 64,
+      "6418": 9,
+      "6676": 15,
+      "7185": 29
+    },
+    "status": "verified"
+  },
   "13023": {
     "id": 13023,
     "name": "Igor de Camargo",
@@ -149,6 +269,62 @@
     },
     "status": "verified"
   },
+  "14119": {
+    "id": 14119,
+    "name": "Danny",
+    "verifiedAt": "2026-07-17T14:14:43.662Z",
+    "source": "https://tmapi.transfermarkt.technology/player/14119/performance-game",
+    "appearances": 502,
+    "goals": 99,
+    "assists": 109,
+    "minutesPlayed": 39210,
+    "clubIds": [
+      1301,
+      62,
+      964,
+      121,
+      336
+    ],
+    "clubAppearances": {
+      "62": 32,
+      "121": 113,
+      "336": 18,
+      "964": 256,
+      "1301": 83
+    },
+    "status": "verified"
+  },
+  "15076": {
+    "id": 15076,
+    "name": "Aleksandr Samedov",
+    "verifiedAt": "2026-07-17T14:14:37.059Z",
+    "source": "https://tmapi.transfermarkt.technology/player/15076/performance-game",
+    "appearances": 539,
+    "goals": 84,
+    "assists": 90,
+    "minutesPlayed": 40118,
+    "clubIds": [
+      68289,
+      2696,
+      232,
+      932,
+      121,
+      5268,
+      11749,
+      6189
+    ],
+    "clubAppearances": {
+      "121": 78,
+      "232": 113,
+      "932": 215,
+      "2696": 9,
+      "5268": 53,
+      "6189": 57,
+      "11749": 11,
+      "68289": 3
+    },
+    "status": "verified"
+  },
   "16649": {
     "id": 16649,
     "name": "Jefferson Farfán",
@@ -171,6 +347,45 @@
       "383": 170,
       "932": 69,
       "2524": 12
+    },
+    "status": "verified"
+  },
+  "18900": {
+    "id": 18900,
+    "name": "Hatem Ben Arfa",
+    "verifiedAt": "2026-07-17T14:14:46.092Z",
+    "source": "https://tmapi.transfermarkt.technology/player/18900/performance-game",
+    "appearances": 429,
+    "goals": 76,
+    "assists": 63,
+    "minutesPlayed": 25104,
+    "clubIds": [
+      1082,
+      40,
+      366,
+      273,
+      583,
+      417,
+      3008,
+      9253,
+      762,
+      244,
+      1041,
+      7813
+    ],
+    "clubAppearances": {
+      "40": 25,
+      "244": 91,
+      "273": 41,
+      "366": 5,
+      "417": 37,
+      "583": 32,
+      "762": 86,
+      "1041": 92,
+      "1082": 9,
+      "3008": 9,
+      "7813": 1,
+      "9253": 1
     },
     "status": "verified"
   },
@@ -310,6 +525,62 @@
     },
     "status": "verified"
   },
+  "35026": {
+    "id": 35026,
+    "name": "Selcuk Inan",
+    "verifiedAt": "2026-07-17T14:14:53.706Z",
+    "source": "https://tmapi.transfermarkt.technology/player/35026/performance-game",
+    "appearances": 608,
+    "goals": 84,
+    "assists": 108,
+    "minutesPlayed": 47982,
+    "clubIds": [
+      141,
+      449,
+      1267,
+      1507
+    ],
+    "clubAppearances": {
+      "141": 331,
+      "449": 113,
+      "1267": 86,
+      "1507": 78
+    },
+    "status": "verified"
+  },
+  "35245": {
+    "id": 35245,
+    "name": "Matheus",
+    "verifiedAt": "2026-07-17T14:14:31.061Z",
+    "source": "https://tmapi.transfermarkt.technology/player/35245/performance-game",
+    "appearances": 501,
+    "goals": 154,
+    "assists": 72,
+    "minutesPlayed": 32713,
+    "clubIds": [
+      8547,
+      7816,
+      17276,
+      35272,
+      339,
+      1075,
+      1085,
+      1436,
+      95875
+    ],
+    "clubAppearances": {
+      "339": 154,
+      "1075": 121,
+      "1085": 20,
+      "1436": 16,
+      "7816": 5,
+      "8547": 15,
+      "17276": 46,
+      "35272": 108,
+      "95875": 16
+    },
+    "status": "verified"
+  },
   "37091": {
     "id": 37091,
     "name": "Ilhan Parlak",
@@ -336,6 +607,45 @@
       "2944": 4,
       "3205": 162,
       "6894": 16
+    },
+    "status": "verified"
+  },
+  "39426": {
+    "id": 39426,
+    "name": "Nicolai Müller",
+    "verifiedAt": "2026-07-17T14:14:32.516Z",
+    "source": "https://tmapi.transfermarkt.technology/player/39426/performance-game",
+    "appearances": 501,
+    "goals": 112,
+    "assists": 52,
+    "minutesPlayed": 36235,
+    "clubIds": [
+      81867,
+      6954,
+      36100,
+      42,
+      24,
+      41,
+      39,
+      851,
+      65,
+      393,
+      254,
+      2612
+    ],
+    "clubAppearances": {
+      "24": 12,
+      "39": 90,
+      "41": 88,
+      "42": 14,
+      "65": 76,
+      "254": 18,
+      "393": 66,
+      "851": 1,
+      "2612": 53,
+      "6954": 19,
+      "36100": 37,
+      "81867": 27
     },
     "status": "verified"
   },
@@ -574,6 +884,62 @@
     },
     "status": "verified"
   },
+  "59187": {
+    "id": 59187,
+    "name": "Oleg Shatov",
+    "verifiedAt": "2026-07-17T14:14:35.723Z",
+    "source": "https://tmapi.transfermarkt.technology/player/59187/performance-game",
+    "appearances": 435,
+    "goals": 55,
+    "assists": 66,
+    "minutesPlayed": 28308,
+    "clubIds": [
+      11127,
+      2698,
+      964,
+      16704,
+      2700
+    ],
+    "clubAppearances": {
+      "964": 202,
+      "2698": 25,
+      "2700": 51,
+      "11127": 151,
+      "16704": 6
+    },
+    "status": "verified"
+  },
+  "60517": {
+    "id": 60517,
+    "name": "Yacine Brahimi",
+    "verifiedAt": "2026-07-17T14:14:30.028Z",
+    "source": "https://tmapi.transfermarkt.technology/player/60517/performance-game",
+    "appearances": 568,
+    "goals": 164,
+    "assists": 120,
+    "minutesPlayed": 42577,
+    "clubIds": [
+      6297,
+      3229,
+      720,
+      16795,
+      8154,
+      273,
+      3524,
+      7874
+    ],
+    "clubAppearances": {
+      "273": 54,
+      "720": 215,
+      "3229": 85,
+      "3524": 34,
+      "6297": 114,
+      "7874": 1,
+      "8154": 1,
+      "16795": 64
+    },
+    "status": "verified"
+  },
   "61505": {
     "id": 61505,
     "name": "Aleksandar Prijovic",
@@ -656,6 +1022,41 @@
     },
     "status": "verified"
   },
+  "69838": {
+    "id": 69838,
+    "name": "El Fardou Ben",
+    "verifiedAt": "2026-07-17T14:14:38.281Z",
+    "source": "https://tmapi.transfermarkt.technology/player/69838/performance-game",
+    "appearances": 462,
+    "goals": 153,
+    "assists": 76,
+    "minutesPlayed": 31760,
+    "clubIds": [
+      3521,
+      59358,
+      2784,
+      159,
+      683,
+      169,
+      2672,
+      2079,
+      1377,
+      738
+    ],
+    "clubAppearances": {
+      "159": 196,
+      "169": 36,
+      "683": 10,
+      "738": 10,
+      "1377": 102,
+      "2079": 64,
+      "2672": 14,
+      "2784": 13,
+      "3521": 11,
+      "59358": 6
+    },
+    "status": "verified"
+  },
   "75287": {
     "id": 75287,
     "name": "Seydou Doumbia",
@@ -730,6 +1131,78 @@
     },
     "status": "verified"
   },
+  "79127": {
+    "id": 79127,
+    "name": "Mitchell Te Vrede",
+    "verifiedAt": "2026-07-17T14:14:39.427Z",
+    "source": "https://tmapi.transfermarkt.technology/player/79127/performance-game",
+    "appearances": 309,
+    "goals": 118,
+    "assists": 9,
+    "minutesPlayed": 20904,
+    "clubIds": [
+      34744,
+      14456,
+      40039,
+      27221,
+      132,
+      8523,
+      3207,
+      306,
+      24368,
+      24366,
+      234,
+      798,
+      7460
+    ],
+    "clubAppearances": {
+      "132": 42,
+      "234": 44,
+      "306": 28,
+      "798": 21,
+      "3207": 12,
+      "7460": 8,
+      "8523": 1,
+      "14456": 14,
+      "24366": 43,
+      "24368": 2,
+      "27221": 54,
+      "34744": 12,
+      "40039": 28
+    },
+    "status": "verified"
+  },
+  "81588": {
+    "id": 81588,
+    "name": "Nicolas Diguiny",
+    "verifiedAt": "2026-07-17T14:14:33.568Z",
+    "source": "https://tmapi.transfermarkt.technology/player/81588/performance-game",
+    "appearances": 489,
+    "goals": 105,
+    "assists": 33,
+    "minutesPlayed": 33167,
+    "clubIds": [
+      9,
+      37577,
+      429,
+      605,
+      3060,
+      7185,
+      9902,
+      1377
+    ],
+    "clubAppearances": {
+      "9": 26,
+      "429": 89,
+      "605": 62,
+      "1377": 151,
+      "3060": 45,
+      "7185": 57,
+      "9902": 27,
+      "37577": 32
+    },
+    "status": "verified"
+  },
   "81808": {
     "id": 81808,
     "name": "Wilfried Bony",
@@ -764,6 +1237,90 @@
       "8023": 10,
       "33616": 1,
       "42208": 2
+    },
+    "status": "verified"
+  },
+  "83946": {
+    "id": 83946,
+    "name": "Youness Mokhtar",
+    "verifiedAt": "2026-07-17T14:14:50.492Z",
+    "source": "https://tmapi.transfermarkt.technology/player/83946/performance-game",
+    "appearances": 295,
+    "goals": 53,
+    "assists": 42,
+    "minutesPlayed": 19216,
+    "clubIds": [
+      3569,
+      3892,
+      53944,
+      1268,
+      813,
+      1274,
+      35026,
+      868,
+      1269,
+      20300,
+      18544,
+      18026,
+      317,
+      9715
+    ],
+    "clubAppearances": {
+      "317": 64,
+      "813": 27,
+      "868": 15,
+      "1268": 10,
+      "1269": 102,
+      "1274": 3,
+      "3569": 5,
+      "3892": 38,
+      "9715": 2,
+      "18026": 2,
+      "18544": 9,
+      "20300": 3,
+      "35026": 1,
+      "53944": 14
+    },
+    "status": "verified"
+  },
+  "84318": {
+    "id": 84318,
+    "name": "Paolo Hurtado",
+    "verifiedAt": "2026-07-17T14:14:40.534Z",
+    "source": "https://tmapi.transfermarkt.technology/player/84318/performance-game",
+    "appearances": 392,
+    "goals": 67,
+    "assists": 31,
+    "minutesPlayed": 21750,
+    "clubIds": [
+      17475,
+      88406,
+      19520,
+      2729,
+      184,
+      4321,
+      2259,
+      2293,
+      2420,
+      1032,
+      2995,
+      861,
+      4576
+    ],
+    "clubAppearances": {
+      "184": 99,
+      "861": 14,
+      "1032": 6,
+      "2259": 2,
+      "2293": 35,
+      "2420": 80,
+      "2729": 19,
+      "2995": 74,
+      "4321": 4,
+      "4576": 21,
+      "17475": 4,
+      "19520": 19,
+      "88406": 15
     },
     "status": "verified"
   },
@@ -846,6 +1403,74 @@
     },
     "status": "verified"
   },
+  "106675": {
+    "id": 106675,
+    "name": "Kirill Panchenko",
+    "verifiedAt": "2026-07-17T14:14:48.392Z",
+    "source": "https://tmapi.transfermarkt.technology/player/106675/performance-game",
+    "appearances": 411,
+    "goals": 101,
+    "assists": 54,
+    "minutesPlayed": 24626,
+    "clubIds": [
+      3719,
+      3729,
+      41201,
+      121,
+      2410,
+      11755,
+      3691,
+      11754,
+      11126,
+      16594,
+      12045
+    ],
+    "clubAppearances": {
+      "121": 103,
+      "2410": 41,
+      "3691": 30,
+      "3719": 32,
+      "3729": 64,
+      "11126": 120,
+      "11754": 1,
+      "11755": 1,
+      "12045": 1,
+      "16594": 7,
+      "41201": 11
+    },
+    "status": "verified"
+  },
+  "107665": {
+    "id": 107665,
+    "name": "Filip Novak",
+    "verifiedAt": "2026-07-17T14:14:51.500Z",
+    "source": "https://tmapi.transfermarkt.technology/player/107665/performance-game",
+    "appearances": 502,
+    "goals": 69,
+    "assists": 33,
+    "minutesPlayed": 39455,
+    "clubIds": [
+      1322,
+      6488,
+      2311,
+      2524,
+      36,
+      449,
+      865,
+      5545
+    ],
+    "clubAppearances": {
+      "36": 51,
+      "449": 89,
+      "865": 97,
+      "1322": 177,
+      "2311": 13,
+      "2524": 14,
+      "5545": 59,
+      "6488": 2
+    },
+    "status": "verified"
+  },
   "118022": {
     "id": 118022,
     "name": "Younès Belhanda",
@@ -876,6 +1501,41 @@
       "4630": 8,
       "10775": 49,
       "10852": 1
+    },
+    "status": "verified"
+  },
+  "120785": {
+    "id": 120785,
+    "name": "Knowledge Musona",
+    "verifiedAt": "2026-07-17T14:14:26.461Z",
+    "source": "https://tmapi.transfermarkt.technology/player/120785/performance-game",
+    "appearances": 391,
+    "goals": 118,
+    "assists": 59,
+    "minutesPlayed": 28304,
+    "clubIds": [
+      71665,
+      31008,
+      40079,
+      1245,
+      498,
+      58,
+      2861,
+      568,
+      167,
+      533
+    ],
+    "clubAppearances": {
+      "58": 10,
+      "167": 17,
+      "498": 6,
+      "533": 17,
+      "568": 88,
+      "1245": 33,
+      "2861": 112,
+      "31008": 23,
+      "40079": 55,
+      "71665": 30
     },
     "status": "verified"
   },
@@ -942,6 +1602,156 @@
       "6079": 36,
       "6080": 130,
       "12935": 36
+    },
+    "status": "verified"
+  },
+  "146805": {
+    "id": 146805,
+    "name": "Majeed Waris",
+    "verifiedAt": "2026-07-17T14:14:27.457Z",
+    "source": "https://tmapi.transfermarkt.technology/player/146805/performance-game",
+    "appearances": 344,
+    "goals": 84,
+    "assists": 37,
+    "minutesPlayed": 20651,
+    "clubIds": [
+      3899,
+      667,
+      995,
+      720,
+      1158,
+      16662,
+      449,
+      232,
+      1423,
+      6189,
+      1109
+    ],
+    "clubAppearances": {
+      "232": 16,
+      "449": 29,
+      "667": 40,
+      "720": 8,
+      "995": 38,
+      "1109": 63,
+      "1158": 73,
+      "1423": 16,
+      "3899": 57,
+      "6189": 3,
+      "16662": 1
+    },
+    "status": "verified"
+  },
+  "162261": {
+    "id": 162261,
+    "name": "Dimitrios Kolovos",
+    "verifiedAt": "2026-07-17T14:14:44.907Z",
+    "source": "https://tmapi.transfermarkt.technology/player/162261/performance-game",
+    "appearances": 383,
+    "goals": 79,
+    "assists": 44,
+    "minutesPlayed": 24534,
+    "clubIds": [
+      169,
+      72710,
+      6418,
+      120,
+      2481,
+      265,
+      829,
+      9005,
+      403,
+      354,
+      683,
+      8476
+    ],
+    "clubAppearances": {
+      "120": 14,
+      "169": 151,
+      "265": 23,
+      "354": 42,
+      "403": 3,
+      "683": 11,
+      "829": 18,
+      "2481": 49,
+      "6418": 30,
+      "8476": 7,
+      "9005": 7,
+      "72710": 28
+    },
+    "status": "verified"
+  },
+  "173589": {
+    "id": 173589,
+    "name": "Viktor Klonaridis",
+    "verifiedAt": "2026-07-17T14:14:49.444Z",
+    "source": "https://tmapi.transfermarkt.technology/player/173589/performance-game",
+    "appearances": 388,
+    "goals": 61,
+    "assists": 43,
+    "minutesPlayed": 19901,
+    "clubIds": [
+      4586,
+      68029,
+      3999,
+      30120,
+      24245,
+      3060,
+      2784,
+      2441,
+      265,
+      8152,
+      826,
+      29228,
+      1082,
+      12765,
+      7632
+    ],
+    "clubAppearances": {
+      "265": 123,
+      "826": 13,
+      "1082": 5,
+      "2441": 95,
+      "2784": 39,
+      "3060": 46,
+      "3999": 4,
+      "4586": 2,
+      "7632": 18,
+      "8152": 1,
+      "12765": 4,
+      "24245": 12,
+      "29228": 8,
+      "30120": 12,
+      "68029": 6
+    },
+    "status": "verified"
+  },
+  "182392": {
+    "id": 182392,
+    "name": "Pieros Sotiriou",
+    "verifiedAt": "2026-07-17T14:14:52.551Z",
+    "source": "https://tmapi.transfermarkt.technology/player/182392/performance-game",
+    "appearances": 435,
+    "goals": 152,
+    "assists": 28,
+    "minutesPlayed": 26605,
+    "clubIds": [
+      2784,
+      2697,
+      31614,
+      22220,
+      190,
+      62683,
+      1402
+    ],
+    "clubAppearances": {
+      "190": 110,
+      "1402": 52,
+      "2697": 66,
+      "2784": 126,
+      "22220": 17,
+      "31614": 62,
+      "62683": 2
     },
     "status": "verified"
   },
@@ -1014,6 +1824,33 @@
       "9902": 34,
       "13613": 31,
       "52358": 32
+    },
+    "status": "verified"
+  },
+  "339808": {
+    "id": 339808,
+    "name": "Theo Hernández",
+    "verifiedAt": "2026-07-17T14:14:42.657Z",
+    "source": "https://tmapi.transfermarkt.technology/player/339808/performance-game",
+    "appearances": 406,
+    "goals": 48,
+    "assists": 55,
+    "minutesPlayed": 34521,
+    "clubIds": [
+      1114,
+      5,
+      681,
+      418,
+      1108,
+      41581
+    ],
+    "clubAppearances": {
+      "5": 262,
+      "418": 23,
+      "681": 28,
+      "1108": 38,
+      "1114": 44,
+      "41581": 11
     },
     "status": "verified"
   }
