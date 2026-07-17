@@ -103,7 +103,12 @@ function setupScreen(id, title, description, mode) {
     ...new Set(clubs.map((c) => c.leagueId || `${c.country}:${c.league}`)),
   ].sort();
   $(id).innerHTML =
-    `<button class="back" data-view="home">← Ana sayfa</button><div class="surface"><span class="kicker">OYUN AYARLARI</span><h2>${title}</h2><p>${description}</p><label>Tur sayısı<select class="rounds"><option>3</option><option selected>5</option><option>10</option><option>15</option></select></label><label>Tur süresi<select class="seconds"><option>15</option><option selected>30</option><option>45</option></select></label><label>Zorluk<select class="difficulty"><option value="normal">Normal</option><option value="easy">Kolay</option><option value="hard">Zor</option></select></label><fieldset class="league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend>${leagues.map((league, i) => `<label><input type="checkbox" value="${esc(league)}"><span>${esc(league)}</span></label>`).join("")}</fieldset><button class="cta start">Oyunu başlat →</button></div>`;
+    `<button class="back" data-view="home">← Ana sayfa</button><div class="surface classic-setup"><span class="kicker">OYUN AYARLARI</span><h2>${title}</h2><p>${description}</p><fieldset><legend>Oyun biçimi</legend><div class="segmented game-format"><label><input type="radio" name="${mode}Format" value="solo" checked><span>Tek oyunculu</span></label><label><input type="radio" name="${mode}Format" value="duo"><span>Aynı cihazda iki oyunculu</span></label><label><input type="radio" name="${mode}Format" value="online"><span>Online iki oyunculu</span></label><label><input type="radio" name="${mode}Format" value="computer"><span>Bilgisayara karşı</span></label></div></fieldset><div class="setup-grid"><label>Tur sayısı<select class="rounds"><option>3</option><option selected>5</option><option>10</option><option>15</option></select></label><label>Tur süresi<select class="seconds"><option>15</option><option selected>30</option><option>45</option></select></label><label>Zorluk<select class="difficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select><small class="difficulty-help">Bilinen ve orta seviye kulüplerden dengeli sorular.</small></label><label>Cevap yöntemi<select class="answer-method"><option value="text" selected>Serbest metin</option><option value="multiple">Çoktan seçmeli</option></select><small>Çoktan seçmelide dört ilişkili seçenek gösterilir.</small></label></div><fieldset class="league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend>${leagues.map((league) => `<label><input type="checkbox" value="${esc(league)}"><span>${esc(league)}</span></label>`).join("")}</fieldset><button class="cta start">Oyunu başlat →</button></div>`;
+  const difficulty = $(id).querySelector(".difficulty"), answer = $(id).querySelector(".answer-method"), help = $(id).querySelector(".difficulty-help");
+  difficulty.onchange = () => {
+    help.textContent = difficulty.value === "easy" ? "Tanınmış kulüpler, bilinen futbolcular ve daha ayırt edilebilir seçenekler." : difficulty.value === "hard" ? "Daha az bilinen kulüpler, eski kariyerler ve birbirine yakın seçenekler." : "Bilinen ve orta seviye kulüplerden dengeli sorular.";
+    answer.value = difficulty.value === "easy" ? "multiple" : "text";
+  };
   $(id).querySelector(".start").onclick = () => startGame(mode, $(id));
 }
 function enhanceLeagueSelector(root) {
@@ -224,7 +229,7 @@ function buildPairs(mode, difficulty, selectedLeagues) {
       !selectedLeagues.size ||
       selectedLeagues.has(c.leagueId || `${c.country}:${c.league}`);
   if (mode === "clubs") {
-    const active = clubs.filter((c) => c.active && allowed(c));
+    const active = clubs.filter((c) => c.active && allowed(c) && IkiFormaCore.selectClubByDifficulty([c], difficulty, () => 0));
     for (let i = 0; i < active.length; i++)
       for (let j = i + 1; j < active.length; j++) {
         const answers = namesForClubs([active[i].id, active[j].id]);
@@ -241,14 +246,14 @@ function buildPairs(mode, difficulty, selectedLeagues) {
           });
       }
   } else {
-    for (const c of clubs.filter((x) => x.active && allowed(x))) {
+    for (const c of clubs.filter((x) => x.active && allowed(x) && IkiFormaCore.selectClubByDifficulty([x], difficulty, () => 0))) {
       const grouped = new Map();
       for (const p of clubPlayers.get(c.id) || []) {
-        if (!p.nationality) continue;
-        if (!grouped.has(p.nationality)) grouped.set(p.nationality, []);
-        grouped.get(p.nationality).push(p);
+        if (!p.nationalityCode) continue;
+        if (!grouped.has(p.nationalityCode)) grouped.set(p.nationalityCode, []);
+        grouped.get(p.nationalityCode).push(p);
       }
-      for (const [nationality, list] of grouped) {
+      for (const [countryCode, list] of grouped) {
         if (
           (difficulty === "easy" && list.length < 6) ||
           (difficulty === "normal" && list.length < 2) ||
@@ -256,10 +261,10 @@ function buildPairs(mode, difficulty, selectedLeagues) {
         )
           continue;
         pairs.push({
-          a: { name: nationality, league: "Vatandaşlık", country: "Ülke" },
+          a: { name: list[0].nationality, league: "Vatandaşlık", country: "Ülke", countryCode },
           b: c,
           answers: list,
-          key: `${nationality}:${c.id}`,
+          key: `${countryCode}:${c.id}`,
         });
       }
     }
@@ -273,8 +278,13 @@ function startGame(mode, screen) {
         (x) => x.value,
       ),
     );
+  const format = screen.querySelector(".game-format input:checked").value;
+  if (format === "online" && typeof openOnlineLobby === "function") return openOnlineLobby(mode, screen);
   game = {
     mode,
+    format,
+    difficulty,
+    answerMethod: screen.querySelector(".answer-method").value,
     round: 0,
     total: +screen.querySelector(".rounds").value,
     seconds: +screen.querySelector(".seconds").value,
@@ -293,6 +303,16 @@ function nextRound() {
   if (game.round >= game.total || !game.pairs.length) return finishGame();
   const current = game.pairs.shift();
   game.current = current;
+  game.question = null;
+  if (game.answerMethod === "multiple") {
+    game.question = game.mode === "clubs"
+      ? IkiFormaCore.generateTwoClubMultipleChoiceQuestion({ clubAId: current.a.id, clubBId: current.b.id, indexes, difficulty: game.difficulty })
+      : IkiFormaCore.generateCountryClubMultipleChoiceQuestion({ countryCode: current.a.countryCode, clubId: current.b.id, indexes, difficulty: game.difficulty });
+    if (!game.question) {
+      console.debug("QUESTION_GENERATION_FAILED", { mode: game.mode, key: current.key });
+      return game.pairs.length ? nextRound() : finishGame();
+    }
+  }
   game.round++;
   game.left = game.seconds;
   $("#gameRound").textContent = `Tur ${game.round}/${game.total}`;
@@ -300,6 +320,9 @@ function nextRound() {
   $("#sideB").innerHTML = side(current.b);
   $("#answerInput").value = "";
   $("#answerSuggestions").innerHTML = "";
+  $("#multipleChoiceOptions").innerHTML = "";
+  $("#answerInput").closest(".answer-box").hidden = game.answerMethod === "multiple";
+  $("#multipleChoiceOptions").hidden = game.answerMethod !== "multiple";
   $("#gameMessage").textContent = "Ortak futbolcuyu bul";
   tick();
   timer = setInterval(() => {
@@ -307,7 +330,43 @@ function nextRound() {
     tick();
     if (game.left <= 0) endRound(null, "Süre doldu");
   }, 1000);
-  $("#answerInput").focus();
+  if (game.answerMethod === "multiple") renderMultipleChoice();
+  else $("#answerInput").focus();
+}
+
+function renderMultipleChoice() {
+  const root = $("#multipleChoiceOptions");
+  root.innerHTML = game.question.optionPlayerIds.map((id, index) => {
+    const player = indexes.playerById.get(id), flag = countryFlag(player.nationalityCode);
+    return `<button class="choice-option" data-player-id="${id}" aria-label="${index + 1}. ${esc(player.name)}"><span class="choice-key">${index + 1}</span>${person(player)}<span><b>${esc(player.name)}</b><small><img src="${flag}" alt="" width="22" height="15"> ${esc(player.nationality || "Milliyet bilinmiyor")}</small></span><i aria-hidden="true"></i></button>`;
+  }).join("");
+  root.querySelectorAll("button").forEach((button) => button.onclick = () => answerMultipleChoice(+button.dataset.playerId));
+  root.onkeydown = (event) => {
+    if (!["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
+    event.preventDefault();
+    const buttons = [...root.querySelectorAll("button:not(:disabled)")], current = buttons.indexOf(document.activeElement);
+    const direction = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+    buttons[(current + direction + buttons.length) % buttons.length]?.focus();
+  };
+  root.querySelector("button")?.focus();
+}
+
+function answerMultipleChoice(playerId) {
+  if (game.answerLocked) return;
+  game.answerLocked = true;
+  clearInterval(timer);
+  const correctId = game.question.correctPlayerId, selected = indexes.playerById.get(playerId), correct = indexes.playerById.get(correctId), isCorrect = playerId === correctId;
+  $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => {
+    button.disabled = true;
+    if (+button.dataset.playerId === correctId) { button.classList.add("is-correct"); button.querySelector("i").textContent = "✓ Doğru"; }
+    else if (+button.dataset.playerId === playerId) { button.classList.add("is-wrong"); button.querySelector("i").textContent = "✕ Yanlış"; }
+  });
+  const relation = IkiFormaCore.optionRelation ? IkiFormaCore.optionRelation(game.question, selected, indexes) : [];
+  const explanation = isCorrect
+    ? game.mode === "clubs" ? `${correct.name}, iki kulübün de A takımında oynadı.` : `${correct.name}, ${game.current.a.name} vatandaşı ve ${game.current.b.name} A takımında oynadı.`
+    : game.mode === "clubs" ? `${selected.name}, gösterilen kulüplerden yalnızca birinde oynadı.` : `${selected.name}, ülke ve kulüp koşullarından yalnızca birini sağlıyor.`;
+  $("#gameMessage").textContent = `${isCorrect ? "✓ Doğru" : "✕ Yanlış"}. ${explanation}`;
+  setTimeout(() => { game.answerLocked = false; endRound(isCorrect ? correct : null, isCorrect ? "" : `Yanlış: ${selected.name}`); }, 1200);
 }
 function tick() {
   $("#timer").textContent = `${game.left} sn`;

@@ -423,6 +423,7 @@ const api = {
   getCountryOnlyDistractors,
   getClubOnlyDistractors,
   validateQuestionOptions,
+  optionRelation,
   selectClubByDifficulty,
   selectPlayerByDifficulty,
   generateTwoClubMultipleChoiceQuestion,
