@@ -522,6 +522,8 @@ $("#copyRoomCode").onclick = async () => { await navigator.clipboard.writeText(o
 $("#onlineReady").onclick = () => mutateOnline({ type: "ready", ready: !online.state.players[online.playerIndex].ready });
 $("#onlineApplySettings").onclick = async () => {
   const settings = { gameType: $("#onlineGameType").value, rounds: +$("#onlineRounds").value, seconds: +$("#onlineSeconds").value, difficulty: $("#onlineDifficulty").value, answerMethod: $("#onlineAnswerMethod").value, optionCount: 4, repeatPlayers: true, leagueIds: [] };
+  settings.lastModeState = online.state.settings?.lastModeState || null;
+  settings.randomFiveHistory = online.state.settings?.randomFiveHistory || [];
   if (settings.gameType === "grid") {
     const board = generateGrid(new Set(), "mixed"), initialState = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: online.state.players.map((player) => player.name) });
     if (!board) return toast("Bu ayarlarla geçerli ızgara üretilemedi."); initialState.grid = board; initialState.answerMethod = settings.answerMethod; settings.initialState = initialState;
@@ -569,9 +571,11 @@ function buildFreshOnlineSpecialState(settings, active) {
   const previous = settings.lastModeState?.value || settings.initialState || {};
   for (let attempt = 0; attempt < 12; attempt++) {
     if (settings.gameType === "randomFive") {
-      const pool = players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), sets = Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool));
+      const pool = players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), used = new Set((settings.randomFiveHistory || []).map((set) => randomFiveSetKey(set)));
+      for (const set of previous.setIds || []) used.add(randomFiveSetKey(set));
+      const sets = buildFreshRandomFiveSets(allowedClubs, pool, used);
+      if (!sets) continue;
       const setIds = sets.map((set) => set.map((club) => club.id));
-      if (sets.some((set) => set.length < 5) || JSON.stringify(setIds) === JSON.stringify(previous.setIds)) continue;
       return { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: active.map(() => 0), round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds, choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
     }
     if (settings.gameType === "twin") {
@@ -590,6 +594,20 @@ function buildFreshOnlineSpecialState(settings, active) {
     }
   }
   return null;
+}
+function randomFiveSetKey(set) { return [...set].map(Number).sort((a, b) => a - b).join("-"); }
+function buildFreshRandomFiveSets(allowedClubs, pool, used) {
+  const sets = [];
+  for (let round = 0; round < 5; round++) {
+    let accepted = null;
+    for (let attempt = 0; attempt < 80; attempt++) {
+      const candidate = buildRandomFiveSet(allowedClubs, pool), key = randomFiveSetKey(candidate.map((club) => club.id));
+      if (candidate.length === 5 && !used.has(key)) { accepted = candidate; used.add(key); break; }
+    }
+    if (!accepted) return null;
+    sets.push(accepted);
+  }
+  return sets;
 }
 function handleOnlineSpecialState() {
   const snapshot = online.state?.modeState;
