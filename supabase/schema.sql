@@ -97,6 +97,7 @@ begin
     remaining_count := jsonb_array_length(room.state->'matchPlayers') - 1;
     if slot = 0 or remaining_count < 2 then
       next_state := jsonb_set(next_state, '{status}', '"finished"');
+      next_state := jsonb_set(next_state, '{settings,lastModeState}', coalesce(room.state->'modeState', 'null'::jsonb));
       next_state := jsonb_set(next_state, '{finishedAt}', to_jsonb(floor(extract(epoch from now()) * 1000)));
       next_state := jsonb_set(next_state, '{players}', (select jsonb_agg(jsonb_set(p, '{ready}', 'false')) from jsonb_array_elements(room.state->'players') p));
     else
@@ -193,6 +194,7 @@ begin
     results := coalesce(room.state->'matchResults', '{}'::jsonb) || coalesce((select jsonb_object_agg(player->>'roomSlot', room.state#>array['scores',(ordinality - 1)::text]) from jsonb_array_elements(room.state->'matchPlayers') with ordinality roster(player, ordinality)), '{}'::jsonb);
     next_state := jsonb_set(next_state, '{matchResults}', results);
     next_state := jsonb_set(next_state, '{totalScores}', (select jsonb_agg(coalesce(results->(ordinality - 1)::text, room.state#>array['totalScores',(ordinality - 1)::text], '0'::jsonb) order by ordinality) from jsonb_array_elements(room.state->'players') with ordinality listed(player, ordinality)));
+    next_state := jsonb_set(next_state, '{settings,lastModeState}', coalesce(room.state->'modeState', 'null'::jsonb));
     next_state := jsonb_set(next_state, '{status}', '"finished"'); next_state := jsonb_set(next_state, '{finishedAt}', to_jsonb(floor(extract(epoch from now()) * 1000)));
     next_state := jsonb_set(next_state, '{players}', (select jsonb_agg(jsonb_set(p, '{ready}', 'false')) from jsonb_array_elements(room.state->'players') p));
   elsif action_type = 'special_guess' then

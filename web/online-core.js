@@ -44,7 +44,7 @@ function leaveOnlineMatch(state, { playerIndex, expectedVersion, now = Date.now(
   const matchResults = { ...(state.matchResults || {}) };
   roster.forEach((player, index) => { matchResults[player.roomSlot] = state.scores[index] || 0; });
   const totalScores = state.players.map((_, index) => matchResults[index] ?? state.totalScores?.[index] ?? 0);
-  if (playerIndex === 0 || roster.length - 1 < 2) return advance(state, { status: "finished", finishedAt: now, matchResults, totalScores, players: state.players.map((player) => ({ ...player, ready: false })) });
+  if (playerIndex === 0 || roster.length - 1 < 2) return advance(state, { status: "finished", finishedAt: now, matchResults, totalScores, settings: { ...state.settings, lastModeState: state.modeState || null }, players: state.players.map((player) => ({ ...player, ready: false })) });
   const matchPlayers = roster.filter((_, index) => index !== removed), scores = state.scores.filter((_, index) => index !== removed);
   const currentTurn = state.currentTurn > removed ? state.currentTurn - 1 : state.currentTurn === removed ? removed % matchPlayers.length : state.currentTurn;
   let modeState = state.modeState ? structuredClone(state.modeState) : null;
@@ -125,7 +125,7 @@ function finishOnlineGame(state, { playerIndex, expectedVersion, now = Date.now(
   if (state.status !== "playing" || (!state.revealUntil && !state.modeState?.value?.finished && state.modeState?.value?.status !== "finished")) throw new Error("FINISH_NOT_ALLOWED");
   const matchResults = { ...(state.matchResults || {}) }; (state.matchPlayers || []).forEach((player, index) => { matchResults[player.roomSlot] = state.scores[index] || 0; });
   const totalScores = state.players.map((_, index) => matchResults[index] ?? state.totalScores?.[index] ?? 0);
-  return advance(state, { status: "finished", finishedAt: now, matchResults, totalScores, players: state.players.map((player) => ({ ...player, ready: false })) });
+  return advance(state, { status: "finished", finishedAt: now, matchResults, totalScores, settings: { ...state.settings, lastModeState: state.modeState || null }, players: state.players.map((player) => ({ ...player, ready: false })) });
 }
 function configureOnlineMatch(state, { playerIndex, settings, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
