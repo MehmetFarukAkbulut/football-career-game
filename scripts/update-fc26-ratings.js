@@ -49,6 +49,8 @@ async function main() {
         team: row.team || "",
         photoUrl: careerPlayer?.photo || sofifaPortrait(row.id),
         photoSource: careerPlayer?.photo ? "career-data-transfermarkt" : "sofifa-ea-id",
+        careerPlayerId: careerPlayer?.id || null,
+        careerClubIds: careerPlayer?.clubIds || [],
         eaUrl: row.url || "",
       };
     })

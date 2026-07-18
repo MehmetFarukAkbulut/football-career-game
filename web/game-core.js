@@ -621,6 +621,68 @@ function compareTrumpStat(current, next, key) {
   return { currentValue, nextValue, correct: currentValue >= nextValue };
 }
 
+const XI_SLOTS = ["GK", "LB", "CB", "CB", "RB", "CM", "CM", "CM", "LW", "ST", "RW"];
+const POSITION_GROUPS = { GK: ["GK"], LB: ["LB", "LWB"], CB: ["CB"], RB: ["RB", "RWB"], CM: ["CM", "CDM", "CAM"], LW: ["LW", "LM"], ST: ["ST", "CF"], RW: ["RW", "RM"] };
+
+function playerFitsXiSlot(player, slot) {
+  const positions = [player?.position, ...(player?.alternativePositions || [])];
+  return (POSITION_GROUPS[slot] || [slot]).some((position) => positions.includes(position));
+}
+
+function tournamentWinChance(teamRating, opponentRating) {
+  return 1 / (1 + Math.pow(10, (+opponentRating - +teamRating) / 10));
+}
+
+function simulateTournamentMatch(teamRating, opponentRating, rng = Math.random, allowDraw = false) {
+  const chance = tournamentWinChance(teamRating, opponentRating), roll = rng();
+  if (allowDraw && roll > chance && roll < chance + .22) return "draw";
+  return roll <= chance ? "win" : "loss";
+}
+
+function simulateXiTournament({ averageRating, difficulty = "normal", tournament = "ucl", rng = Math.random }) {
+  const modifier = difficulty === "hard" ? 3 : difficulty === "easy" ? -3 : 0;
+  const stages = [];
+  if (tournament === "worldCup") {
+    let points = 0;
+    for (let match = 1; match <= 3; match++) {
+      const result = simulateTournamentMatch(averageRating, 79 + modifier + rng() * 7, rng, true);
+      points += result === "win" ? 3 : result === "draw" ? 1 : 0;
+      stages.push({ stage: `Grup maçı ${match}`, result });
+    }
+    const position = points >= 7 ? 1 : points >= 5 ? 2 : points >= 4 ? 3 : 4;
+    stages.push({ stage: "Grup", result: `${points} puan · ${position}. sıra` });
+    if (position === 4 || (position === 3 && points < 4)) return { stages, outcome: "Grup aşamasında elendin", matches: 3 };
+    for (const stage of ["Son 32", "Son 16", "Çeyrek final", "Yarı final", "Final"]) {
+      const result = simulateTournamentMatch(averageRating, 80 + modifier + rng() * 8, rng);
+      stages.push({ stage, result });
+      if (result === "loss") return { stages, outcome: `${stage} aşamasında elendin`, matches: stages.filter((item) => ["win", "draw", "loss"].includes(item.result)).length };
+    }
+    return { stages, outcome: "Dünya Kupası şampiyonu oldun!", matches: 8 };
+  }
+  let points = 0;
+  for (let match = 1; match <= 8; match++) {
+    const result = simulateTournamentMatch(averageRating, 78 + modifier + rng() * 10, rng, true);
+    points += result === "win" ? 3 : result === "draw" ? 1 : 0;
+    stages.push({ stage: `Lig maçı ${match}`, result });
+  }
+  const rank = points >= 19 ? 3 : points >= 16 ? 7 : points >= 13 ? 12 : points >= 10 ? 20 : 29;
+  stages.push({ stage: "Lig etabı", result: `${points} puan · ${rank}. sıra` });
+  if (rank > 24) return { stages, outcome: `Lig etabını ${rank}. bitirdin ve elendin`, matches: 8 };
+  if (rank > 8) {
+    const playoff = simulateTournamentMatch(averageRating, 81 + modifier + rng() * 6, rng);
+    stages.push({ stage: "Son 16 play-off (2 maç)", result: playoff });
+    if (playoff === "loss") return { stages, outcome: "Son 16 play-off aşamasında elendin", matches: 10 };
+  }
+  let matches = rank > 8 ? 10 : 8;
+  for (const [stage, legs] of [["Son 16", 2], ["Çeyrek final", 2], ["Yarı final", 2], ["Final", 1]]) {
+    const result = simulateTournamentMatch(averageRating, 82 + modifier + rng() * 7, rng);
+    stages.push({ stage: `${stage}${legs === 2 ? " (2 maç)" : ""}`, result });
+    matches += legs;
+    if (result === "loss") return { stages, outcome: `${stage} aşamasında elendin`, matches };
+  }
+  return { stages, outcome: "Şampiyonlar Ligi şampiyonu oldun!", matches };
+}
+
 const api = {
   DIFFICULTIES,
   WINNING_LINES,
@@ -671,6 +733,11 @@ const api = {
   TRUMP_METRICS,
   trumpMetricValue,
   compareTrumpStat,
+  XI_SLOTS,
+  playerFitsXiSlot,
+  tournamentWinChance,
+  simulateTournamentMatch,
+  simulateXiTournament,
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;
