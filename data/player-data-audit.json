@@ -1,0 +1,3514 @@
+{
+  "auditedAt": "2026-07-18T12:59:37.464Z",
+  "sourceVersion": 6,
+  "source": "dcaribou/transfermarkt-datasets (CC0-1.0)",
+  "counts": {
+    "players": 28487,
+    "clubs": 7705,
+    "errors": 0,
+    "warnings": 1773
+  },
+  "issueLimit": 500,
+  "issues": [
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 1772,
+      "name": "Du-ri Cha",
+      "detail": 854
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 3890,
+      "name": "Eduardo",
+      "detail": 28708
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 3942,
+      "name": "Martin Lanig",
+      "detail": 955
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 5399,
+      "name": "Kamel Chafni",
+      "detail": 14213
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 6322,
+      "name": "Patrick Helmes",
+      "detail": 2366
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 8740,
+      "name": "Josef Cinar",
+      "detail": 1452
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 9707,
+      "name": "Konstantinos Mendrinos",
+      "detail": 6100
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 13326,
+      "name": "Johnny Leoni",
+      "detail": 25738
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 14365,
+      "name": "Ricardo Fernandes",
+      "detail": 46282
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 14403,
+      "name": "Júnior",
+      "detail": 35505
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 14542,
+      "name": "Zvonimir Vukic",
+      "detail": 2674
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 14716,
+      "name": "Ross Tokely",
+      "detail": 5751
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 14881,
+      "name": "Marcelo Carné",
+      "detail": 32037
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 14881,
+      "name": "Marcelo Carné",
+      "detail": 31465
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 14881,
+      "name": "Marcelo Carné",
+      "detail": 15656
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15363,
+      "name": "Aleksey Berezutski",
+      "detail": 41511
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15373,
+      "name": "Sergey Semak",
+      "detail": 12042
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15373,
+      "name": "Sergey Semak",
+      "detail": 19972
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15380,
+      "name": "Spartak Gogniev",
+      "detail": 16006
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15404,
+      "name": "Maris Verpakovskis",
+      "detail": 55292
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15404,
+      "name": "Maris Verpakovskis",
+      "detail": 3811
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15583,
+      "name": "Dmitriy Kirichenko",
+      "detail": 82456
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15597,
+      "name": "Artur Tlisov",
+      "detail": 41511
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 15885,
+      "name": "Kostadin Hazurov",
+      "detail": 19215
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 16191,
+      "name": "Kendal Ucar",
+      "detail": 2054
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 16420,
+      "name": "Dimitrios Koutsopoulos",
+      "detail": 50498
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 16420,
+      "name": "Dimitrios Koutsopoulos",
+      "detail": 4594
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 16599,
+      "name": "Vangelis Koutsopoulos",
+      "detail": 4594
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 16831,
+      "name": "Ken Reichel",
+      "detail": 5609
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 17313,
+      "name": "Henrico Drost",
+      "detail": 45950
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 18416,
+      "name": "Aloys Nong",
+      "detail": 44255
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 18429,
+      "name": "Denis Epstein",
+      "detail": 29698
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 18502,
+      "name": "Tim Dreesen",
+      "detail": 34791
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 18543,
+      "name": "Víctor Montaño",
+      "detail": 52845
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 20833,
+      "name": "Grigoris Athanasiou",
+      "detail": 4792
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 20887,
+      "name": "Dimitrios Kontodimos",
+      "detail": 18488
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 21108,
+      "name": "Jan Rajnoch",
+      "detail": 18973
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 22131,
+      "name": "Jaime Valdés",
+      "detail": 39607
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 22632,
+      "name": "Cédric Hengbart",
+      "detail": 87674
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 22720,
+      "name": "William",
+      "detail": 21535
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 23250,
+      "name": "Niels Lodberg",
+      "detail": 896
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 23379,
+      "name": "Volodymyr Polyovyi",
+      "detail": 132873
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24038,
+      "name": "Eghishe Melikyan",
+      "detail": 8837
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24155,
+      "name": "Olivier Occéan",
+      "detail": 36253
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24232,
+      "name": "Ronny Garbuschewski",
+      "detail": 7289
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24232,
+      "name": "Ronny Garbuschewski",
+      "detail": 5237
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24232,
+      "name": "Ronny Garbuschewski",
+      "detail": 99
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24976,
+      "name": "Vance Sikov",
+      "detail": 43841
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24986,
+      "name": "Petr Bystrov",
+      "detail": 2693
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24994,
+      "name": "Roman Gerus",
+      "detail": 41511
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 24994,
+      "name": "Roman Gerus",
+      "detail": 20534
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 25740,
+      "name": "Dragan Blatnjak",
+      "detail": 10312
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 25827,
+      "name": "Paulo Arantes",
+      "detail": 1522
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 25850,
+      "name": "Andriy Dykan",
+      "detail": 89217
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 25879,
+      "name": "Pavel Alikin",
+      "detail": 12413
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 25918,
+      "name": "Zahari Sirakov",
+      "detail": 977
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 25923,
+      "name": "Sergey Volkov",
+      "detail": 6435
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 25933,
+      "name": "Ovidiu Herea",
+      "detail": 37621
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 26239,
+      "name": "Pedro Botelho",
+      "detail": 22013
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 26502,
+      "name": "Daniel Oprita",
+      "detail": 36594
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 26579,
+      "name": "Georgios Chatzizisis",
+      "detail": 4600
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 26585,
+      "name": "Giannis Ioannou",
+      "detail": 4600
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 26771,
+      "name": "Jan Holenda",
+      "detail": 600
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 27019,
+      "name": "Vladimir Korytko",
+      "detail": 4363
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 27019,
+      "name": "Vladimir Korytko",
+      "detail": 24015
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 27151,
+      "name": "Pavlo Ivanov",
+      "detail": 24974
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 27151,
+      "name": "Pavlo Ivanov",
+      "detail": 95340
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 27193,
+      "name": "Sergey Omeljanchuk",
+      "detail": 4363
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 27592,
+      "name": "Lefteris Mappas",
+      "detail": 21891
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 28022,
+      "name": "Alessandro Lucarelli",
+      "detail": 25265
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 28027,
+      "name": "Nicola Pavarini",
+      "detail": 4090
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 28027,
+      "name": "Nicola Pavarini",
+      "detail": 22184
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 28716,
+      "name": "Adi Adilovic",
+      "detail": 6804
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 28716,
+      "name": "Adi Adilovic",
+      "detail": 3492
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 28753,
+      "name": "Juan Pablo Caffa",
+      "detail": 61553
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 28753,
+      "name": "Juan Pablo Caffa",
+      "detail": 19422
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 29354,
+      "name": "Ivan Sproule",
+      "detail": 35843
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 29354,
+      "name": "Ivan Sproule",
+      "detail": 15252
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 29855,
+      "name": "Ibou",
+      "detail": 34791
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 30505,
+      "name": "Zé Love",
+      "detail": 815
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 31453,
+      "name": "Ruben Schaken",
+      "detail": 19231
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 31751,
+      "name": "Robert Zillner",
+      "detail": 9070
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 31751,
+      "name": "Robert Zillner",
+      "detail": 9624
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 32618,
+      "name": "Assani Lukimya",
+      "detail": 12719
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 32618,
+      "name": "Assani Lukimya",
+      "detail": 40010
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 32618,
+      "name": "Assani Lukimya",
+      "detail": 5609
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 33440,
+      "name": "Adrian Cristea",
+      "detail": 9560
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 33921,
+      "name": "Maxime Josse",
+      "detail": 2055
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 33931,
+      "name": "Ousmane Sarr",
+      "detail": 59279
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34158,
+      "name": "Hassan El Mouataz",
+      "detail": 3738
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34281,
+      "name": "Rok Elsner",
+      "detail": 15926
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34281,
+      "name": "Rok Elsner",
+      "detail": 28377
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34641,
+      "name": "Darijan Matic",
+      "detail": 4770
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34758,
+      "name": "Banel Nicolita",
+      "detail": 56504
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34773,
+      "name": "Volodymyr Pryiomov",
+      "detail": 1941
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34773,
+      "name": "Volodymyr Pryiomov",
+      "detail": 2667
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 34941,
+      "name": "Alexandru Tudose",
+      "detail": 46111
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 35069,
+      "name": "Adam Stachowiak",
+      "detail": 28946
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 35245,
+      "name": "Matheus",
+      "detail": 7816
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 35579,
+      "name": "Jan Blazek",
+      "detail": 37151
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 35579,
+      "name": "Jan Blazek",
+      "detail": 56398
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 35748,
+      "name": "Dennis Oliech",
+      "detail": 12641
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 35892,
+      "name": "Mladen Bozovic",
+      "detail": 56052
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 36107,
+      "name": "Brana Ilic",
+      "detail": 59302
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 36134,
+      "name": "Borivoje Ristic",
+      "detail": 8975
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 36294,
+      "name": "Julien Quercia",
+      "detail": 82550
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 36478,
+      "name": "Alanzinho",
+      "detail": 5744
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 36808,
+      "name": "Chris Robertson",
+      "detail": 1051
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37078,
+      "name": "Christopher Mandiangu",
+      "detail": 6385
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37124,
+      "name": "McDonald Mariga",
+      "detail": 3125
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37247,
+      "name": "Vadim Demidov",
+      "detail": 10216
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37481,
+      "name": "Ahmed Abou-Mosalem",
+      "detail": 27291
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37481,
+      "name": "Ahmed Abou-Mosalem",
+      "detail": 23222
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37481,
+      "name": "Ahmed Abou-Mosalem",
+      "detail": 8586
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37538,
+      "name": "Martijn Barto",
+      "detail": 20780
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 37966,
+      "name": "Gabriel Cichero",
+      "detail": 18520
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 38124,
+      "name": "Heinz Barmettler",
+      "detail": 110600
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 38178,
+      "name": "Amr Zaki",
+      "detail": 19466
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 38339,
+      "name": "Petr Janda",
+      "detail": 57570
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 38440,
+      "name": "Christian Träsch",
+      "detail": 18215
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 38473,
+      "name": "Garry Bocaly",
+      "detail": 26706
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 38793,
+      "name": "Enar Jääger",
+      "detail": 19329
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39027,
+      "name": "Tayfun Pektürk",
+      "detail": 25201
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39027,
+      "name": "Tayfun Pektürk",
+      "detail": 1001
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39426,
+      "name": "Nicolai Müller",
+      "detail": 81867
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39556,
+      "name": "Ashour El Teki",
+      "detail": 28571
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39556,
+      "name": "Ashour El Teki",
+      "detail": 16216
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39637,
+      "name": "Roman Miroshnyk",
+      "detail": 50162
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39637,
+      "name": "Roman Miroshnyk",
+      "detail": 74494
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39637,
+      "name": "Roman Miroshnyk",
+      "detail": 76726
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39917,
+      "name": "Mamadou Samassa",
+      "detail": 14111
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 39917,
+      "name": "Mamadou Samassa",
+      "detail": 35385
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 40059,
+      "name": "Marek Sapara",
+      "detail": 58318
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 40254,
+      "name": "Viktor Faizulin",
+      "detail": 12058
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 40326,
+      "name": "Herve Tchami",
+      "detail": 32024
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 40326,
+      "name": "Herve Tchami",
+      "detail": 5399
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 41351,
+      "name": "Rihairo Meulens",
+      "detail": 10806
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 42296,
+      "name": "Damian Bellon",
+      "detail": 6732
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 42622,
+      "name": "Leandro",
+      "detail": 32621
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 42792,
+      "name": "Sander Puri",
+      "detail": 7682
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 42853,
+      "name": "Ferreira",
+      "detail": 3811
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 42853,
+      "name": "Ferreira",
+      "detail": 6181
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 43060,
+      "name": "Sergey Kuznetsov",
+      "detail": 22014
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 43259,
+      "name": "Michael Gardyne",
+      "detail": 23703
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 43411,
+      "name": "Roberto Colombo",
+      "detail": 5515
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 43411,
+      "name": "Roberto Colombo",
+      "detail": 57135
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 43989,
+      "name": "Toto Tamuz",
+      "detail": 28377
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44094,
+      "name": "Tarmo Kink",
+      "detail": 48803
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44172,
+      "name": "Vinicius",
+      "detail": 5120
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44172,
+      "name": "Vinicius",
+      "detail": 734
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44281,
+      "name": "Adriano Russo",
+      "detail": 22329
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44281,
+      "name": "Adriano Russo",
+      "detail": 10561
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44281,
+      "name": "Adriano Russo",
+      "detail": 52776
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44324,
+      "name": "Dejan Mezga",
+      "detail": 34000
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44398,
+      "name": "Veselin Minev",
+      "detail": 2190
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44622,
+      "name": "Vladimir Kisenkov",
+      "detail": 6435
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 44759,
+      "name": "Georgi Sarmov",
+      "detail": 40669
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45025,
+      "name": "Paulo Vinícius",
+      "detail": 32542
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45168,
+      "name": "Bakaye Traoré",
+      "detail": 85057
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45491,
+      "name": "Aleksandr Bukharov",
+      "detail": 41511
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45559,
+      "name": "Miroslav Stoch",
+      "detail": 18973
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45611,
+      "name": "Leigh Griffiths",
+      "detail": 28625
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45860,
+      "name": "Vladimir Dimitrovski",
+      "detail": 5111
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45930,
+      "name": "Marcel Stutter",
+      "detail": 7810
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 45986,
+      "name": "Kingsley Onuegbu",
+      "detail": 1248
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 46010,
+      "name": "Rubén Palazuelos",
+      "detail": 41029
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 46809,
+      "name": "Juan Pablo Pino",
+      "detail": 12971
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 47048,
+      "name": "Milan Bojovic",
+      "detail": 15552
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 47048,
+      "name": "Milan Bojovic",
+      "detail": 76366
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 47285,
+      "name": "Ibrahima Traoré",
+      "detail": 30423
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 47431,
+      "name": "Michalis Kripintiris",
+      "detail": 6100
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 47533,
+      "name": "Marko Stanojevic",
+      "detail": 12151
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 47571,
+      "name": "Florin Costea",
+      "detail": 83092
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 48495,
+      "name": "Maksim Budnikov",
+      "detail": 114705
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 48514,
+      "name": "Yaroslav Godzyur",
+      "detail": 20839
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 48534,
+      "name": "Aleksandr Shulenin",
+      "detail": 9687
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 48536,
+      "name": "Yuval Shpungin",
+      "detail": 51820
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 48542,
+      "name": "Sergey Narubin",
+      "detail": 20093
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 48560,
+      "name": "Dmitriy Tarasov",
+      "detail": 111238
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 48897,
+      "name": "Ade Runsewe",
+      "detail": 24308
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 49022,
+      "name": "Vitaliy Rudenko",
+      "detail": 26552
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 49035,
+      "name": "Mihail Aleksandrov",
+      "detail": 21253
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 49038,
+      "name": "Chigozie Udoji",
+      "detail": 31811
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 49040,
+      "name": "Sean Clohessy",
+      "detail": 3454
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 49040,
+      "name": "Sean Clohessy",
+      "detail": 9605
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 49788,
+      "name": "Aleksandr Karapetyan",
+      "detail": 98058
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 49788,
+      "name": "Aleksandr Karapetyan",
+      "detail": 2230
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 50413,
+      "name": "Deniz Kadah",
+      "detail": 7355
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 50413,
+      "name": "Deniz Kadah",
+      "detail": 917
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 50470,
+      "name": "Jan Hable",
+      "detail": 18968
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 50782,
+      "name": "Justin Eilers",
+      "detail": 21042
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 50782,
+      "name": "Justin Eilers",
+      "detail": 49135
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51141,
+      "name": "Aleksandar Lazevski",
+      "detail": 36923
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51168,
+      "name": "Jens Hegeler",
+      "detail": 11826
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51178,
+      "name": "Julian Schauerte",
+      "detail": 10226
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51190,
+      "name": "Marc Vucinovic",
+      "detail": 46176
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51190,
+      "name": "Marc Vucinovic",
+      "detail": 6964
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51224,
+      "name": "Daylon Claasen",
+      "detail": 85615
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51885,
+      "name": "Grigori Chirkin",
+      "detail": 12883
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51951,
+      "name": "Petros Kanakoudis",
+      "detail": 6677
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 51954,
+      "name": "Antonis Ladakis",
+      "detail": 6677
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 52044,
+      "name": "Georgios Lazaridis",
+      "detail": 21588
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 52045,
+      "name": "Athanasios Panteliadis",
+      "detail": 21588
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 52101,
+      "name": "Abdul Osman",
+      "detail": 28618
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 52212,
+      "name": "Doka Madureira",
+      "detail": 36960
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 52453,
+      "name": "Haris Handzic",
+      "detail": 24197
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 52956,
+      "name": "Gerson Acevedo",
+      "detail": 77217
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 53155,
+      "name": "Sebastián Rusculleda",
+      "detail": 15955
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 53238,
+      "name": "Sergey Krivets",
+      "detail": 14176
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 54178,
+      "name": "Renny Vega",
+      "detail": 21800
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 54565,
+      "name": "Dusan Savic",
+      "detail": 35246
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 54818,
+      "name": "Egidio Arévalo Ríos",
+      "detail": 46557
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 55044,
+      "name": "Abraham Gneki Guié",
+      "detail": 2238
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 55345,
+      "name": "Dmitriy Grachev",
+      "detail": 21854
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 55360,
+      "name": "Sergey Kotov",
+      "detail": 41511
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 55546,
+      "name": "Stanislav Matyash",
+      "detail": 121100
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 55546,
+      "name": "Stanislav Matyash",
+      "detail": 91531
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 55595,
+      "name": "Benjamin Mokulu",
+      "detail": 112033
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 55737,
+      "name": "Artur Yedigaryan",
+      "detail": 54
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 56372,
+      "name": "Hursut Meric",
+      "detail": 57103
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 56510,
+      "name": "André Fomitschow",
+      "detail": 7827
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 56528,
+      "name": "Kagan Söylemezgiller",
+      "detail": 5272
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 56528,
+      "name": "Kagan Söylemezgiller",
+      "detail": 24936
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 56528,
+      "name": "Kagan Söylemezgiller",
+      "detail": 280
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 56816,
+      "name": "Marcelo Goianira",
+      "detail": 20888
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 57609,
+      "name": "Andrey Chukhley",
+      "detail": 81228
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 57618,
+      "name": "Andrey Klimovich",
+      "detail": 27236
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 57789,
+      "name": "Cristian Castells",
+      "detail": 22338
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 57856,
+      "name": "Dmytro Babenko",
+      "detail": 38300
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 57961,
+      "name": "Edu Albacar",
+      "detail": 16694
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58000,
+      "name": "Artem Fedetskyi",
+      "detail": 132435
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58152,
+      "name": "Athanasios Tsourakis",
+      "detail": 882
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58152,
+      "name": "Athanasios Tsourakis",
+      "detail": 857
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58238,
+      "name": "Mykyta Kamenyuka",
+      "detail": 89217
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58450,
+      "name": "Nikolay Zaytsev",
+      "detail": 91532
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58660,
+      "name": "Ibrahim Öztürk",
+      "detail": 12390
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58928,
+      "name": "Yuriy Brovchenko",
+      "detail": 76012
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58928,
+      "name": "Yuriy Brovchenko",
+      "detail": 19727
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58933,
+      "name": "Yevgen Bokhashvili",
+      "detail": 120389
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 58933,
+      "name": "Yevgen Bokhashvili",
+      "detail": 14111
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59148,
+      "name": "Oleksandr Volovyk",
+      "detail": 95340
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59196,
+      "name": "Philipp Zulechner",
+      "detail": 18119
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59420,
+      "name": "Sergiy Kostyuk",
+      "detail": 32769
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59713,
+      "name": "Omar Jarun",
+      "detail": 46521
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59713,
+      "name": "Omar Jarun",
+      "detail": 4274
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59755,
+      "name": "Macoumba Kandji",
+      "detail": 4274
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59800,
+      "name": "Benjamin Bellot",
+      "detail": 9572
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59800,
+      "name": "Benjamin Bellot",
+      "detail": 5237
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59800,
+      "name": "Benjamin Bellot",
+      "detail": 8721
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59872,
+      "name": "Valery Nahayo",
+      "detail": 2238
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59951,
+      "name": "David Manga",
+      "detail": 2474
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 59985,
+      "name": "Yevgen Santrapynskykh",
+      "detail": 23633
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 60080,
+      "name": "Uros Celcer",
+      "detail": 21412
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 60085,
+      "name": "Georgios Goumagias",
+      "detail": 22007
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 60096,
+      "name": "Miral Samardzic",
+      "detail": 23246
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 60129,
+      "name": "Bojan Malisic",
+      "detail": 45401
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 60132,
+      "name": "Nemanja Obradovic",
+      "detail": 8577
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 60861,
+      "name": "Filip Stanisavljevic",
+      "detail": 36923
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 60905,
+      "name": "Conrad Balatoni",
+      "detail": 23303
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61194,
+      "name": "Vladan Giljen",
+      "detail": 30037
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61389,
+      "name": "Ivan Lozenkov",
+      "detail": 21524
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61462,
+      "name": "Rinar Valeev",
+      "detail": 31355
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61462,
+      "name": "Rinar Valeev",
+      "detail": 40010
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61857,
+      "name": "Vasil Shkurtaj",
+      "detail": 45458
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61857,
+      "name": "Vasil Shkurtaj",
+      "detail": 36881
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61881,
+      "name": "Ulrik Flo",
+      "detail": 22439
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 61912,
+      "name": "Andreas Hagen",
+      "detail": 11234
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62054,
+      "name": "Vegard Forren",
+      "detail": 36245
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62054,
+      "name": "Vegard Forren",
+      "detail": 36233
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62134,
+      "name": "Philip Hellqvist",
+      "detail": 46434
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62462,
+      "name": "Kenan Hajdarevic",
+      "detail": 54662
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62524,
+      "name": "Vladimir Khozin",
+      "detail": 139088
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62827,
+      "name": "Tomas Borek",
+      "detail": 26258
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62831,
+      "name": "Robert Demjan",
+      "detail": 40530
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 62831,
+      "name": "Robert Demjan",
+      "detail": 46971
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 63285,
+      "name": "Kagisho Dikgacoi",
+      "detail": 7011
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 63295,
+      "name": "Tawonga Chimodzi",
+      "detail": 7204
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 63496,
+      "name": "Vladimirs Kamess",
+      "detail": 3811
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 63496,
+      "name": "Vladimirs Kamess",
+      "detail": 28532
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 63496,
+      "name": "Vladimirs Kamess",
+      "detail": 28933
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 63899,
+      "name": "Josef Husbauer",
+      "detail": 31804
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 64215,
+      "name": "Cristian Oros",
+      "detail": 44810
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 64215,
+      "name": "Cristian Oros",
+      "detail": 34768
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 64711,
+      "name": "Pablo Fontanello",
+      "detail": 76676
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 65464,
+      "name": "Alex Cooper",
+      "detail": 61553
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 65681,
+      "name": "Dugary Ndabashinze",
+      "detail": 52692
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 65929,
+      "name": "Matías Rodríguez",
+      "detail": 12949
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 65977,
+      "name": "Aleksey Sapogov",
+      "detail": 12069
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 65977,
+      "name": "Aleksey Sapogov",
+      "detail": 12443
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 65992,
+      "name": "Kermit Erasmus",
+      "detail": 102349
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 66020,
+      "name": "Stanislav Dragun",
+      "detail": 14176
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 67067,
+      "name": "Konstantinos Kaznaferis",
+      "detail": 26454
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 67832,
+      "name": "Myroslav Slavov",
+      "detail": 42192
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 67832,
+      "name": "Myroslav Slavov",
+      "detail": 2082
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 68203,
+      "name": "Moussa Maazou",
+      "detail": 24428
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 68205,
+      "name": "Antun Palic",
+      "detail": 5111
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 69010,
+      "name": "Janko Simovic",
+      "detail": 15551
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 69382,
+      "name": "Diego Romano",
+      "detail": 71824
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 69435,
+      "name": "Paul Paton",
+      "detail": 8928
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 70554,
+      "name": "Nicholas Gotfredsen",
+      "detail": 90714
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 70574,
+      "name": "Milan Milanovic",
+      "detail": 59756
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 70645,
+      "name": "Peter Sladek",
+      "detail": 61598
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 70645,
+      "name": "Peter Sladek",
+      "detail": 20599
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 70942,
+      "name": "Manu Busto",
+      "detail": 85571
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 71026,
+      "name": "Davide Grassi",
+      "detail": 22052
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 71103,
+      "name": "Josimar Lima",
+      "detail": 815
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 71130,
+      "name": "Antonio Reguero",
+      "detail": 6689
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 72120,
+      "name": "Ertugrul Furkan",
+      "detail": 5744
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 72651,
+      "name": "Bruno Fornaroli",
+      "detail": 32385
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 72896,
+      "name": "Dejan Skolnik",
+      "detail": 32175
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73668,
+      "name": "Marco Pappa",
+      "detail": 38141
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73668,
+      "name": "Marco Pappa",
+      "detail": 35101
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73668,
+      "name": "Marco Pappa",
+      "detail": 18578
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73720,
+      "name": "Viktor Genev",
+      "detail": 12504
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73735,
+      "name": "Juha Pirinen",
+      "detail": 11150
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73951,
+      "name": "Kehinde Fatai",
+      "detail": 37620
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73951,
+      "name": "Kehinde Fatai",
+      "detail": 14572
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 73951,
+      "name": "Kehinde Fatai",
+      "detail": 5267
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74196,
+      "name": "Rodrigo Dantas",
+      "detail": 40120
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74196,
+      "name": "Rodrigo Dantas",
+      "detail": 34247
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74196,
+      "name": "Rodrigo Dantas",
+      "detail": 15656
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74253,
+      "name": "Henry Giménez",
+      "detail": 45741
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74253,
+      "name": "Henry Giménez",
+      "detail": 17494
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74302,
+      "name": "Marko Obradovic",
+      "detail": 3069
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74725,
+      "name": "Kornel Salata",
+      "detail": 84075
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74725,
+      "name": "Kornel Salata",
+      "detail": 24527
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74900,
+      "name": "Jakub Sylvestr",
+      "detail": 36093
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74945,
+      "name": "Milos Lacny",
+      "detail": 15742
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 74945,
+      "name": "Milos Lacny",
+      "detail": 20593
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75109,
+      "name": "Célio Santos",
+      "detail": 62736
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75109,
+      "name": "Célio Santos",
+      "detail": 815
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75339,
+      "name": "Stevan Kovacevic",
+      "detail": 38828
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75521,
+      "name": "Marcos Barrera",
+      "detail": 100047
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75521,
+      "name": "Marcos Barrera",
+      "detail": 17591
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75554,
+      "name": "Magnus Eriksson",
+      "detail": 53133
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75631,
+      "name": "Milos Jokic",
+      "detail": 5399
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 75631,
+      "name": "Milos Jokic",
+      "detail": 8975
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 76195,
+      "name": "Marcos Bambam",
+      "detail": 29475
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 76597,
+      "name": "Joaquín Boghossian",
+      "detail": 15943
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 76896,
+      "name": "Rodrigo Sanguinetti",
+      "detail": 18129
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 76948,
+      "name": "Pablo Olivera",
+      "detail": 45741
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 76984,
+      "name": "Braian Rodríguez",
+      "detail": 17494
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77126,
+      "name": "Michail Fragos",
+      "detail": 1400
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77140,
+      "name": "Goran Galesic",
+      "detail": 25435
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77471,
+      "name": "Konstantinos Kotsaridis",
+      "detail": 67901
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77484,
+      "name": "Georgios Niklitsiotis",
+      "detail": 65024
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77490,
+      "name": "Igor Khudobyak",
+      "detail": 74871
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77490,
+      "name": "Igor Khudobyak",
+      "detail": 40770
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77640,
+      "name": "Akaki Khubutia",
+      "detail": 30856
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 77853,
+      "name": "Roman Loktionov",
+      "detail": 105857
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 78490,
+      "name": "Rodolfo Zelaya",
+      "detail": 14078
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 78490,
+      "name": "Rodolfo Zelaya",
+      "detail": 33203
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 78500,
+      "name": "Stefan Deloose",
+      "detail": 9617
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 78500,
+      "name": "Stefan Deloose",
+      "detail": 3738
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 78547,
+      "name": "Novica Maksimovic",
+      "detail": 7682
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 79089,
+      "name": "Theo Weeks",
+      "detail": 2468
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 79132,
+      "name": "Chumbinho",
+      "detail": 5120
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 79209,
+      "name": "Sergey Chepchugov",
+      "detail": 12883
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 79607,
+      "name": "Marco Meilinger",
+      "detail": 771
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 79643,
+      "name": "Genki Omae",
+      "detail": 76176
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 80383,
+      "name": "Rodgers Kola",
+      "detail": 14578
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 80383,
+      "name": "Rodgers Kola",
+      "detail": 24026
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 80383,
+      "name": "Rodgers Kola",
+      "detail": 7011
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 80814,
+      "name": "Hrvoje Spahija",
+      "detail": 35205
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 80877,
+      "name": "Jarno Molenberghs",
+      "detail": 64320
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 81421,
+      "name": "Cosmin Matei",
+      "detail": 14572
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 81421,
+      "name": "Cosmin Matei",
+      "detail": 5267
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 81589,
+      "name": "Lawrence Doe",
+      "detail": 29572
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 81589,
+      "name": "Lawrence Doe",
+      "detail": 16381
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 81650,
+      "name": "Saladin Said",
+      "detail": 14120
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 82364,
+      "name": "Ezechiel Ndouasel",
+      "detail": 78930
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 82364,
+      "name": "Ezechiel Ndouasel",
+      "detail": 34723
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 82608,
+      "name": "Pavlo Khudzik",
+      "detail": 95340
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 83234,
+      "name": "Cihan Özkara",
+      "detail": 72999
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 83692,
+      "name": "Ali Gökdemir",
+      "detail": 120667
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 83696,
+      "name": "Georgios Machlelis",
+      "detail": 7375
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 83948,
+      "name": "Marco Ospitalieri",
+      "detail": 33065
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 84318,
+      "name": "Paolo Hurtado",
+      "detail": 17475
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 84318,
+      "name": "Paolo Hurtado",
+      "detail": 88406
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 84363,
+      "name": "Milton Raphael",
+      "detail": 27240
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 84802,
+      "name": "Filip Kljajic",
+      "detail": 11836
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 84970,
+      "name": "Nathan Júnior",
+      "detail": 28488
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 84980,
+      "name": "Aleksandrs Fertovs",
+      "detail": 77492
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85176,
+      "name": "Nurettin Kayaoglu",
+      "detail": 69753
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85176,
+      "name": "Nurettin Kayaoglu",
+      "detail": 31355
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85176,
+      "name": "Nurettin Kayaoglu",
+      "detail": 4840
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85312,
+      "name": "Alex Gonçalves",
+      "detail": 36963
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85312,
+      "name": "Alex Gonçalves",
+      "detail": 122128
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85312,
+      "name": "Alex Gonçalves",
+      "detail": 66813
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85312,
+      "name": "Alex Gonçalves",
+      "detail": 34723
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85312,
+      "name": "Alex Gonçalves",
+      "detail": 34815
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85349,
+      "name": "Jordi César",
+      "detail": 21368
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85626,
+      "name": "Sergei Zenjov",
+      "detail": 8964
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85626,
+      "name": "Sergei Zenjov",
+      "detail": 33579
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85873,
+      "name": "Michael Clepkens",
+      "detail": 3088
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85928,
+      "name": "Danny Lafferty",
+      "detail": 12903
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 85949,
+      "name": "Igor Shukhovtsev",
+      "detail": 26552
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 86158,
+      "name": "Onur Cenik",
+      "detail": 60834
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 86158,
+      "name": "Onur Cenik",
+      "detail": 12800
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 86876,
+      "name": "Ovidy Karuru",
+      "detail": 13487
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87245,
+      "name": "Borislav Stoychev",
+      "detail": 19784
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87245,
+      "name": "Borislav Stoychev",
+      "detail": 19215
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87245,
+      "name": "Borislav Stoychev",
+      "detail": 32673
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87245,
+      "name": "Borislav Stoychev",
+      "detail": 26565
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87536,
+      "name": "Emiliano Romero",
+      "detail": 14675
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87645,
+      "name": "Bálint Bajner",
+      "detail": 13572
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87689,
+      "name": "Arber Dhrami",
+      "detail": 83818
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87689,
+      "name": "Arber Dhrami",
+      "detail": 24985
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87689,
+      "name": "Arber Dhrami",
+      "detail": 21781
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 87689,
+      "name": "Arber Dhrami",
+      "detail": 30154
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 88717,
+      "name": "Rui Sacramento",
+      "detail": 8075
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 89010,
+      "name": "Sylvano Comvalius",
+      "detail": 14111
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 89010,
+      "name": "Sylvano Comvalius",
+      "detail": 12971
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 89215,
+      "name": "Grenddy Perozo",
+      "detail": 17389
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 89399,
+      "name": "Ivan Ershov",
+      "detail": 41511
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 89399,
+      "name": "Ivan Ershov",
+      "detail": 84563
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 89409,
+      "name": "Igor Udalyi",
+      "detail": 9687
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 89480,
+      "name": "Dimitrios Ferfelis",
+      "detail": 6779
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 90741,
+      "name": "Martijn de Zwart",
+      "detail": 19967
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 90797,
+      "name": "Nicolás Mazzola",
+      "detail": 63109
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 90797,
+      "name": "Nicolás Mazzola",
+      "detail": 18939
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 90797,
+      "name": "Nicolás Mazzola",
+      "detail": 19517
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 91377,
+      "name": "Dmytro Trukhin",
+      "detail": 20839
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 91377,
+      "name": "Dmytro Trukhin",
+      "detail": 95104
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 91529,
+      "name": "Yaroslav Kinash",
+      "detail": 74962
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 91537,
+      "name": "Vitaliy Pryndeta",
+      "detail": 9483
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 91563,
+      "name": "Aleksey Babyr",
+      "detail": 77492
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 91698,
+      "name": "Oleksandr Churilov",
+      "detail": 5149
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92030,
+      "name": "Dmytro Bashlay",
+      "detail": 8668
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92111,
+      "name": "Orhan Ademi",
+      "detail": 4408
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92348,
+      "name": "Breitner",
+      "detail": 19976
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92635,
+      "name": "Oleksandr Mandzyuk",
+      "detail": 95340
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92640,
+      "name": "Andriy Mostovyi",
+      "detail": 3538
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92640,
+      "name": "Andriy Mostovyi",
+      "detail": 31355
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92741,
+      "name": "Aleksandar Stankov",
+      "detail": 2641
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92845,
+      "name": "Andriy Sakhnevych",
+      "detail": 91532
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92944,
+      "name": "Mohamed Aidara",
+      "detail": 8156
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 92944,
+      "name": "Mohamed Aidara",
+      "detail": 6150
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 94230,
+      "name": "Andac Güleryüz",
+      "detail": 18826
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 94450,
+      "name": "Carlos Olascuaga",
+      "detail": 57405
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 94598,
+      "name": "Stefan Wannenwetsch",
+      "detail": 21078
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 95272,
+      "name": "Robert Kurez",
+      "detail": 22410
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 95280,
+      "name": "Christian Cueva",
+      "detail": 99517
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 95289,
+      "name": "Igor Mirceta",
+      "detail": 3571
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 95295,
+      "name": "Samed Yesil",
+      "detail": 2530
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 95295,
+      "name": "Samed Yesil",
+      "detail": 42635
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 95295,
+      "name": "Samed Yesil",
+      "detail": 4840
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96189,
+      "name": "Matic Kotnik",
+      "detail": 20248
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96374,
+      "name": "Tim Schraml",
+      "detail": 7736
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96374,
+      "name": "Tim Schraml",
+      "detail": 3918
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96444,
+      "name": "Fotis Georgiou",
+      "detail": 49318
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96476,
+      "name": "Angelos Vertzos",
+      "detail": 63702
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96661,
+      "name": "Leonidas Argyropoulos",
+      "detail": 45043
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96788,
+      "name": "Georgios Margaritis",
+      "detail": 74281
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96812,
+      "name": "Dimitrios Skliopidis",
+      "detail": 54376
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 96824,
+      "name": "Dimitrios Vlastellis",
+      "detail": 71798
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 97808,
+      "name": "Dmytro Kozban",
+      "detail": 124492
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 97859,
+      "name": "Evgeniy Pavlov",
+      "detail": 36923
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 98320,
+      "name": "Kalidou Yero",
+      "detail": 57293
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 98824,
+      "name": "Eugen Sidorenco",
+      "detail": 68502
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 98824,
+      "name": "Eugen Sidorenco",
+      "detail": 73711
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 98824,
+      "name": "Eugen Sidorenco",
+      "detail": 89531
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 99007,
+      "name": "Dmitri Stajila",
+      "detail": 46779
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 100482,
+      "name": "Deivydas Matulevicius",
+      "detail": 140673
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 100497,
+      "name": "Alejandro González",
+      "detail": 45741
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 100497,
+      "name": "Alejandro González",
+      "detail": 17494
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101183,
+      "name": "Joel Acosta",
+      "detail": 72763
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101214,
+      "name": "Stamatis Sapalidis",
+      "detail": 101401
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101214,
+      "name": "Stamatis Sapalidis",
+      "detail": 7060
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101254,
+      "name": "Vandinho",
+      "detail": 22013
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101254,
+      "name": "Vandinho",
+      "detail": 27418
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101670,
+      "name": "Marcelinho",
+      "detail": 25671
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101808,
+      "name": "Mamadou Wagué",
+      "detail": 5492
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101808,
+      "name": "Mamadou Wagué",
+      "detail": 2828
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 101954,
+      "name": "Antons Kurakins",
+      "detail": 12683
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 102040,
+      "name": "Delphin Tshiembe",
+      "detail": 5792
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 102045,
+      "name": "Izunna Uzochukwu",
+      "detail": 5790
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 102097,
+      "name": "Gudjón Baldvinsson",
+      "detail": 29366
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 102572,
+      "name": "Yuriy Pankiv",
+      "detail": 20839
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 102580,
+      "name": "Igor Cheminava",
+      "detail": 22832
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 103305,
+      "name": "Kensuke Nagai",
+      "detail": 26644
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 103523,
+      "name": "Ioan Mera",
+      "detail": 15448
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 103934,
+      "name": "Michael Smith",
+      "detail": 3712
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 104219,
+      "name": "Enes Sipovic",
+      "detail": 5267
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 104590,
+      "name": "Rafael Forster",
+      "detail": 63296
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 104607,
+      "name": "Dmitriy Malyaka",
+      "detail": 46502
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 104642,
+      "name": "Aleksandr Subbotin",
+      "detail": 91532
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 104941,
+      "name": "Gedo",
+      "detail": 23222
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 104946,
+      "name": "Ouka",
+      "detail": 47010
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 104946,
+      "name": "Ouka",
+      "detail": 23222
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 105092,
+      "name": "Cofie Bekoe",
+      "detail": 37600
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 105625,
+      "name": "Fabio Sciacca",
+      "detail": 50402
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 105817,
+      "name": "Giannis Loukinas",
+      "detail": 7060
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 106207,
+      "name": "Aleksandr Kutjin",
+      "detail": 12418
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 106605,
+      "name": "Mostafa Shebeita",
+      "detail": 13447
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 106605,
+      "name": "Mostafa Shebeita",
+      "detail": 13448
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 106628,
+      "name": "Dmitriy Polyanin",
+      "detail": 22847
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 106629,
+      "name": "Stanislav Prokofjev",
+      "detail": 6413
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 106783,
+      "name": "Aleksandr Erkin",
+      "detail": 91531
+    },
+    {
+      "level": "warning",
+      "code": "HISTORIC_CLUB_NOT_IN_CATALOG",
+      "playerId": 106783,
+      "name": "Aleksandr Erkin",
+      "detail": 77492
+    }
+  ]
+}
