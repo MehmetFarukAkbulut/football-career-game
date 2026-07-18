@@ -18,6 +18,7 @@ function assertMutable(state, expectedVersion, now = Date.now()) {
   if (+expectedVersion !== +state.stateVersion) throw new Error("STALE_STATE");
 }
 function advance(state, patch) { return { ...state, ...patch, stateVersion: state.stateVersion + 1 }; }
+function matchIndexFor(state, playerIndex) { return state.matchPlayers?.findIndex((player) => +(player.roomSlot ?? -1) === +playerIndex) ?? playerIndex; }
 function joinOnlineRoom(state, { playerName = "Oyuncu 2", expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (state.status === "playing" || state.players.length >= MAX_ROOM_PLAYERS) throw new Error("ROOM_FULL");
@@ -38,8 +39,9 @@ function setOnlineReady(state, { playerIndex, ready = true, expectedVersion, now
 function startOnlineGame(state, { playerIndex, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
-  if (!['waiting', 'finished'].includes(state.status) || state.players.length < 2 || !state.players.every((player) => player?.ready)) throw new Error("PLAYERS_NOT_READY");
-  return advance(state, { status: "playing", matchNumber: (state.matchNumber || 0) + 1, questionSequence: 0, scores: state.players.map(() => 0), settings: { ...state.settings, locked: true }, question: null, roundAnswers: {}, revealUntil: null, modeState: null });
+  const matchPlayers = state.players.map((player, roomSlot) => ({ ...player, roomSlot })).filter((player) => player.ready);
+  if (!['waiting', 'finished'].includes(state.status) || matchPlayers.length < 2 || !state.players[0]?.ready) throw new Error("PLAYERS_NOT_READY");
+  return advance(state, { status: "playing", matchPlayers, matchNumber: (state.matchNumber || 0) + 1, questionSequence: 0, scores: matchPlayers.map(() => 0), settings: { ...state.settings, locked: true }, question: null, roundAnswers: {}, revealUntil: null, modeState: null });
 }
 function publishOnlineQuestion(state, { playerIndex, question, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
@@ -51,13 +53,15 @@ function publishOnlineQuestion(state, { playerIndex, question, expectedVersion, 
 function submitOnlineAnswer(state, { playerIndex, questionId, selectedPlayerId, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (state.status !== "playing" || !state.question) throw new Error("QUESTION_NOT_ACTIVE");
-  if (state.roundAnswers && Object.hasOwn(state.roundAnswers, playerIndex)) throw new Error("QUESTION_ALREADY_ANSWERED");
+  const matchIndex = matchIndexFor(state, playerIndex);
+  if (matchIndex < 0) throw new Error("NOT_IN_MATCH");
+  if (state.roundAnswers && Object.hasOwn(state.roundAnswers, matchIndex)) throw new Error("QUESTION_ALREADY_ANSWERED");
   if (state.question.questionId !== questionId) throw new Error("STALE_QUESTION");
   if (state.question.optionPlayerIds?.length && !state.question.optionPlayerIds.map(Number).includes(+selectedPlayerId)) throw new Error("INVALID_OPTION");
   const correctIds = (state.question.validPlayerIds || [state.question.correctPlayerId]).map(Number);
-  const correct = correctIds.includes(+selectedPlayerId), scores = [...state.scores], roundAnswers = { ...(state.roundAnswers || {}), [playerIndex]: { selectedPlayerId: +selectedPlayerId, result: correct ? "correct" : "wrong" } };
-  if (correct) scores[playerIndex] += 1;
-  const allAnswered = state.players.every((_, index) => Object.hasOwn(roundAnswers, index));
+  const correct = correctIds.includes(+selectedPlayerId), scores = [...state.scores], roundAnswers = { ...(state.roundAnswers || {}), [matchIndex]: { selectedPlayerId: +selectedPlayerId, result: correct ? "correct" : "wrong" } };
+  if (correct) scores[matchIndex] += 1;
+  const allAnswered = (state.matchPlayers || state.players).every((_, index) => Object.hasOwn(roundAnswers, index));
   return advance(state, { scores, roundAnswers, revealUntil: allAnswered ? now + 2000 : null, answerResult: allAnswered ? "revealed" : null });
 }
 function timeoutOnlineQuestion(state, { questionId, expectedVersion, now = Date.now() }) {
@@ -67,7 +71,7 @@ function timeoutOnlineQuestion(state, { questionId, expectedVersion, now = Date.
   if (state.revealUntil) return state;
   if (now < Number(state.question.deadlineAt || 0)) throw new Error("TIME_REMAINING");
   const roundAnswers = { ...(state.roundAnswers || {}) };
-  state.players.forEach((_, index) => { if (!Object.hasOwn(roundAnswers, index)) roundAnswers[index] = { selectedPlayerId: null, result: "timeout" }; });
+  (state.matchPlayers || state.players).forEach((_, index) => { if (!Object.hasOwn(roundAnswers, index)) roundAnswers[index] = { selectedPlayerId: null, result: "timeout" }; });
   return advance(state, { roundAnswers, revealUntil: now + 2000, answerResult: "revealed" });
 }
 function submitOnlineSpecialGuess(state, { playerIndex, kind, step, selectedPlayerId, expectedVersion, now = Date.now() }) {
@@ -76,22 +80,25 @@ function submitOnlineSpecialGuess(state, { playerIndex, kind, step, selectedPlay
   if (state.status !== "playing" || snapshot?.kind !== kind) throw new Error("SPECIAL_GAME_NOT_ACTIVE");
   if (+snapshot.value.round !== +step) throw new Error("STALE_SPECIAL_STEP");
   const guessIds = { ...(snapshot.value.guessIds || {}) };
-  if (Object.hasOwn(guessIds, playerIndex)) throw new Error("SPECIAL_GUESS_ALREADY_SUBMITTED");
-  guessIds[playerIndex] = +selectedPlayerId;
-  const allAnswered = state.players.every((_, index) => Object.hasOwn(guessIds, index));
+  const matchIndex = matchIndexFor(state, playerIndex);
+  if (matchIndex < 0) throw new Error("NOT_IN_MATCH");
+  if (Object.hasOwn(guessIds, matchIndex)) throw new Error("SPECIAL_GUESS_ALREADY_SUBMITTED");
+  guessIds[matchIndex] = +selectedPlayerId;
+  const allAnswered = (state.matchPlayers || state.players).every((_, index) => Object.hasOwn(guessIds, index));
   return advance(state, { modeState: { ...snapshot, value: { ...snapshot.value, guessIds, revealUntil: allAnswered ? now + 2000 : null } } });
 }
 function passOnlineTurn(state, { playerIndex, questionId, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (state.status !== "playing" || !state.question) throw new Error("QUESTION_NOT_ACTIVE");
-  if (state.currentTurn !== playerIndex) throw new Error("NOT_YOUR_TURN");
+  const matchIndex = matchIndexFor(state, playerIndex);
+  if (matchIndex < 0 || state.currentTurn !== matchIndex) throw new Error("NOT_YOUR_TURN");
   if (state.answeredBy !== null || state.question.questionId !== questionId) throw new Error("QUESTION_ALREADY_ANSWERED");
-  return advance(state, { answeredBy: playerIndex, selectedPlayerId: null, answerResult: "pass", currentTurn: playerIndex ? 0 : 1 });
+  return advance(state, { answeredBy: matchIndex, selectedPlayerId: null, answerResult: "pass", currentTurn: (matchIndex + 1) % (state.matchPlayers || state.players).length });
 }
 function finishOnlineGame(state, { playerIndex, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
-  if (state.status !== "playing" || !state.revealUntil) throw new Error("FINISH_NOT_ALLOWED");
+  if (state.status !== "playing" || (!state.revealUntil && !state.modeState?.value?.finished && state.modeState?.value?.status !== "finished")) throw new Error("FINISH_NOT_ALLOWED");
   return advance(state, { status: "finished", finishedAt: now, players: state.players.map((player) => ({ ...player, ready: false })) });
 }
 function configureOnlineMatch(state, { playerIndex, settings, expectedVersion, now = Date.now() }) {
@@ -103,7 +110,8 @@ function configureOnlineMatch(state, { playerIndex, settings, expectedVersion, n
 function syncOnlineModeState(state, { playerIndex, modeState, currentTurn, scores, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (state.status !== "playing") throw new Error("GAME_NOT_STARTED");
-  if (state.modeState && state.currentTurn !== playerIndex) throw new Error("NOT_YOUR_TURN");
+  const matchIndex = matchIndexFor(state, playerIndex);
+  if (state.modeState && (matchIndex < 0 || state.currentTurn !== matchIndex)) throw new Error("NOT_YOUR_TURN");
   if (!state.modeState && playerIndex !== 0) throw new Error("HOST_ONLY");
   return advance(state, { modeState, currentTurn: Number(currentTurn) || 0, scores: Array.isArray(scores) ? scores : state.scores });
 }

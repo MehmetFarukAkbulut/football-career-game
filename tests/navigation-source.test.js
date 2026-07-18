@@ -32,7 +32,7 @@ test("ana menü doğrudan online oda katılımı sunar", () => {
 });
 
 test("online cevap sonucu tüm oyuncular cevaplamadan açılmaz", () => {
-  assert.match(source, /state\.roundAnswers\?\.\[online\.playerIndex\]/);
+  assert.match(source, /state\.roundAnswers\?\.\[matchIndex\]/);
   assert.match(source, /state\.revealUntil/);
   assert.match(source, /Diğer oyuncular bekleniyor/);
 });
@@ -56,7 +56,7 @@ test("online sayaç sıfırda backend timeout işlemini tetikler", () => {
 test("Rastgele Beşler online tahminleri oyuncu bazlı ve eşzamanlı gönderir", () => {
   assert.match(source, /submitOnlineSpecialGuess\("randomFive", randomFive\.round, player\.id\)/);
   assert.match(source, /Diğer oyuncular bekleniyor/);
-  assert.match(source, /Object\.keys\(randomFive\.guessIds \|\| \{\}\)\.length !== online\.state\.players\.length/);
+  assert.match(source, /Object\.keys\(randomFive\.guessIds \|\| \{\}\)\.length !== onlineGamePlayers\(\)\.length/);
 });
 
 test("online özel oyun bitince oda sonuç lobisine güvenilir biçimde taşınır", () => {
@@ -68,4 +68,10 @@ test("online özel oyun bitince oda sonuç lobisine güvenilir biçimde taşın�
 test("oyun bitince katılan oyuncu da hazır olabileceği lobiye taşınır", () => {
   assert.match(source, /if \(state\.status !== "playing"\) show\("onlineLobby"\)/);
   assert.match(source, /\$\("#onlineReady"\)\.hidden = !\["waiting", "finished"\]\.includes\(state\.status\)/);
+});
+
+test("online maç yalnız hazır oyuncuları kullanır ve lobi eylemleri görünür kalır", () => {
+  assert.match(source, /function onlineGamePlayers/);
+  assert.match(source, /readyCount < 2 \|\| !me\?\.ready/);
+  assert.match(choiceStyles, /\.online-actions\{position:sticky/);
 });
