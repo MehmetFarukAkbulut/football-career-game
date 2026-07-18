@@ -364,12 +364,29 @@ function startRatingGame() {
 $("#startRatingGame").onclick = startRatingGame;
 
 function setupFcLeagueSelector(selector) {
-  const root = $(selector), leagues = [...new Set(FC26_DATA.players.map((player) => player.league).filter(Boolean))].sort((a, b) => a.localeCompare(b, "tr"));
-  root.insertAdjacentHTML("beforeend", `<div class="league-tools"><input type="search" placeholder="Lig ara…" aria-label="FC 26 ligi ara"><button type="button" class="secondary" data-fc-leagues="all">Tümünü seç</button><button type="button" class="secondary" data-fc-leagues="clear">Temizle</button></div><div class="league-list">${leagues.map((league) => `<label data-search="${esc(norm(league))}"><input type="checkbox" value="${esc(league)}"><span><b>${esc(league)}</b><small>${FC26_DATA.players.filter((player) => player.league === league).length.toLocaleString("tr-TR")} futbolcu</small></span></label>`).join("")}</div>`);
-  const search = root.querySelector('input[type="search"]'), checks = () => [...root.querySelectorAll('.league-list input')];
+  const root = $(selector), priority = ["Premier League", "LALIGA EA SPORTS", "Serie A Enilive", "Ligue 1 McDonald's", "Bundesliga", "Trendyol Süper Lig"], priorityMeta = {
+    "Premier League": ["GB", "İngiltere"], "LALIGA EA SPORTS": ["ES", "İspanya"], "Serie A Enilive": ["IT", "İtalya"], "Ligue 1 McDonald's": ["FR", "Fransa"], Bundesliga: ["DE", "Almanya"], "Trendyol Süper Lig": ["TR", "Türkiye"],
+  };
+  const careerLeagues = DATA.leagues || [], metadata = (name) => {
+    if (priorityMeta[name]) return priorityMeta[name];
+    const normalized = norm(name), match = careerLeagues.find((league) => norm(league.name) === normalized) || careerLeagues.find((league) => normalized.startsWith(norm(league.name)) || norm(league.name).startsWith(normalized));
+    return match ? [match.countryCode, match.countryName] : ["", "FC 26 ligi"];
+  };
+  const leagues = [...new Set(FC26_DATA.players.map((player) => player.league).filter(Boolean))].sort((a, b) => {
+    const rankA = priority.indexOf(a), rankB = priority.indexOf(b);
+    if (rankA !== -1 || rankB !== -1) return (rankA === -1 ? priority.length : rankA) - (rankB === -1 ? priority.length : rankB);
+    const [, countryA] = metadata(a), [, countryB] = metadata(b);
+    return `${countryA}${a}`.localeCompare(`${countryB}${b}`, "tr");
+  });
+  const counts = new Map();
+  for (const player of FC26_DATA.players) counts.set(player.league, (counts.get(player.league) || 0) + 1);
+  root.insertAdjacentHTML("beforeend", `<div class="league-tools"><input type="search" placeholder="Lig veya ülke ara…" aria-label="FC 26 ligi veya ülkesi ara"><button type="button" class="secondary" data-fc-leagues="all">Tümünü seç</button><button type="button" class="secondary" data-fc-leagues="clear">Temizle</button></div><div class="league-list">${leagues.map((league) => { const [code, country] = metadata(league); return `<label data-search="${esc(norm(`${league} ${country}`))}"><input type="checkbox" value="${esc(league)}">${code ? `<img class="flag" src="${countryFlag(code)}" alt="" width="28" height="28" loading="lazy">` : `<span class="flag flag-fallback" aria-hidden="true">⚽</span>`}<span><b>${esc(league)}</b><small>${esc(country)} • ${counts.get(league).toLocaleString("tr-TR")} futbolcu</small></span></label>`; }).join("")}</div>`);
+  const search = root.querySelector('input[type="search"]'), checks = () => [...root.querySelectorAll('.league-list input')], legendCount = root.querySelector("legend small"), update = () => { if (legendCount) legendCount.textContent = `${checks().filter((input) => input.checked).length} lig seçili • seçim yoksa tümü`; };
   search.oninput = () => root.querySelectorAll('.league-list label').forEach((label) => { label.hidden = !label.dataset.search.includes(norm(search.value)); });
-  root.querySelector('[data-fc-leagues="all"]').onclick = () => checks().filter((input) => !input.closest("label").hidden).forEach((input) => { input.checked = true; });
-  root.querySelector('[data-fc-leagues="clear"]').onclick = () => checks().forEach((input) => { input.checked = false; });
+  root.querySelector('[data-fc-leagues="all"]').onclick = () => { checks().filter((input) => !input.closest("label").hidden).forEach((input) => { input.checked = true; }); update(); };
+  root.querySelector('[data-fc-leagues="clear"]').onclick = () => { checks().forEach((input) => { input.checked = false; }); update(); };
+  checks().forEach((input) => { input.onchange = update; });
+  update();
 }
 
 function mysteryArrow(value) {

@@ -79,5 +79,9 @@ test("Gizli Futbolcu sekiz tahmin ve lig filtresiyle ana menüde bulunur", async
   assert.match(html, /id="mysteryAttempts"[\s\S]*selected>8</);
   assert.match(html, /id="mysteryLeagueOptions"/);
   assert.match(source, /selectedLeagues\.has\(player\.league\)/);
+  assert.match(source, /priority = \["Premier League", "LALIGA EA SPORTS", "Serie A Enilive", "Ligue 1 McDonald's", "Bundesliga", "Trendyol Süper Lig"\]/);
+  assert.match(source, /class="flag" src=/);
+  assert.match(source, /Lig veya ülke ara/);
+  assert.match(source, /lig seçili • seçim yoksa tümü/);
   assert.match(source, /evaluateMysteryGuess/);
 });
