@@ -10,6 +10,16 @@ Reyting verisi çalışma anında internetten çağrılmaz. `data/fc26-ratings.j
 npm run ratings:fc26
 ```
 
+## Turnuva 11'i
+
+Turnuva 11'i, yalnız güncel FC 26 paketinde overall ve mevki kaydı bulunan aktif futbolcularla 4-3-3 kadrosu kurdurur. Her mevki için üç aday gösterilir; seçilen 11'in overall ortalaması, seçilen zorlukla birlikte turnuva performans olasılığını belirler. Emekli olmuş ve güncel FC 26 reytingi bulunmayan futbolcular havuza alınmaz.
+
+Lig filtresi yalnız futbolcunun güncel kulübüne bakmaz. FC 26 kaydı güvenli biçimde kariyer veri setindeki tekil oyuncuyla eşleşiyorsa `careerPlayerId` ve `careerClubIds` statik rating paketine yazılır; oyuncunun geçmişte filtrelenen ligde A takım kariyeri bulunması da yeterlidir. Güvenli kariyer eşleşmesi bulunmayan FC 26 oyuncularında güncel lig bilgisi kullanılmaya devam eder.
+
+Şampiyonlar Ligi senaryosu UEFA'nın güncel formatını temel alır: sekiz lig maçı, ilk sekiz için doğrudan son 16, 9–24 için iki maçlı play-off ve ardından eleme turları. 2026 Dünya Kupası senaryosu 12 adet dörderli grup, ilk iki takımla en iyi sekiz üçüncünün Son 32'ye çıkması ve şampiyonun toplam sekiz maç oynaması yapısını kullanır. Simülasyon gerçek maç sonucu iddiası değildir; takım overall ortalaması, rakip seviyesi ve seçilen zorluktan üretilmiş oyunlaştırılmış bir olasılık modelidir.
+
+Format kaynakları: [UEFA Champions League 2026/27 Regulations, Article 17](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-17-Match-system-league-phase-Online) ve [FIFA 2026 World Cup format açıklaması](https://www.fifa.com/en/articles/article-fifa-world-cup-2026-mexico-canada-usa-new-format-tournament-football-soccer?pubDate=20250524).
+
 Kaynaklar: [EA Sports FC resmi ratings sayfası](https://careers.ea.com/games/ea-sports-fc/ratings) ve bunun makinece okunabilir alanlarını sunan [EAFC API dokümantasyonu](https://api.msmc.cc/eafc/). Reytingler oyun güncellemeleriyle değişebildiği için paket sürümü ve üretim tarihi JSON metadata'sında saklanır.
 
 ## Gizli Futbolcu

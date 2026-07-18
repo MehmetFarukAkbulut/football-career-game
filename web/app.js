@@ -51,6 +51,7 @@ let DATA,
   mysteryGame = {},
   hexGame = {},
   trumpsGame = {},
+  xiDraft = {},
   online = {},
   computerTimer,
   ratingTimer,
@@ -306,7 +307,7 @@ function organizeHomeMenu() {
   const root = $("#home .mode-grid");
   if (!root) return;
   const cards = new Map([...root.querySelectorAll("[data-view]")].map((card) => [card.dataset.view, card]));
-  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "mysterySetup", "hexSetup", "trumpsSetup", "compare", "catalog", "travelers"]
+  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "mysterySetup", "hexSetup", "trumpsSetup", "xiDraftSetup", "compare", "catalog", "travelers"]
     .forEach((view) => cards.get(view) && root.append(cards.get(view)));
 }
 
@@ -623,6 +624,87 @@ function startTrumpsGame() {
 
 $("#startTrumpsGame").onclick = startTrumpsGame;
 $("#restartTrumps").onclick = startTrumpsGame;
+
+function xiAverage() {
+  return xiDraft.selected.length ? xiDraft.selected.reduce((sum, player) => sum + player.overall, 0) / xiDraft.selected.length : 0;
+}
+
+function renderXiSlots() {
+  $("#xiSlots").innerHTML = IkiFormaCore.XI_SLOTS.map((slot, index) => {
+    const player = xiDraft.selected[index];
+    return `<article class="xi-slot slot-${index} ${player ? "filled" : index === xiDraft.index ? "active" : ""}">${player ? `<img src="${esc(player.photoUrl)}" alt=""><b>${esc(player.name)}</b><span>${player.overall}</span>` : `<strong>${slot}</strong><small>${index === xiDraft.index ? "Seçiliyor" : "Boş"}</small>`}</article>`;
+  }).join("");
+  $("#xiDraftProgress").textContent = `${xiDraft.selected.length}/11 futbolcu`;
+  $("#xiDraftAverage").textContent = xiDraft.selected.length ? `Ort. ${xiAverage().toFixed(1)}` : "Ort. —";
+}
+
+function xiCandidateChoices(slot) {
+  const used = new Set(xiDraft.selected.map((player) => player.eaId));
+  const eligible = xiDraft.pool.filter((player) => !used.has(player.eaId) && IkiFormaCore.playerFitsXiSlot(player, slot)).sort((a, b) => b.overall - a.overall);
+  if (eligible.length < 3) return [];
+  const segment = Math.max(1, Math.floor(eligible.length / 3)), pick = (start, end) => eligible[start + Math.floor(Math.random() * Math.max(1, end - start))];
+  return [pick(0, segment), pick(segment, Math.min(segment * 2, eligible.length)), pick(Math.min(segment * 2, eligible.length - 1), eligible.length)].sort(() => Math.random() - .5);
+}
+
+function renderXiPick() {
+  renderXiSlots();
+  if (xiDraft.index >= IkiFormaCore.XI_SLOTS.length) return finishXiDraft();
+  const slot = IkiFormaCore.XI_SLOTS[xiDraft.index], choices = xiCandidateChoices(slot);
+  if (choices.length < 3) {
+    toast(`${slot} mevkii için yeterli güncel oyuncu bulunamadı.`);
+    return show("xiDraftSetup");
+  }
+  $("#xiPickTitle").textContent = `${slot} için futbolcu seç`;
+  $("#xiPickHelp").textContent = xiDraft.tournament === "worldCup" ? `${xiDraft.nation} millî takım havuzu · güncel FC 26 overall` : "Güncel veya geçmiş lig kariyeri filtreye dahildir.";
+  $("#xiCandidates").innerHTML = choices.map((player) => `<button type="button" data-xi-player="${player.eaId}"><img src="${esc(player.photoUrl)}" alt="${esc(player.name)}"><span><b>${esc(player.name)}</b><small>${esc(player.team)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small></span><strong>${player.overall}</strong></button>`).join("");
+  $$("[data-xi-player]").forEach((button) => button.onclick = () => {
+    const player = xiDraft.pool.find((item) => item.eaId === +button.dataset.xiPlayer);
+    xiDraft.selected.push(player);
+    xiDraft.index++;
+    renderXiPick();
+  });
+}
+
+function finishXiDraft() {
+  const average = xiAverage(), simulation = IkiFormaCore.simulateXiTournament({ averageRating: average, difficulty: xiDraft.difficulty, tournament: xiDraft.tournament });
+  $("#xiOutcome").textContent = simulation.outcome;
+  $("#xiResultSummary").textContent = `${xiDraft.tournament === "worldCup" ? `${xiDraft.nation} · ` : ""}Takım overall ortalaması ${average.toFixed(1)} · ${simulation.matches} maçlık senaryo · ${xiDraft.difficulty === "easy" ? "Kolay" : xiDraft.difficulty === "hard" ? "Zor" : "Normal"} seviye`;
+  const resultText = { win: "Galibiyet", draw: "Beraberlik", loss: "Mağlubiyet" };
+  $("#xiTimeline").innerHTML = simulation.stages.map((item) => `<article class="${item.result}"><b>${esc(item.stage)}</b><span>${esc(resultText[item.result] || item.result)}</span></article>`).join("");
+  show("xiTournamentResult");
+}
+
+function viableWorldCupNations(pool) {
+  const byNation = new Map();
+  for (const player of pool) { if (!byNation.has(player.nation)) byNation.set(player.nation, []); byNation.get(player.nation).push(player); }
+  return [...byNation].filter(([, nationPool]) => hasXiDraftCoverage(nationPool)).map(([nation]) => nation).sort((a, b) => a.localeCompare(b, "tr"));
+}
+
+function hasXiDraftCoverage(pool) {
+  const occurrences = IkiFormaCore.XI_SLOTS.reduce((counts, slot) => ({ ...counts, [slot]: (counts[slot] || 0) + 1 }), {});
+  return Object.entries(occurrences).every(([slot, count]) => pool.filter((player) => IkiFormaCore.playerFitsXiSlot(player, slot)).length >= count + 2);
+}
+
+function startXiDraft() {
+  const tournament = $("#xiTournament").value, selectedLeagues = new Set([...$$("#xiLeagueOptions input:checked")].map((input) => input.value));
+  const allowedClubs = clubs.filter((club) => !selectedLeagues.size || selectedLeagues.has(club.leagueId || `${club.country}:${club.league}`)), allowedClubIds = new Set(allowedClubs.map((club) => club.id)), allowedLeagueNames = new Set(allowedClubs.map((club) => club.league));
+  let pool = FC26_DATA.players.filter((player) => player.gender === "M" && (!selectedLeagues.size || allowedLeagueNames.has(player.league) || (player.careerClubIds || []).some((id) => allowedClubIds.has(+id))));
+  let nation = "";
+  if (tournament === "worldCup") {
+    const viable = viableWorldCupNations(pool), requested = $("#xiNation").value;
+    nation = requested && viable.includes(requested) ? requested : viable[Math.floor(Math.random() * viable.length)];
+    if (!nation) return toast("Seçilen lig filtresiyle mevkilere uygun millî takım üretilemedi.");
+    pool = pool.filter((player) => player.nation === nation);
+  }
+  if (!IkiFormaCore.XI_SLOTS.every((slot) => pool.filter((player) => IkiFormaCore.playerFitsXiSlot(player, slot)).length >= 3)) return toast("Bu filtreyle her mevki için üç güncel FC 26 adayı üretilemiyor.");
+  if (!hasXiDraftCoverage(pool)) return toast("Bu filtreyle 4-3-3 kadrosunun her seçiminde üç güncel FC 26 adayı üretilemiyor.");
+  xiDraft = { tournament, difficulty: $("#xiDifficulty").value, nation, pool, selected: [], index: 0 };
+  show("xiDraftGame");
+  renderXiPick();
+}
+
+$("#startXiDraft").onclick = startXiDraft;
+$("#xiTournament").onchange = () => { $("#xiNationWrap").hidden = $("#xiTournament").value !== "worldCup"; };
 function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
   const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
   const pools = Object.fromEntries(levels.map((level) => [level, buildPairsForDifficulty(mode, level, selectedLeagues)]));
@@ -2092,6 +2174,8 @@ async function init() {
     ]);
     setupFcLeagueSelector("#ratingLeagueOptions");
     setupFcLeagueSelector("#mysteryLeagueOptions");
+    const fcNations = [...new Set(FC26_DATA.players.filter((player) => player.gender === "M").map((player) => player.nation).filter(Boolean))].sort((a, b) => a.localeCompare(b, "tr"));
+    $("#xiNation").insertAdjacentHTML("beforeend", fcNations.map((nation) => `<option value="${esc(nation)}">${esc(nation)}</option>`).join(""));
     clubs = DATA.clubs;
     players = DATA.players;
     clubMap = new Map(clubs.map((c) => [c.id, c]));
@@ -2150,6 +2234,7 @@ async function init() {
     enhanceLeagueSelector($("#randomFiveSetup"));
     enhanceLeagueSelector($("#hexSetup"));
     enhanceLeagueSelector($("#trumpsSetup"));
+    enhanceLeagueSelector($("#xiDraftSetup"));
     enhanceLeagueSelector($("#onlineHostSettings"));
     $("#onlineHostSettings .league-options").addEventListener("change", () => { online.leagueSelectionDirty = true; });
     organizeHomeMenu();
