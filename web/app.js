@@ -482,7 +482,10 @@ function renderOnlineLobby() {
     $("#onlineGameType").value = state.settings.gameType || "clubs"; $("#onlineRounds").value = state.settings.rounds || 5;
     $("#onlineSeconds").value = state.settings.seconds || 30; $("#onlineDifficulty").value = state.settings.difficulty || "normal"; $("#onlineAnswerMethod").value = state.settings.answerMethod || "multiple";
   }
-  const ranking = matchPlayers.map((player, index) => ({ name: player.name, score: state.scores[index] || 0 })).sort((a, b) => b.score - a.score);
+  const ranking = state.status === "finished" && state.matchResults
+    ? state.players.map((player, index) => ({ name: player.name, score: +(state.matchResults[index] || 0) }))
+    : matchPlayers.map((player, index) => ({ name: player.name, score: state.scores[index] || 0 }));
+  ranking.sort((a, b) => b.score - a.score);
   $("#onlineRanking").hidden = state.status !== "finished";
   $("#onlineRanking").innerHTML = state.status === "finished" ? `<h3>🏆 Oyun sıralaması</h3>${ranking.map((row, index) => `<p><b>${index + 1}. ${esc(row.name)}</b><span>${row.score} puan</span></p>`).join("")}` : "";
   $("#onlineLobbyMessage").textContent = state.status === "playing" ? "Oyun başladı; herkes kendi cevabını veriyor…" : state.status === "finished" ? "Oda açık. Oda sahibi aynı oyunu başlatabilir veya yeni oyun seçebilir; herkes yeniden hazır olmalıdır." : state.players.length > 1 ? "Tüm oyuncular hazır olduğunda oda sahibi oyunu başlatabilir." : "Oda kodunu arkadaşlarınızla paylaşın (en fazla 5 oyuncu).";
@@ -501,6 +504,13 @@ async function mutateOnline(action) {
     return null;
   }
 }
+async function returnToOnlineRoom(event) {
+  if (!online.state || online.state.status !== "playing" || onlineMatchIndex() < 0) return;
+  event?.preventDefault(); event?.stopPropagation();
+  const state = await mutateOnline({ type: "leave_match" });
+  if (state) { show("onlineLobby"); renderOnlineLobby(); }
+}
+$$('.online-room-return').forEach((button) => button.addEventListener("click", returnToOnlineRoom));
 
 $("#createOnlineRoom").onclick = () => connectOnlineRoom("create");
 $("#joinOnlineRoom").onclick = () => connectOnlineRoom("join");
@@ -1485,7 +1495,7 @@ async function nextRandomFiveRound() {
     randomFive.guessIds = {}; randomFive.revealUntil = null; randomFive.guesses = [];
   }
   randomFive.round++;
-  if (randomFive.round < 5) { randomFive.guesses = []; if (randomFive.online) { const synced = await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores); online.specialAdvancing = false; if (!synced || online.state.modeState?.value?.round !== previousRound + 1) return; } return renderRandomFiveRound(); }
+  if (randomFive.round < 5) { randomFive.guesses = []; if (randomFive.online) { const synced = await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores); online.specialAdvancing = false; if (!synced || online.state.modeState?.value?.round !== previousRound + 1) { online.specialAdvanceKey = null; setTimeout(handleOnlineSpecialState, 500); return; } } return renderRandomFiveRound(); }
   const best = Math.max(...randomFive.scores), leaders = randomFive.names.filter((_, index) => randomFive.scores[index] === best), winner = leaders.length > 1 ? "Berabere!" : `${leaders[0]} kazandı!`;
   $("#randomFiveClubs").innerHTML = "";
   $("#randomFivePrompt").textContent = `🏆 ${winner}`;
@@ -1627,9 +1637,9 @@ async function nextTwinStep() {
   if (twin.online && online.playerIndex !== 0) return toast("Sonraki adımı oda sahibi açar.");
   if (twin.online && online.specialAdvancing) return;
   if (twin.online) online.specialAdvancing = true;
-  if (twin.metric < 3) { twin.metric++; twin.guesses = []; if (twin.online) { const synced = await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores); online.specialAdvancing = false; if (!synced) return; } return renderTwinTurn(); }
+  if (twin.metric < 3) { twin.metric++; twin.guesses = []; if (twin.online) { const synced = await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores); online.specialAdvancing = false; if (!synced) { online.specialAdvanceKey = null; setTimeout(handleOnlineSpecialState, 500); return; } } return renderTwinTurn(); }
   twin.round++;
-  if (twin.round < twin.rounds) { beginTwinRound(); if (twin.online) { const synced = await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores); online.specialAdvancing = false; if (!synced) return; } return; }
+  if (twin.round < twin.rounds) { beginTwinRound(); if (twin.online) { const synced = await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores); online.specialAdvancing = false; if (!synced) { online.specialAdvanceKey = null; setTimeout(handleOnlineSpecialState, 500); return; } } return; }
   const best = Math.max(...twin.scores), leaders = twin.names.filter((_, index) => twin.scores[index] === best), winner = leaders.length > 1 ? "Berabere!" : `${leaders[0]} kazandı!`;
   $("#twinTarget").innerHTML = "";
   $("#twinMetricStep").textContent = "OYUN TAMAMLANDI";

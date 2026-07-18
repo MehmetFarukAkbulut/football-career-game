@@ -71,7 +71,7 @@ end $$;
 
 create or replace function public.apply_game_room_action(p_room_code text, p_player_token text, p_expected_version bigint, p_action jsonb)
 returns jsonb language plpgsql security definer set search_path = '' as $$
-declare room public.game_rooms; slot integer; match_slot integer; next_state jsonb; action_type text := p_action->>'type'; correct boolean; score integer; new_answer_keys jsonb; answers jsonb; guess_ids jsonb; choice_ids jsonb; player_count integer; answer_count integer; i integer; special_step integer;
+declare room public.game_rooms; slot integer; match_slot integer; next_state jsonb; action_type text := p_action->>'type'; correct boolean; score integer; new_answer_keys jsonb; answers jsonb; guess_ids jsonb; choice_ids jsonb; player_count integer; answer_count integer; remaining_count integer; i integer; special_step integer; results jsonb;
 begin
   select * into room from public.game_rooms where room_code = p_room_code for update;
   if not found then raise exception 'ROOM_NOT_FOUND'; end if;
@@ -88,6 +88,43 @@ begin
   elsif action_type = 'connection' then
     next_state := jsonb_set(next_state, array['players', slot::text, 'connected'], to_jsonb((p_action->>'connected')::boolean));
     next_state := jsonb_set(next_state, array['players', slot::text, 'lastSeenAt'], to_jsonb(floor(extract(epoch from now()) * 1000)));
+  elsif action_type = 'leave_match' then
+    if room.state->>'status' <> 'playing' or match_slot is null then raise exception 'NOT_IN_MATCH'; end if;
+    results := coalesce(room.state->'matchResults', '{}'::jsonb) || coalesce((select jsonb_object_agg(player->>'roomSlot', room.state#>array['scores',(ordinality - 1)::text]) from jsonb_array_elements(room.state->'matchPlayers') with ordinality roster(player, ordinality)), '{}'::jsonb);
+    next_state := jsonb_set(next_state, '{matchResults}', results);
+    remaining_count := jsonb_array_length(room.state->'matchPlayers') - 1;
+    if slot = 0 or remaining_count < 2 then
+      next_state := jsonb_set(next_state, '{status}', '"finished"');
+      next_state := jsonb_set(next_state, '{finishedAt}', to_jsonb(floor(extract(epoch from now()) * 1000)));
+      next_state := jsonb_set(next_state, '{players}', (select jsonb_agg(jsonb_set(p, '{ready}', 'false')) from jsonb_array_elements(room.state->'players') p));
+    else
+      next_state := jsonb_set(next_state, '{matchPlayers}', (select jsonb_agg(player order by ordinality) from jsonb_array_elements(room.state->'matchPlayers') with ordinality listed(player, ordinality) where ordinality - 1 <> match_slot));
+      next_state := jsonb_set(next_state, '{scores}', (room.state->'scores') - match_slot);
+      next_state := jsonb_set(next_state, '{roundAnswers}', (select coalesce(jsonb_object_agg(case when key::integer > match_slot then (key::integer - 1)::text else key end, value), '{}'::jsonb) from jsonb_each(coalesce(room.state->'roundAnswers', '{}'::jsonb)) where key::integer <> match_slot));
+      next_state := jsonb_set(next_state, '{currentTurn}', to_jsonb(case when (room.state->>'currentTurn')::integer > match_slot then (room.state->>'currentTurn')::integer - 1 when (room.state->>'currentTurn')::integer = match_slot then match_slot % remaining_count else (room.state->>'currentTurn')::integer end));
+      if room.state#>>'{modeState,kind}' = 'randomFive' then
+        guess_ids := (select coalesce(jsonb_object_agg(case when key::integer > match_slot then (key::integer - 1)::text else key end, value), '{}'::jsonb) from jsonb_each(coalesce(room.state#>'{modeState,value,guessIds}', '{}'::jsonb)) where key::integer <> match_slot);
+        next_state := jsonb_set(next_state, '{modeState,value,guessIds}', guess_ids);
+        next_state := jsonb_set(next_state, '{modeState,value,scores}', (room.state#>'{modeState,value,scores}') - match_slot);
+      elsif room.state#>>'{modeState,kind}' = 'twin' then
+        if jsonb_array_length(coalesce(room.state#>'{modeState,value,guesses}', '[]'::jsonb)) > match_slot then next_state := jsonb_set(next_state, '{modeState,value,guesses}', (room.state#>'{modeState,value,guesses}') - match_slot); end if;
+        next_state := jsonb_set(next_state, '{modeState,value,scores}', (room.state#>'{modeState,value,scores}') - match_slot);
+      elsif room.state#>>'{modeState,kind}' = 'grid' then
+        next_state := jsonb_set(next_state, '{modeState,value,players}', (room.state#>'{modeState,value,players}') - match_slot);
+        next_state := jsonb_set(next_state, '{modeState,value,scores}', (room.state#>'{modeState,value,scores}') - match_slot);
+        next_state := jsonb_set(next_state, '{modeState,value,correct}', (room.state#>'{modeState,value,correct}') - match_slot);
+        next_state := jsonb_set(next_state, '{modeState,value,wrong}', (room.state#>'{modeState,value,wrong}') - match_slot);
+        next_state := jsonb_set(next_state, '{modeState,value,currentTurn}', next_state->'currentTurn');
+        next_state := jsonb_set(next_state, '{modeState,value,grid,marks}', (select jsonb_agg(case when mark = 'null'::jsonb then mark when (mark->>'owner')::integer = match_slot then 'null'::jsonb when (mark->>'owner')::integer > match_slot then jsonb_set(mark, '{owner}', to_jsonb((mark->>'owner')::integer - 1)) else mark end order by ordinality) from jsonb_array_elements(coalesce(room.state#>'{modeState,value,grid,marks}', '[]'::jsonb)) with ordinality marks(mark, ordinality)));
+      end if;
+      if next_state->'question' <> 'null'::jsonb and (select count(*) from jsonb_object_keys(next_state->'roundAnswers')) = remaining_count then
+        next_state := jsonb_set(next_state, '{revealUntil}', to_jsonb(floor(extract(epoch from now() + interval '2 seconds') * 1000)));
+        next_state := jsonb_set(next_state, '{answerResult}', '"revealed"');
+        next_state := jsonb_set(next_state, '{question,correctPlayerId}', room.answer_keys->0);
+      elsif next_state#>>'{modeState,kind}' = 'randomFive' and (select count(*) from jsonb_object_keys(coalesce(next_state#>'{modeState,value,guessIds}', '{}'::jsonb))) = remaining_count then
+        next_state := jsonb_set(next_state, '{modeState,value,revealUntil}', to_jsonb(floor(extract(epoch from now() + interval '2 seconds') * 1000)));
+      end if;
+    end if;
   elsif action_type = 'start' then
     if slot <> 0 then raise exception 'HOST_ONLY'; end if;
     player_count := (select count(*) from jsonb_array_elements(room.state->'players') p where coalesce((p->>'ready')::boolean, false));
@@ -96,6 +133,7 @@ begin
     next_state := jsonb_set(next_state, '{status}', '"playing"');
     next_state := jsonb_set(next_state, '{matchNumber}', to_jsonb(coalesce((room.state->>'matchNumber')::integer, 0) + 1));
     next_state := jsonb_set(next_state, '{questionSequence}', '0');
+    next_state := jsonb_set(next_state, '{matchResults}', '{}');
     next_state := jsonb_set(next_state, '{scores}', (select jsonb_agg(0) from generate_series(1, player_count)));
     next_state := jsonb_set(next_state, '{question}', 'null'); next_state := jsonb_set(next_state, '{roundAnswers}', '{}'); next_state := jsonb_set(next_state, '{revealUntil}', 'null'); next_state := jsonb_set(next_state, '{modeState}', 'null');
     next_state := jsonb_set(next_state, '{settings,locked}', 'true');
@@ -150,6 +188,8 @@ begin
   elsif action_type = 'finish' then
     if slot <> 0 then raise exception 'HOST_ONLY'; end if;
     if room.state->>'status' <> 'playing' or (room.state->'revealUntil' = 'null'::jsonb and not coalesce((room.state#>>'{modeState,value,finished}')::boolean, false) and coalesce(room.state#>>'{modeState,value,status}', '') <> 'finished') then raise exception 'FINISH_NOT_ALLOWED'; end if;
+    results := coalesce(room.state->'matchResults', '{}'::jsonb) || coalesce((select jsonb_object_agg(player->>'roomSlot', room.state#>array['scores',(ordinality - 1)::text]) from jsonb_array_elements(room.state->'matchPlayers') with ordinality roster(player, ordinality)), '{}'::jsonb);
+    next_state := jsonb_set(next_state, '{matchResults}', results);
     next_state := jsonb_set(next_state, '{status}', '"finished"'); next_state := jsonb_set(next_state, '{finishedAt}', to_jsonb(floor(extract(epoch from now()) * 1000)));
     next_state := jsonb_set(next_state, '{players}', (select jsonb_agg(jsonb_set(p, '{ready}', 'false')) from jsonb_array_elements(room.state->'players') p));
   elsif action_type = 'special_guess' then

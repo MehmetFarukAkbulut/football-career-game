@@ -165,7 +165,7 @@
         </div>
       </section>
       <section id="twinGame" class="view">
-        <div class="game-top twin-top"><button class="back" data-view="home">← Oyundan çık</button><b id="twinRound"></b><div id="twinScore"></div></div>
+        <div class="game-top twin-top"><button class="back online-room-return" data-view="home">← Odaya dön</button><b id="twinRound"></b><div id="twinScore"></div></div>
         <div id="twinTarget" class="twin-target"></div>
         <div class="surface twin-play">
           <span id="twinMetricStep" class="kicker"></span><h2 id="twinPrompt"></h2><p id="twinTurn"></p>
@@ -196,7 +196,7 @@
         </div>
       </section>
       <section id="randomFiveGame" class="view">
-        <div class="game-top twin-top"><button class="back" data-view="home">← Oyundan çık</button><b id="randomFiveRound"></b><div id="randomFiveScore"></div></div>
+        <div class="game-top twin-top"><button class="back online-room-return" data-view="home">← Odaya dön</button><b id="randomFiveRound"></b><div id="randomFiveScore"></div></div>
         <div id="randomFiveClubs" class="random-five-clubs"></div>
         <div class="surface twin-play random-five-play">
           <span class="kicker">EN ÇOK KULÜPTE OYNAYANI BUL</span><h2 id="randomFivePrompt"></h2><p id="randomFiveTurn"></p>
@@ -206,7 +206,7 @@
       </section>
       <section id="game" class="view">
         <div class="game-top">
-          <button class="back" data-view="home">← Oyundan çık</button>
+          <button class="back online-room-return" data-view="home">← Odaya dön</button>
           <div><b id="gameContext"></b><b id="gameRound">Tur 1/5</b><span id="timer">30</span></div>
         </div>
         <div class="versus">
@@ -389,6 +389,7 @@
           <button id="startGrid" class="cta">Izgarayı başlat</button>
         </div>
         <div id="gridGame" hidden>
+          <button class="back online-room-return" data-view="home">← Odaya dön</button>
           <div class="grid-status" aria-live="polite">
             <div id="gridTurn"></div>
             <div id="gridScores"></div>
@@ -437,8 +438,8 @@
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=2" defer></script>
     <script src="web/game-core.js?v=13" defer></script>
-    <script src="web/online-core.js?v=5" defer></script>
-    <script src="web/online-service.js?v=4" defer></script>
-    <script src="web/app.js?v=21" defer></script>
+    <script src="web/online-core.js?v=6" defer></script>
+    <script src="web/online-service.js?v=5" defer></script>
+    <script src="web/app.js?v=22" defer></script>
   </body>
 </html>
