@@ -29,5 +29,10 @@ test("Kariyer Kozları menü, paket ve lig filtresi akışını içerir", async 
   assert.match(html, /id="trumpsLeagueOptions"/);
   assert.match(source, /enhanceLeagueSelector\(\$\("#trumpsSetup"\)\)/);
   assert.match(source, /trumpsGame\.errors >= 2/);
+  assert.doesNotMatch(source, /if \(hidden && !revealed\) return `<div class="trump-mystery"/);
+  assert.match(source, /const concealed = hidden && !revealed/);
+  assert.match(source, /concealed \? "\?" : IkiFormaCore\.trumpMetricValue/);
+  assert.match(source, /İstatistikler seçimden sonra açılır/);
   assert.match(css, /\.trumps-table/);
+  assert.match(css, /\.trump-metrics\.concealed button/);
 });
