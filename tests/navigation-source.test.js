@@ -47,3 +47,8 @@ test("online özel oyunlarda çift ilerleme ve çift gönderim kilitlidir", () =
 test("online lobby gizlenen giriş formunu gerçekten kaldırır", () => {
   assert.match(choiceStyles, /\.online-entry\[hidden\][^{]*\{display:none!important\}/);
 });
+
+test("online sayaç sıfırda backend timeout işlemini tetikler", () => {
+  assert.match(source, /requestOnlineQuestionTimeout\(question\.questionId, state\.questionSequence\)/);
+  assert.match(source, /type: "timeout", questionId/);
+});

@@ -649,8 +649,23 @@ function handleOnlineState() {
     $("#gameMessage").textContent = "Seçiminizi yapın; sonuç herkes cevapladıktan sonra gösterilecek.";
   }
   clearInterval(timer);
-  const updateOnlineTime = () => { const left = Math.max(0, Math.ceil((question.deadlineAt - Date.now()) / 1000)); $("#timer").textContent = `${left} sn`; $("#timebar").style.width = `${Math.min(100, left / state.settings.seconds * 100)}%`; if (!left) clearInterval(timer); };
+  const updateOnlineTime = () => { const left = Math.max(0, Math.ceil((question.deadlineAt - Date.now()) / 1000)); $("#timer").textContent = `${left} sn`; $("#timebar").style.width = `${Math.min(100, left / state.settings.seconds * 100)}%`; if (!left) { clearInterval(timer); requestOnlineQuestionTimeout(question.questionId, state.questionSequence); } };
   updateOnlineTime(); timer = setInterval(updateOnlineTime, 500);
+}
+
+async function requestOnlineQuestionTimeout(questionId, sequence) {
+  if (!online.state?.question || online.state.revealUntil || online.timeoutRequestedSeq === sequence) return;
+  online.timeoutRequestedSeq = sequence;
+  try {
+    online.state = await online.service.mutate(online.state.roomCode, online.token, online.state.stateVersion, { type: "timeout", questionId });
+    handleOnlineState();
+  } catch (error) {
+    await refreshOnlineRoom();
+    if (!online.state?.revealUntil && online.state?.question?.questionId === questionId) {
+      online.timeoutRequestedSeq = null;
+      if (error.message.includes("TIME_REMAINING") || error.message.includes("STALE_STATE")) setTimeout(() => requestOnlineQuestionTimeout(questionId, sequence), 400);
+    }
+  }
 }
 
 async function submitOnlinePlayer(playerId) {
