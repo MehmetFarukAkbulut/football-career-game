@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=16">',
+  '<link rel="stylesheet" href="web/grid.css?v=17">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -482,6 +482,7 @@ function renderOnlineLobby() {
   if (online.playerIndex === 0 && state.settings) {
     $("#onlineGameType").value = state.settings.gameType || "clubs"; $("#onlineRounds").value = state.settings.rounds || 5;
     $("#onlineSeconds").value = state.settings.seconds || 30; $("#onlineDifficulty").value = state.settings.difficulty || "normal"; $("#onlineAnswerMethod").value = state.settings.answerMethod || "multiple";
+    $("#onlineGridType").value = state.settings.gridType || "mixed"; updateOnlineGridTypeVisibility();
     if (!online.leagueSelectionDirty) {
       const selectedLeagues = new Set(state.settings.leagueIds || []);
       $$("#onlineHostSettings .league-options input[type=checkbox]").forEach((input) => { input.checked = selectedLeagues.has(input.value); input.onchange?.(); });
@@ -523,13 +524,15 @@ $("#openOnlineHub").onclick = openOnlineHub;
 $("#openOnlineHome").onclick = openOnlineHub;
 $("#copyRoomCode").onclick = async () => { await navigator.clipboard.writeText(online.state.roomCode); toast("Oda kodu kopyalandı."); };
 $("#onlineReady").onclick = () => mutateOnline({ type: "ready", ready: !online.state.players[online.playerIndex].ready });
+function updateOnlineGridTypeVisibility() { $("#onlineGridTypeWrap").hidden = $("#onlineGameType").value !== "grid"; }
+$("#onlineGameType").onchange = updateOnlineGridTypeVisibility;
 $("#onlineApplySettings").onclick = async () => {
-  const settings = { gameType: $("#onlineGameType").value, rounds: +$("#onlineRounds").value, seconds: +$("#onlineSeconds").value, difficulty: $("#onlineDifficulty").value, answerMethod: $("#onlineAnswerMethod").value, optionCount: 4, repeatPlayers: true, leagueIds: $$("#onlineHostSettings .league-options input:checked").map((input) => input.value) };
+  const settings = { gameType: $("#onlineGameType").value, gridType: $("#onlineGridType").value, rounds: +$("#onlineRounds").value, seconds: +$("#onlineSeconds").value, difficulty: $("#onlineDifficulty").value, answerMethod: $("#onlineAnswerMethod").value, optionCount: 4, repeatPlayers: true, leagueIds: $$("#onlineHostSettings .league-options input:checked").map((input) => input.value) };
   settings.lastModeState = online.state.settings?.lastModeState || null;
   settings.randomFiveHistory = online.state.settings?.randomFiveHistory || [];
   const selectedLeagues = new Set(settings.leagueIds), allowedClubIds = new Set(clubs.filter((club) => !selectedLeagues.size || selectedLeagues.has(club.leagueId || `${club.country}:${club.league}`)).map((club) => club.id));
   if (settings.gameType === "grid") {
-    const board = generateGrid(selectedLeagues, "mixed"), initialState = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: online.state.players.map((player) => player.name) });
+    const board = generateGrid(selectedLeagues, settings.gridType), initialState = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: online.state.players.map((player) => player.name) });
     if (!board) return toast("Bu ayarlarla geçerli ızgara üretilemedi."); initialState.grid = board; initialState.answerMethod = settings.answerMethod; settings.initialState = initialState;
   }
   if (settings.gameType === "randomFive") {
@@ -591,7 +594,7 @@ function buildFreshOnlineSpecialState(settings, active) {
       return { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: active.map(() => 0), round: 0, rounds: settings.rounds, metric: 0, guesses: [], targetIds, choiceIds: buildTwinChoiceIds(targets, pool) };
     }
     if (settings.gameType === "grid") {
-      const board = generateGrid(selected, previous.grid?.type || "mixed");
+      const board = generateGrid(selected, settings.gridType || "mixed");
       const signature = (gridBoard) => JSON.stringify([...(gridBoard?.rows || []), ...(gridBoard?.cols || [])].map((criterion) => `${criterion.type}:${criterion.id}`));
       if (!board || signature(board) === signature(previous.grid)) continue;
       const state = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: active.map((player) => player.name) });

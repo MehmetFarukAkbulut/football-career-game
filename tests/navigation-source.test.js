@@ -106,10 +106,17 @@ test("Rastgele Beşler online set sayısı oda ayarındaki tur değerini korur",
 
 test("online oda sahibi lig filtresini ayarlara ve tüm oyun havuzlarına uygular", () => {
   assert.match(source, /#onlineHostSettings \.league-options input:checked/);
-  assert.match(source, /generateGrid\(selectedLeagues, "mixed"\)/);
+  assert.match(source, /generateGrid\(selectedLeagues, settings\.gridType\)/);
   assert.match(source, /allowedClubIds\.has\(club\.id\)/);
   assert.match(source, /twinPool\(\)\.filter/);
   assert.match(source, /enhanceLeagueSelector\(\$\("#onlineHostSettings"\)\)/);
+});
+
+test("online oda sahibi ızgara tipini seçer ve ortak state ile sonraki ızgaralarda korur", () => {
+  assert.match(source, /gridType: \$\("#onlineGridType"\)\.value/);
+  assert.match(source, /state\.settings\.gridType \|\| "mixed"/);
+  assert.match(source, /generateGrid\(selected, settings\.gridType \|\| "mixed"\)/);
+  assert.match(source, /updateOnlineGridTypeVisibility/);
 });
 
 test("online oda masaüstünde dar setup sütununa sıkışmadan tam genişliği kullanır", () => {
