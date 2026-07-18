@@ -321,7 +321,6 @@ function startGame(mode, screen) {
     return toast("Seçilen ligler ve zorluk için uygun eşleşme bulunamadı.");
   if (game.pairs.length < game.total)
     toast(`Yalnızca ${game.pairs.length} geçerli ve tekrarsız soru üretilebildi.`);
-  $("#score").textContent = 0;
   show("game");
   nextRound();
 }
@@ -833,7 +832,6 @@ function endRound(player, result) {
     const points = Math.max(10, game.left * 3);
     game.score += points;
     game.scores[game.currentTurn] += points;
-    $("#score").textContent = game.score;
     result = `Doğru: ${player.name} (+${points})`;
   }
   game.history.push({
