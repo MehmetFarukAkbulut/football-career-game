@@ -10,7 +10,7 @@ function generateRoomCode(bytes = secureRandomBytes(6)) {
   return [...bytes].map((byte) => ROOM_CODE_ALPHABET[byte % ROOM_CODE_ALPHABET.length]).join("").slice(0, 6);
 }
 function createOnlineRoom({ code, hostName = "Oyuncu 1", settings = {}, now = Date.now() }) {
-  return { roomCode: code || generateRoomCode(), stateVersion: 1, status: "waiting", createdAt: now, expiresAt: now + ROOM_TTL_MS, matchNumber: 0, questionSequence: 0, settings: { ...settings, locked: false }, currentTurn: 0, scores: [0], usedPlayerIds: [], players: [{ name: hostName.trim() || "Oyuncu 1", ready: false, connected: true, host: true }], question: null, roundAnswers: {}, revealUntil: null, answerResult: null };
+  return { roomCode: code || generateRoomCode(), stateVersion: 1, status: "waiting", createdAt: now, expiresAt: now + ROOM_TTL_MS, matchNumber: 0, questionSequence: 0, settings: { ...settings, locked: false }, currentTurn: 0, scores: [0], totalScores: [0], usedPlayerIds: [], players: [{ name: hostName.trim() || "Oyuncu 1", ready: false, connected: true, host: true }], question: null, roundAnswers: {}, revealUntil: null, answerResult: null };
 }
 function assertMutable(state, expectedVersion, now = Date.now()) {
   if (!state) throw new Error("ROOM_NOT_FOUND");
@@ -22,7 +22,7 @@ function matchIndexFor(state, playerIndex) { return state.matchPlayers?.findInde
 function joinOnlineRoom(state, { playerName = "Oyuncu 2", expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (state.status === "playing" || state.players.length >= MAX_ROOM_PLAYERS) throw new Error("ROOM_FULL");
-  return advance(state, { players: [...state.players, { name: playerName.trim() || `Oyuncu ${state.players.length + 1}`, ready: false, connected: true, host: false }], scores: [...state.scores, 0] });
+  return advance(state, { players: [...state.players, { name: playerName.trim() || `Oyuncu ${state.players.length + 1}`, ready: false, connected: true, host: false }], scores: [...state.scores, 0], totalScores: [...(state.totalScores || state.scores), 0] });
 }
 function updateConnection(state, { playerIndex, connected, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
@@ -43,7 +43,8 @@ function leaveOnlineMatch(state, { playerIndex, expectedVersion, now = Date.now(
   if (state.status !== "playing" || removed < 0) throw new Error("NOT_IN_MATCH");
   const matchResults = { ...(state.matchResults || {}) };
   roster.forEach((player, index) => { matchResults[player.roomSlot] = state.scores[index] || 0; });
-  if (playerIndex === 0 || roster.length - 1 < 2) return advance(state, { status: "finished", finishedAt: now, matchResults, players: state.players.map((player) => ({ ...player, ready: false })) });
+  const totalScores = state.players.map((_, index) => matchResults[index] ?? state.totalScores?.[index] ?? 0);
+  if (playerIndex === 0 || roster.length - 1 < 2) return advance(state, { status: "finished", finishedAt: now, matchResults, totalScores, players: state.players.map((player) => ({ ...player, ready: false })) });
   const matchPlayers = roster.filter((_, index) => index !== removed), scores = state.scores.filter((_, index) => index !== removed);
   const currentTurn = state.currentTurn > removed ? state.currentTurn - 1 : state.currentTurn === removed ? removed % matchPlayers.length : state.currentTurn;
   let modeState = state.modeState ? structuredClone(state.modeState) : null;
@@ -57,14 +58,14 @@ function leaveOnlineMatch(state, { playerIndex, expectedVersion, now = Date.now(
       modeState.value.grid?.marks?.forEach((mark, index, marks) => { if (!mark) return; if (mark.owner === removed) marks[index] = null; else if (mark.owner > removed) mark.owner--; });
     }
   }
-  return advance(state, { matchPlayers, scores, matchResults, currentTurn, modeState, roundAnswers: rekeyAfterRemoval(state.roundAnswers, removed) });
+  return advance(state, { matchPlayers, scores, matchResults, totalScores, currentTurn, modeState, roundAnswers: rekeyAfterRemoval(state.roundAnswers, removed) });
 }
 function startOnlineGame(state, { playerIndex, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
   const matchPlayers = state.players.map((player, roomSlot) => ({ ...player, roomSlot })).filter((player) => player.ready);
   if (!['waiting', 'finished'].includes(state.status) || matchPlayers.length < 2 || !state.players[0]?.ready) throw new Error("PLAYERS_NOT_READY");
-  return advance(state, { status: "playing", matchPlayers, matchNumber: (state.matchNumber || 0) + 1, questionSequence: 0, scores: matchPlayers.map(() => 0), settings: { ...state.settings, locked: true }, question: null, roundAnswers: {}, revealUntil: null, modeState: null });
+  return advance(state, { status: "playing", matchPlayers, matchResults: {}, matchNumber: (state.matchNumber || 0) + 1, questionSequence: 0, scores: matchPlayers.map((player) => state.totalScores?.[player.roomSlot] || 0), settings: { ...state.settings, locked: true }, question: null, roundAnswers: {}, revealUntil: null, modeState: null });
 }
 function publishOnlineQuestion(state, { playerIndex, question, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
@@ -122,13 +123,15 @@ function finishOnlineGame(state, { playerIndex, expectedVersion, now = Date.now(
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
   if (state.status !== "playing" || (!state.revealUntil && !state.modeState?.value?.finished && state.modeState?.value?.status !== "finished")) throw new Error("FINISH_NOT_ALLOWED");
-  return advance(state, { status: "finished", finishedAt: now, players: state.players.map((player) => ({ ...player, ready: false })) });
+  const matchResults = { ...(state.matchResults || {}) }; (state.matchPlayers || []).forEach((player, index) => { matchResults[player.roomSlot] = state.scores[index] || 0; });
+  const totalScores = state.players.map((_, index) => matchResults[index] ?? state.totalScores?.[index] ?? 0);
+  return advance(state, { status: "finished", finishedAt: now, matchResults, totalScores, players: state.players.map((player) => ({ ...player, ready: false })) });
 }
 function configureOnlineMatch(state, { playerIndex, settings, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
   if (!['waiting', 'finished'].includes(state.status)) throw new Error("SETTINGS_LOCKED");
-  return advance(state, { status: "waiting", settings: { ...settings, locked: false }, players: state.players.map((player) => ({ ...player, ready: false })), scores: state.players.map(() => 0), question: null, roundAnswers: {}, revealUntil: null, modeState: null });
+  return advance(state, { status: "waiting", settings: { ...settings, locked: false }, players: state.players.map((player) => ({ ...player, ready: false })), scores: [...(state.totalScores || state.scores)], question: null, roundAnswers: {}, revealUntil: null, modeState: null });
 }
 function syncOnlineModeState(state, { playerIndex, modeState, currentTurn, scores, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
