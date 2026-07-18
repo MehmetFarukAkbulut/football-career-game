@@ -335,6 +335,16 @@
               <option value="hard">Zor</option>
             </select></label
           >
+          <label>Izgara tipi<select id="gridType">
+            <option value="club">Kulüp × Kulüp</option>
+            <option value="leagueClub">Lig × Kulüp</option>
+            <option value="countryClub">Ülke × Kulüp</option>
+            <option value="mixed">Karışık</option>
+          </select></label>
+          <label>Cevap yöntemi<select id="gridAnswerMethod">
+            <option value="text">Serbest metin</option>
+            <option value="multiple">Çoktan seçmeli</option>
+          </select></label>
           <div id="gridNames" hidden>
             <label
               >Oyuncu 1<input
@@ -394,6 +404,7 @@
                 class="suggestions"
                 role="listbox"
               ></div>
+              <div id="gridChoices" class="suggestions inline-choices" hidden></div>
             </div>
             <button id="gridCancel" class="secondary">Vazgeç</button>
           </div>
@@ -410,9 +421,9 @@
     </footer>
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=1" defer></script>
-    <script src="web/game-core.js?v=12" defer></script>
+    <script src="web/game-core.js?v=13" defer></script>
     <script src="web/online-core.js?v=1" defer></script>
     <script src="web/online-service.js?v=1" defer></script>
-    <script src="web/app.js?v=12" defer></script>
+    <script src="web/app.js?v=13" defer></script>
   </body>
 </html>
