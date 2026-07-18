@@ -71,7 +71,7 @@ end $$;
 
 create or replace function public.apply_game_room_action(p_room_code text, p_player_token text, p_expected_version bigint, p_action jsonb)
 returns jsonb language plpgsql security definer set search_path = '' as $$
-declare room public.game_rooms; slot integer; next_state jsonb; action_type text := p_action->>'type'; correct boolean; score integer; new_answer_keys jsonb; answers jsonb; player_count integer; answer_count integer;
+declare room public.game_rooms; slot integer; next_state jsonb; action_type text := p_action->>'type'; correct boolean; score integer; new_answer_keys jsonb; answers jsonb; player_count integer; answer_count integer; i integer;
 begin
   select * into room from public.game_rooms where room_code = p_room_code for update;
   if not found then raise exception 'ROOM_NOT_FOUND'; end if;
@@ -127,6 +127,19 @@ begin
       next_state := jsonb_set(next_state, '{answerResult}', '"revealed"');
       next_state := jsonb_set(next_state, '{question,correctPlayerId}', room.answer_keys->0);
     end if;
+  elsif action_type = 'timeout' then
+    if room.state->>'status' <> 'playing' or room.state->'question' = 'null'::jsonb then raise exception 'QUESTION_NOT_ACTIVE'; end if;
+    if room.state#>>'{question,questionId}' <> p_action->>'questionId' then raise exception 'STALE_QUESTION'; end if;
+    if room.state->'revealUntil' <> 'null'::jsonb then raise exception 'QUESTION_ALREADY_ANSWERED'; end if;
+    if coalesce((room.state#>>'{question,deadlineAt}')::bigint, 0) > floor(extract(epoch from now()) * 1000) then raise exception 'TIME_REMAINING'; end if;
+    answers := coalesce(room.state->'roundAnswers', '{}'::jsonb); player_count := jsonb_array_length(room.state->'players');
+    for i in 0..player_count - 1 loop
+      if not answers ? i::text then answers := answers || jsonb_build_object(i::text, jsonb_build_object('selectedPlayerId', null, 'result', 'timeout')); end if;
+    end loop;
+    next_state := jsonb_set(next_state, '{roundAnswers}', answers);
+    next_state := jsonb_set(next_state, '{revealUntil}', to_jsonb(floor(extract(epoch from now() + interval '2 seconds') * 1000)));
+    next_state := jsonb_set(next_state, '{answerResult}', '"revealed"');
+    next_state := jsonb_set(next_state, '{question,correctPlayerId}', room.answer_keys->0);
   elsif action_type = 'pass' then
     if room.state->>'status' <> 'playing' or (room.state->>'currentTurn')::integer <> slot then raise exception 'NOT_YOUR_TURN'; end if;
     if room.state->'answeredBy' <> 'null'::jsonb or room.state#>>'{question,questionId}' <> p_action->>'questionId' then raise exception 'QUESTION_ALREADY_ANSWERED'; end if;
