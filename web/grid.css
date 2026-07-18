@@ -121,6 +121,33 @@
 .online-host-settings .online-league-options { max-height:none; margin:10px 0 4px; padding:10px; }
 .online-host-settings .online-league-options .league-tools { grid-template-columns:minmax(160px,1fr) auto auto; }
 .online-host-settings .online-league-options .league-list { max-height:150px; overflow:auto; }
+@media (min-width:901px) {
+  .setup .surface.online-lobby {
+    display:block;
+    width:100%;
+    max-width:1180px!important;
+    height:auto;
+    min-height:0;
+    max-height:none;
+    overflow:visible;
+    text-align:left;
+  }
+  .online-lobby #onlineRoomState { width:100%; }
+  .online-lobby .room-code { justify-content:flex-start; }
+  .online-lobby .online-players { grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); }
+  .online-lobby .online-host-settings {
+    display:grid;
+    grid-template-columns:minmax(300px,.8fr) minmax(0,1.2fr);
+    grid-template-rows:auto auto 1fr;
+    gap:10px 20px;
+    padding:18px;
+  }
+  .online-lobby .online-host-settings h3 { grid-column:1/-1; }
+  .online-lobby .online-host-settings .setup-grid { grid-column:1; grid-row:2; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; }
+  .online-lobby .online-host-settings .online-league-options { grid-column:2; grid-row:2/4; margin:0; }
+  .online-lobby .online-host-settings > button { grid-column:1; grid-row:3; align-self:start; justify-self:start; }
+  .online-lobby .online-host-settings .online-league-options .league-list { grid-template-columns:repeat(2,minmax(0,1fr)); max-height:260px; }
+}
 .grid-setup {
   max-width: 1120px;
   margin: 0 auto;

@@ -111,3 +111,10 @@ test("online oda sahibi lig filtresini ayarlara ve tüm oyun havuzlarına uygula
   assert.match(source, /twinPool\(\)\.filter/);
   assert.match(source, /enhanceLeagueSelector\(\$\("#onlineHostSettings"\)\)/);
 });
+
+test("online oda masaüstünde dar setup sütununa sıkışmadan tam genişliği kullanır", () => {
+  assert.match(styles, /\.setup \.surface\.online-lobby/);
+  assert.match(styles, /grid-template-columns:minmax\(300px,.8fr\) minmax\(0,1.2fr\)/);
+  assert.match(styles, /\.online-host-settings \.online-league-options \{ grid-column:2/);
+  assert.match(styles, /max-height:none/);
+});
