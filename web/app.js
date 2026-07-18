@@ -460,6 +460,7 @@ async function restoreOnlineSession() {
 function renderOnlineLobby() {
   const state = online.state;
   if (!state) return;
+  if (state.status !== "playing") show("onlineLobby");
   $("#onlineEntry").hidden = true; $("#onlineRoomState").hidden = false;
   $("#onlineRoomCode").textContent = state.roomCode;
   $("#onlinePlayers").innerHTML = state.players.map((player, index) => `<article class="online-player ${player.connected ? "is-connected" : ""}"><b>${esc(player.name)} ${player.host ? "👑" : ""}</b><small>Oyuncu ${index + 1} · ${player.connected ? "Bağlı" : "Yeniden bağlanıyor"}</small><span>${player.ready ? "✓ Hazır" : "Bekleniyor"}</span></article>`).join("");
