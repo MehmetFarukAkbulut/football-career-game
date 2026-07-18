@@ -29,7 +29,9 @@ test("reyting kartı kullanılmaz ve yalnız normal oyuncu portresi gösterilir"
   const css = await require("node:fs/promises").readFile(require("node:path").join(__dirname, "..", "web", "grid.css"), "utf8");
   const source = await require("node:fs/promises").readFile(require("node:path").join(__dirname, "..", "web", "app.js"), "utf8");
   assert.match(css, /\.rating-card-image \{[^}]*overflow: hidden/);
-  assert.match(css, /\.rating-card-image img \{[^}]*width: 100%[^}]*object-fit: cover/);
+  assert.match(css, /\.rating-card-image \{[^}]*border-radius: 16px/);
+  assert.match(css, /\.rating-card-image img \{[^}]*width: 100%[^}]*object-fit: contain/);
+  assert.doesNotMatch(css, /\.rating-card-image \{[^}]*border-radius: 50%/);
   assert.match(source, /player\.photoUrl/);
   assert.doesNotMatch(source, /player\.cardUrl/);
 });

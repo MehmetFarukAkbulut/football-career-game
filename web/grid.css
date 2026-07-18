@@ -17,8 +17,8 @@
 .rating-player:hover:not(:disabled), .rating-player:focus-visible { border-color: var(--mint); transform: translateY(-3px); outline: 3px solid #49e5a533; }
 .rating-player.correct { border-color: var(--mint); box-shadow: inset 0 0 0 2px #49e5a544; }
 .rating-player.wrong { border-color: var(--danger); }
-.rating-card-image { display: grid; place-items: center; width: 230px; height: 230px; overflow: hidden; border: 3px solid #315775; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #315878, #091c30 72%); }
-.rating-card-image img { width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center top; }
+.rating-card-image { display: grid; place-items: center; width: 240px; height: 240px; overflow: hidden; border: 3px solid #315775; border-radius: 16px; background: linear-gradient(145deg, #315878, #091c30 72%); }
+.rating-card-image img { width: 100%; height: 100%; max-width: none; object-fit: contain; object-position: center bottom; }
 .rating-card-image .avatar { width: 150px; height: 150px; font-size: 34px; }
 .rating-player strong { font-size: 24px; }
 .rating-player > span, .rating-player small { color: var(--muted); }
@@ -29,7 +29,7 @@
   .rating-stage { padding: 16px 10px; }
   .rating-choices { gap: 8px; margin-top: 18px; }
   .rating-player { min-height: 300px; padding: 10px 7px; }
-  .rating-card-image { width: 150px; height: 150px; }
+  .rating-card-image { width: 150px; height: 150px; border-radius: 12px; }
   .rating-card-image img { width: 100%; height: 100%; }
   .rating-player strong { font-size: 16px; }
   .rating-player > span, .rating-player small { font-size: 11px; }
