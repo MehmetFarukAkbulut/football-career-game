@@ -118,6 +118,9 @@
   background: #49e5a51a;
   color: var(--text);
 }
+.online-host-settings .online-league-options { max-height:none; margin:10px 0 4px; padding:10px; }
+.online-host-settings .online-league-options .league-tools { grid-template-columns:minmax(160px,1fr) auto auto; }
+.online-host-settings .online-league-options .league-list { max-height:150px; overflow:auto; }
 .grid-setup {
   max-width: 1120px;
   margin: 0 auto;

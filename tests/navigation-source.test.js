@@ -103,3 +103,11 @@ test("Rastgele Beşler online set sayısı oda ayarındaki tur değerini korur",
   assert.match(source, /randomFive\.round < randomFive\.sets\.length/);
   assert.match(source, /finished: randomFive\.round >= randomFive\.sets\.length/);
 });
+
+test("online oda sahibi lig filtresini ayarlara ve tüm oyun havuzlarına uygular", () => {
+  assert.match(source, /#onlineHostSettings \.league-options input:checked/);
+  assert.match(source, /generateGrid\(selectedLeagues, "mixed"\)/);
+  assert.match(source, /allowedClubIds\.has\(club\.id\)/);
+  assert.match(source, /twinPool\(\)\.filter/);
+  assert.match(source, /enhanceLeagueSelector\(\$\("#onlineHostSettings"\)\)/);
+});
