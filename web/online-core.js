@@ -70,6 +70,17 @@ function timeoutOnlineQuestion(state, { questionId, expectedVersion, now = Date.
   state.players.forEach((_, index) => { if (!Object.hasOwn(roundAnswers, index)) roundAnswers[index] = { selectedPlayerId: null, result: "timeout" }; });
   return advance(state, { roundAnswers, revealUntil: now + 2000, answerResult: "revealed" });
 }
+function submitOnlineSpecialGuess(state, { playerIndex, kind, step, selectedPlayerId, expectedVersion, now = Date.now() }) {
+  assertMutable(state, expectedVersion, now);
+  const snapshot = state.modeState;
+  if (state.status !== "playing" || snapshot?.kind !== kind) throw new Error("SPECIAL_GAME_NOT_ACTIVE");
+  if (+snapshot.value.round !== +step) throw new Error("STALE_SPECIAL_STEP");
+  const guessIds = { ...(snapshot.value.guessIds || {}) };
+  if (Object.hasOwn(guessIds, playerIndex)) throw new Error("SPECIAL_GUESS_ALREADY_SUBMITTED");
+  guessIds[playerIndex] = +selectedPlayerId;
+  const allAnswered = state.players.every((_, index) => Object.hasOwn(guessIds, index));
+  return advance(state, { modeState: { ...snapshot, value: { ...snapshot.value, guessIds, revealUntil: allAnswered ? now + 2000 : null } } });
+}
 function passOnlineTurn(state, { playerIndex, questionId, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (state.status !== "playing" || !state.question) throw new Error("QUESTION_NOT_ACTIVE");
@@ -97,6 +108,6 @@ function syncOnlineModeState(state, { playerIndex, modeState, currentTurn, score
   return advance(state, { modeState, currentTurn: Number(currentTurn) || 0, scores: Array.isArray(scores) ? scores : state.scores });
 }
 function isRoomExpired(state, now = Date.now()) { return !state || now >= state.expiresAt; }
-const onlineApi = { ROOM_TTL_MS, MAX_ROOM_PLAYERS, generateRoomCode, createOnlineRoom, joinOnlineRoom, updateConnection, setOnlineReady, startOnlineGame, publishOnlineQuestion, submitOnlineAnswer, timeoutOnlineQuestion, passOnlineTurn, finishOnlineGame, configureOnlineMatch, syncOnlineModeState, isRoomExpired };
+const onlineApi = { ROOM_TTL_MS, MAX_ROOM_PLAYERS, generateRoomCode, createOnlineRoom, joinOnlineRoom, updateConnection, setOnlineReady, startOnlineGame, publishOnlineQuestion, submitOnlineAnswer, timeoutOnlineQuestion, submitOnlineSpecialGuess, passOnlineTurn, finishOnlineGame, configureOnlineMatch, syncOnlineModeState, isRoomExpired };
 if (typeof module !== "undefined") module.exports = onlineApi;
 if (typeof window !== "undefined") window.IkiFormaOnlineCore = onlineApi;

@@ -63,6 +63,7 @@
       else if (action.type === "question") next = global.IkiFormaOnlineCore.publishOnlineQuestion(state, { ...args, question: action.question });
       else if (action.type === "answer") next = global.IkiFormaOnlineCore.submitOnlineAnswer(state, args);
       else if (action.type === "timeout") next = global.IkiFormaOnlineCore.timeoutOnlineQuestion(state, args);
+      else if (action.type === "special_guess") next = global.IkiFormaOnlineCore.submitOnlineSpecialGuess(state, args);
       else if (action.type === "pass") next = global.IkiFormaOnlineCore.passOnlineTurn(state, args);
       else if (action.type === "finish") next = global.IkiFormaOnlineCore.finishOnlineGame(state, args);
       else if (action.type === "mode_state") next = global.IkiFormaOnlineCore.syncOnlineModeState(state, args);
