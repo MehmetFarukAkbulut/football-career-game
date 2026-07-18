@@ -119,6 +119,12 @@ test("online oda sahibi ızgara tipini seçer ve ortak state ile sonraki ızgara
   assert.match(source, /updateOnlineGridTypeVisibility/);
 });
 
+test("ülke kriterli ızgara seçenekleri doğum yılını gösterir", () => {
+  assert.match(source, /showBirthYear: hasCountryCriterion/);
+  assert.match(source, /player\.birthDate\.slice\(0, 4\)/);
+  assert.match(source, /Doğum yılı bilinmiyor/);
+});
+
 test("online oda masaüstünde dar setup sütununa sıkışmadan tam genişliği kullanır", () => {
   assert.match(styles, /\.setup \.surface\.online-lobby/);
   assert.match(styles, /grid-template-columns:minmax\(300px,.8fr\) minmax\(0,1.2fr\)/);
