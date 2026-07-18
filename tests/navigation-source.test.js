@@ -90,6 +90,8 @@ test("online oda puanları oyunlar arasında birikmeye devam eder", () => {
 test("online özel oyunlar her maçta önceki paketten farklı sorular üretir", () => {
   assert.match(source, /function buildFreshOnlineSpecialState/);
   assert.match(source, /settings\.lastModeState\?\.value \|\| settings\.initialState/);
-  assert.match(source, /JSON\.stringify\(setIds\) === JSON\.stringify\(previous\.setIds\)/);
+  assert.match(source, /settings\.randomFiveHistory/);
+  assert.match(source, /function buildFreshRandomFiveSets/);
+  assert.match(source, /function randomFiveSetKey/);
   assert.match(source, /signature\(board\) === signature\(previous\.grid\)/);
 });
