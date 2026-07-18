@@ -14,7 +14,7 @@
     />
     <title>İki Forma — Futbol Kariyer Oyunu</title>
     <link rel="preconnect" href="https://tmssl.akamaized.net" />
-    <link rel="stylesheet" href="web/app.css" />
+    <link rel="stylesheet" href="web/app.css?v=2" />
     <link rel="stylesheet" href="web/multiple-choice.css?v=4" />
     <link rel="stylesheet" href="web/setup-fixes.css?v=1" />
   </head>
@@ -158,10 +158,10 @@
       </section>
       <section id="xiDraftSetup" class="view setup">
         <button class="back" data-view="home">← Ana sayfa</button>
-        <div class="surface xi-draft-setup"><span class="kicker">GÜNCEL FC 26 REYTİNGLERİ</span><h2>Turnuva 11'i</h2><p>Mevkilere uygun aktif futbolcuları seç, takım ortalamanı yükselt ve gerçek turnuva formatında ne kadar ilerleyeceğini gör.</p><div class="setup-grid"><label>Turnuva<select id="xiTournament"><option value="ucl">Şampiyonlar Ligi</option><option value="worldCup">2026 Dünya Kupası</option></select></label><label>Zorluk<select id="xiDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label><label id="xiNationWrap" hidden>Millî takım<select id="xiNation"><option value="">Rastgele uygun ülke</option></select></label></div><fieldset id="xiLeagueOptions" class="league-options"><legend>Kariyer ligi filtresi <small>Oyuncunun güncel veya geçmiş kariyerinde bulunması yeterlidir</small></legend></fieldset><button id="startXiDraft" class="cta">Draftı başlat →</button></div>
+        <div class="surface xi-draft-setup"><span class="kicker">GÜNCEL FC 26 REYTİNGLERİ</span><h2>Turnuva 11'i</h2><p>Mevkilere uygun aktif futbolcuları seç, takım ortalamanı yükselt ve gerçek turnuva formatında ne kadar ilerleyeceğini gör.</p><div class="setup-grid"><label>Seçim biçimi<select id="xiSelectionMode"><option value="classic">Klasik seçim</option><option value="luck">Şans kutusu</option></select><small>Klasikte reytingler seçimden sonra, şans kutusunda tüm futbolcular kutu açılınca görünür.</small></label><label>Turnuva<select id="xiTournament"><option value="ucl">Şampiyonlar Ligi</option><option value="worldCup">2026 Dünya Kupası</option></select></label><label>Zorluk<select id="xiDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label><label id="xiNationWrap" hidden>Millî takım<select id="xiNation"><option value="">Rastgele uygun ülke</option></select></label></div><fieldset id="xiLeagueOptions" class="league-options"><legend>Kariyer ligi filtresi <small>Oyuncunun güncel veya geçmiş kariyerinde bulunması yeterlidir</small></legend></fieldset><button id="startXiDraft" class="cta">Draftı başlat →</button></div>
       </section>
       <section id="xiDraftGame" class="view">
-        <div class="game-top"><button class="back" data-view="xiDraftSetup">← Oyundan çık</button><div><span id="xiDraftProgress"></span><span id="xiDraftAverage">Ort. —</span></div></div><div class="xi-draft-layout"><div class="surface xi-pitch"><div id="xiSlots" class="xi-slots"></div></div><aside class="surface xi-picks"><span class="kicker">SIRADAKİ MEVKİ</span><h2 id="xiPickTitle"></h2><p id="xiPickHelp"></p><div id="xiCandidates" class="xi-candidates"></div></aside></div>
+        <div class="game-top"><button class="back" data-view="xiDraftSetup">← Oyundan çık</button><div><span id="xiDraftProgress"></span><span id="xiDraftAverage">Ort. —</span></div></div><div class="xi-draft-layout"><div class="surface xi-pitch"><div id="xiSlots" class="xi-slots"></div></div><aside class="surface xi-picks"><span class="kicker">SIRADAKİ MEVKİ</span><h2 id="xiPickTitle"></h2><p id="xiPickHelp"></p><div id="xiCandidates" class="xi-candidates"></div><button id="xiNextPick" class="cta" hidden>Sonraki mevki →</button></aside></div>
       </section>
       <section id="xiTournamentResult" class="view"><button class="back" data-view="xiDraftSetup">← Yeni takım kur</button><div class="surface xi-result"><span class="kicker">TURNUVA RAPORU</span><h2 id="xiOutcome"></h2><p id="xiResultSummary"></p><div id="xiTimeline" class="xi-timeline"></div><button class="cta" data-view="xiDraftSetup">Yeni draft →</button></div></section>
       <section id="classicSetup" class="view setup"></section>
@@ -493,9 +493,9 @@
     </footer>
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=2" defer></script>
-    <script src="web/game-core.js?v=20" defer></script>
+    <script src="web/game-core.js?v=21" defer></script>
     <script src="web/online-core.js?v=9" defer></script>
     <script src="web/online-service.js?v=5" defer></script>
-    <script src="web/app.js?v=42" defer></script>
+    <script src="web/app.js?v=43" defer></script>
   </body>
 </html>
