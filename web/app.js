@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=13">',
+  '<link rel="stylesheet" href="web/grid.css?v=14">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -285,12 +285,8 @@ function organizeHomeMenu() {
   const root = $("#home .mode-grid");
   if (!root) return;
   const cards = new Map([...root.querySelectorAll("[data-view]")].map((card) => [card.dataset.view, card]));
-  const addGroup = (title, views) => {
-    const heading = document.createElement("h2"); heading.className = "mode-group-title"; heading.textContent = title; root.append(heading);
-    views.forEach((view) => cards.get(view) && root.append(cards.get(view)));
-  };
-  addGroup("Oyunlar", ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup"]);
-  addGroup("Keşfet", ["compare", "catalog", "travelers"]);
+  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "compare", "catalog", "travelers"]
+    .forEach((view) => cards.get(view) && root.append(cards.get(view)));
 }
 function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
   const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
@@ -931,6 +927,18 @@ function setGridPlaying(active) {
   } else view.classList.remove("grid-playing");
 }
 function criterionClub(club) { return { type: "club", id: club.id, name: club.name, country: club.country, logoAsset: club.logoAsset, logo: club.logo }; }
+const GRID_LEAGUE_BADGES = Object.freeze({
+  GB1: { code: "PL", colors: ["#5b1b75", "#25d9b4"] },
+  ES1: { code: "LL", colors: ["#e43d30", "#f5c542"] },
+  IT1: { code: "SA", colors: ["#1266c5", "#ffffff"] },
+  L1: { code: "BL", colors: ["#d71920", "#ffffff"] },
+  FR1: { code: "L1", colors: ["#182a64", "#d7ff3f"] },
+  TR1: { code: "SL", colors: ["#e21f2f", "#ffffff"] },
+});
+function leagueBadge(criterion) {
+  const badge = GRID_LEAGUE_BADGES[criterion.id] || { code: "LİG", colors: ["#315b7c", "#ffffff"] };
+  return `<span class="league-badge" style="--league-color:${badge.colors[0]};--league-ink:${badge.colors[1]}" aria-hidden="true"><i>⚽</i><b>${badge.code}</b></span>`;
+}
 function gridCriterionPools(selectedLeagues) {
   const active = clubs.filter((club) => club.active && (!selectedLeagues.size || selectedLeagues.has(club.leagueId)));
   const clubCriteria = active
@@ -994,7 +1002,7 @@ function startGridGame() {
 function renderGrid() {
   const criterionHead = (criterion) => criterion.type === "country"
     ? `<img class="flag" src="${countryFlag(criterion.code)}" alt=""><small>${esc(criterion.name)}</small><span>Ülke</span>`
-    : criterion.type === "league" ? `<span class="criterion-icon">🏆</span><small>${esc(criterion.name)}</small><span>Lig</span>`
+    : criterion.type === "league" ? `${leagueBadge(criterion)}<small>${esc(criterion.name)}</small><span>${esc(criterion.country || "Lig")}</span>`
     : `${logo(criterion)}<small>${esc(criterion.name)}</small><span>${esc(criterion.country || "")}</span>`;
   let html =
     '<div class="grid-head"></div>' +
@@ -1265,6 +1273,7 @@ function startRandomFiveGame() {
   renderRandomFiveRound();
 }
 function renderRandomFiveRound() {
+  clearTimeout(randomFive.nextTimer);
   const set = randomFive.sets[randomFive.round];
   if (!randomFive.online) randomFive.guesses = [];
   $("#randomFiveRound").textContent = `Set ${randomFive.round + 1}/5`;
@@ -1292,7 +1301,6 @@ async function submitRandomFiveGuess(player) {
   if (!player) return;
   if (randomFive.online && online.state.currentTurn !== online.playerIndex) return toast("Sıra rakibinizde.");
   const ids = randomFive.sets[randomFive.round].map((club) => club.id);
-  if (!IkiFormaCore.randomFiveScore(player, ids)) return toast("Bu futbolcu gösterilen kulüplerin hiçbirinde oynamadı.");
   randomFive.guesses.push(player);
   $("#randomFiveInput").value = "";
   $("#randomFiveSuggestions").innerHTML = "";
@@ -1316,6 +1324,13 @@ async function submitRandomFiveGuess(player) {
     if (guess) randomFive.guesses.push(guess.player);
   }
   revealRandomFiveRound();
+  if (randomFive.mode === "computer" && IkiFormaCore.randomFiveScore(randomFive.guesses[0], ids) === 0) {
+    $("#randomFiveTurn").textContent = `${randomFive.names[0]} 0 puan aldı. Sonraki sete geçiliyor…`;
+    const answeredRound = randomFive.round;
+    randomFive.nextTimer = setTimeout(() => {
+      if (randomFive.round === answeredRound && !$("#randomFiveNext").hidden) nextRandomFiveRound();
+    }, 1600);
+  }
   if (randomFive.online) await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores);
 }
 function revealRandomFiveRound() {
