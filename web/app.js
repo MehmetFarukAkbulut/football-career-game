@@ -552,7 +552,8 @@ function startOnlineMatch() {
 async function startOnlineSpecialMatch() {
   const settings = online.state.settings;
   if (online.playerIndex === 0 && !online.state.modeState) {
-    const active = onlineGamePlayers(), activeScores = [...online.state.scores], value = structuredClone(settings.initialState);
+    const active = onlineGamePlayers(), activeScores = [...online.state.scores], value = buildFreshOnlineSpecialState(settings, active);
+    if (!value) { toast("Bu oyun için yeni ve geçerli sorular üretilemedi."); return; }
     value.scores = [...activeScores];
     if (settings.gameType === "grid") { value.players = active.map((player, index) => ({ ...(value.players?.[index] || {}), name: player.name, computer: false })); value.scores = [...activeScores]; for (const key of ["correct", "wrong"]) value[key] = active.map(() => 0); }
     let modeState;
@@ -562,6 +563,33 @@ async function startOnlineSpecialMatch() {
     await mutateOnline({ type: "mode_state", modeState, currentTurn: 0, scores: activeScores });
   }
   handleOnlineSpecialState();
+}
+function buildFreshOnlineSpecialState(settings, active) {
+  const selected = new Set(settings.leagueIds || []), allowedClubs = clubs.filter((club) => club.active !== false && (!selected.size || selected.has(club.leagueId || `${club.country}:${club.league}`))), clubIds = new Set(allowedClubs.map((club) => club.id));
+  const previous = settings.lastModeState?.value || settings.initialState || {};
+  for (let attempt = 0; attempt < 12; attempt++) {
+    if (settings.gameType === "randomFive") {
+      const pool = players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), sets = Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool));
+      const setIds = sets.map((set) => set.map((club) => club.id));
+      if (sets.some((set) => set.length < 5) || JSON.stringify(setIds) === JSON.stringify(previous.setIds)) continue;
+      return { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: active.map(() => 0), round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds, choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
+    }
+    if (settings.gameType === "twin") {
+      const pool = players.filter((player) => player.statisticsComplete && player.appearances >= 50 && player.clubIds.some((id) => clubIds.has(id)) && IkiFormaCore.TWIN_METRICS.every((metric) => Number.isFinite(Number(player[metric.key]))));
+      const targets = shuffle(pool.filter((player) => player.appearances >= 200 && player.goals >= 15)).slice(0, settings.rounds);
+      const targetIds = targets.map((player) => player.id);
+      if (targets.length < settings.rounds || JSON.stringify(targetIds) === JSON.stringify(previous.targetIds)) continue;
+      return { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: active.map(() => 0), round: 0, rounds: settings.rounds, metric: 0, guesses: [], targetIds, choiceIds: buildTwinChoiceIds(targets, pool) };
+    }
+    if (settings.gameType === "grid") {
+      const board = generateGrid(selected, previous.grid?.type || "mixed");
+      const signature = (gridBoard) => JSON.stringify([...(gridBoard?.rows || []), ...(gridBoard?.cols || [])].map((criterion) => `${criterion.type}:${criterion.id}`));
+      if (!board || signature(board) === signature(previous.grid)) continue;
+      const state = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: active.map((player) => player.name) });
+      state.grid = board; state.answerMethod = settings.answerMethod; return state;
+    }
+  }
+  return null;
 }
 function handleOnlineSpecialState() {
   const snapshot = online.state?.modeState;

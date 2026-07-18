@@ -86,3 +86,10 @@ test("online oda puanları oyunlar arasında birikmeye devam eder", () => {
   assert.match(source, /state\.totalScores \|\| state\.scores/);
   assert.match(source, /activeScores = \[\.\.\.online\.state\.scores\]/);
 });
+
+test("online özel oyunlar her maçta önceki paketten farklı sorular üretir", () => {
+  assert.match(source, /function buildFreshOnlineSpecialState/);
+  assert.match(source, /settings\.lastModeState\?\.value \|\| settings\.initialState/);
+  assert.match(source, /JSON\.stringify\(setIds\) === JSON\.stringify\(previous\.setIds\)/);
+  assert.match(source, /signature\(board\) === signature\(previous\.grid\)/);
+});
