@@ -107,7 +107,18 @@
           <button class="mode-card random-five-card" data-view="randomFiveSetup">
             <span class="icon">5️⃣</span><span><b>Rastgele Beşler</b><small>Beş kulübün ortak kariyer avcısını bul.</small></span><i>Oyna →</i>
           </button>
+          <button class="mode-card fc-rating-card" data-view="ratingSetup">
+            <span class="icon">⭐</span><span><b>FC 26 Reyting Düellosu</b><small>İki futbolcudan overall reytingi yüksek olanı seç.</small></span><i>Oyna →</i>
+          </button>
         </div>
+      </section>
+      <section id="ratingSetup" class="view setup">
+        <button class="back" data-view="home">← Ana sayfa</button>
+        <div class="surface narrow rating-setup"><span class="kicker">FC 26 GÜNCEL REYTİNGLERİ</span><h2>Reyting Düellosu</h2><p>İki futbolcudan overall reytingi daha yüksek olanı bul.</p><div class="setup-grid"><label>Tur sayısı<select id="ratingRounds"><option>5</option><option selected>10</option><option>20</option></select></label><label>Zorluk<select id="ratingDifficulty"><option value="easy">Kolay · belirgin fark</option><option value="normal" selected>Normal · dengeli</option><option value="hard">Zor · yakın reyting</option></select></label></div><button id="startRatingGame" class="cta">Oyunu başlat →</button></div>
+      </section>
+      <section id="ratingGame" class="view">
+        <div class="game-top"><button class="back" data-view="ratingSetup">← Oyundan çık</button><div><span id="ratingRound"></span><span id="ratingScore"></span></div></div>
+        <div class="rating-stage surface"><span class="kicker">HANGİSİNİN FC 26 OVERALL REYTİNGİ DAHA YÜKSEK?</span><div id="ratingChoices" class="rating-choices"></div><p id="ratingMessage" class="message" aria-live="polite"></p><button id="ratingNext" class="cta" hidden>Sonraki düello →</button></div>
       </section>
       <section id="classicSetup" class="view setup"></section>
       <section id="countrySetup" class="view setup"></section>
@@ -438,9 +449,9 @@
     </footer>
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=2" defer></script>
-    <script src="web/game-core.js?v=15" defer></script>
+    <script src="web/game-core.js?v=16" defer></script>
     <script src="web/online-core.js?v=9" defer></script>
     <script src="web/online-service.js?v=5" defer></script>
-    <script src="web/app.js?v=32" defer></script>
+    <script src="web/app.js?v=33" defer></script>
   </body>
 </html>
