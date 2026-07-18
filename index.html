@@ -113,6 +113,9 @@
           <button class="mode-card mystery-card" data-view="mysterySetup">
             <span class="icon">🕵️</span><span><b>Gizli Futbolcu</b><small>Bulanık fotoğrafı ve karşılaştırma ipuçlarını kullanarak futbolcuyu bul.</small></span><i>Oyna →</i>
           </button>
+          <button class="mode-card hex-card" data-view="hexSetup">
+            <span class="icon">⬢</span><span><b>Kariyer Peteği</b><small>Bir futbolcuyla komşu kariyer koşullarını birleştir ve büyük kombolar kur.</small></span><i>Oyna →</i>
+          </button>
         </div>
       </section>
       <section id="ratingSetup" class="view setup">
@@ -130,6 +133,14 @@
       <section id="mysteryGame" class="view">
         <div class="game-top"><button class="back" data-view="mysterySetup">← Oyundan çık</button><div><span id="mysteryRound"></span><span id="mysteryRemaining"></span></div></div>
         <div class="mystery-layout"><div class="surface mystery-question"><span id="mysteryLeague" class="kicker"></span><div id="mysteryPhoto" class="mystery-photo"></div><h2 id="mysteryName">?</h2><div class="answer-box"><input id="mysteryInput" autocomplete="off" placeholder="Futbolcu adı yaz…" role="combobox" aria-controls="mysterySuggestions"><div id="mysterySuggestions" class="suggestions" role="listbox"></div></div><p id="mysteryMessage" class="message" aria-live="polite"></p><button id="mysteryNext" class="cta" hidden>Sonraki futbolcu →</button></div><div class="surface mystery-feedback"><h3>Tahminler</h3><div class="mystery-head"><span>Oyuncu</span><span>Ülke</span><span>Takım</span><span>Mevki</span><span>Yaş</span><span>OVR</span></div><div id="mysteryHistory"></div><small class="mystery-help">↑ Hedef değer daha yüksek · ↓ Hedef değer daha düşük</small></div></div>
+      </section>
+      <section id="hexSetup" class="view setup">
+        <button class="back" data-view="home">← Ana sayfa</button>
+        <div class="surface hex-setup"><span class="kicker">ALTIGEN KARİYER STRATEJİSİ</span><h2>Kariyer Peteği</h2><p>Bir altıgen seç, koşulu sağlayan futbolcuyu bul ve aynı futbolcuyla eşleşen komşu hücreleri komboya kat.</p><div class="setup-grid"><label>Zorluk<select id="hexDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label></div><fieldset id="hexLeagueOptions" class="league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend></fieldset><button id="startHexGame" class="cta">Peteği başlat →</button></div>
+      </section>
+      <section id="hexGame" class="view">
+        <div class="game-top"><button class="back" data-view="hexSetup">← Oyundan çık</button><div><span id="hexScore">Skor 0</span><span id="hexProgress"></span></div></div>
+        <div class="hex-layout"><div id="hexBoard" class="hex-board" aria-label="Kariyer peteği"></div><aside class="surface hex-panel"><span class="kicker">HAMLE ALANI</span><h2 id="hexPrompt">Bir altıgen seç</h2><p id="hexDescription">Seçtiğin koşulu sağlayan bir futbolcu yaz.</p><div class="answer-box"><input id="hexInput" autocomplete="off" placeholder="Futbolcu adı yaz…" disabled><div id="hexSuggestions" class="suggestions"></div></div><p id="hexMessage" class="message" aria-live="polite"></p><div id="hexLastMove" class="hex-last-move"></div><button id="newHexGame" class="secondary">Yeni petek</button></aside></div>
       </section>
       <section id="classicSetup" class="view setup"></section>
       <section id="countrySetup" class="view setup"></section>
@@ -460,9 +471,9 @@
     </footer>
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=2" defer></script>
-    <script src="web/game-core.js?v=17" defer></script>
+    <script src="web/game-core.js?v=18" defer></script>
     <script src="web/online-core.js?v=9" defer></script>
     <script src="web/online-service.js?v=5" defer></script>
-    <script src="web/app.js?v=37" defer></script>
+    <script src="web/app.js?v=38" defer></script>
   </body>
 </html>

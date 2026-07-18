@@ -578,6 +578,31 @@ function evaluateMysteryGuess(target, guess) {
   };
 }
 
+function playerMatchesHexCriterion(player, criterion, clubById = new Map()) {
+  if (!player || !criterion) return false;
+  if (criterion.type === "club") return (player.clubIds || []).includes(+criterion.value);
+  if (criterion.type === "league") return (player.clubIds || []).some((id) => {
+    const club = clubById.get(+id);
+    return club?.leagueId === criterion.value || club?.league === criterion.value;
+  });
+  if (criterion.type === "nation") return player.nationalityCode === criterion.value || player.nationality === criterion.value;
+  if (criterion.type === "birthDecade") return Number(String(player.birthDate || "").slice(0, 4)) >= +criterion.value && Number(String(player.birthDate || "").slice(0, 4)) < +criterion.value + 10;
+  if (criterion.type === "appearances") return +player.appearances >= +criterion.value;
+  if (criterion.type === "goals") return +player.goals >= +criterion.value;
+  if (criterion.type === "clubs") return new Set(player.clubIds || []).size >= +criterion.value;
+  if (criterion.type === "nationalCaps") return +player.nationalCaps >= +criterion.value;
+  return false;
+}
+
+function hexNeighbors(cells, target) {
+  const directions = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, -1], [-1, 1]];
+  return directions.map(([dq, dr]) => cells.find((cell) => cell.q === target.q + dq && cell.r === target.r + dr)).filter(Boolean);
+}
+
+function scoreHexMove(newCells, reheatedCells = 0) {
+  return (+newCells * (+newCells + 1)) / 2 + +reheatedCells;
+}
+
 const api = {
   DIFFICULTIES,
   WINNING_LINES,
@@ -622,6 +647,9 @@ const api = {
   generateRatingPair,
   compareRatingPlayers,
   evaluateMysteryGuess,
+  playerMatchesHexCriterion,
+  hexNeighbors,
+  scoreHexMove,
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;
