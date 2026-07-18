@@ -2,6 +2,7 @@
 const test = require("node:test"), assert = require("node:assert/strict"), fs = require("node:fs"), path = require("node:path");
 const source = fs.readFileSync(path.join(__dirname, "..", "web", "app.js"), "utf8");
 const styles = fs.readFileSync(path.join(__dirname, "..", "web", "grid.css"), "utf8");
+const choiceStyles = fs.readFileSync(path.join(__dirname, "..", "web", "multiple-choice.css"), "utf8");
 
 test("uygulama içi gezinme history state ve popstate kullanır", () => {
   assert.match(source, /history\.pushState\(\{ view: id \}/);
@@ -34,4 +35,15 @@ test("online cevap sonucu tüm oyuncular cevaplamadan açılmaz", () => {
   assert.match(source, /state\.roundAnswers\?\.\[online\.playerIndex\]/);
   assert.match(source, /state\.revealUntil/);
   assert.match(source, /Diğer oyuncular bekleniyor/);
+});
+
+test("online özel oyunlarda çift ilerleme ve çift gönderim kilitlidir", () => {
+  assert.match(source, /online\.specialSubmitting/);
+  assert.match(source, /online\.specialAdvancing/);
+  assert.match(source, /const sharedIds = randomFive\.online/);
+  assert.match(source, /const sharedIds = twin\.online/);
+});
+
+test("online lobby gizlenen giriş formunu gerçekten kaldırır", () => {
+  assert.match(choiceStyles, /\.online-entry\[hidden\][^{]*\{display:none!important\}/);
 });
