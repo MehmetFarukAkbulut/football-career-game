@@ -49,6 +49,7 @@ let DATA,
   randomFive = {},
   ratingGame = {},
   mysteryGame = {},
+  hexGame = {},
   online = {},
   computerTimer,
   ratingTimer;
@@ -302,7 +303,7 @@ function organizeHomeMenu() {
   const root = $("#home .mode-grid");
   if (!root) return;
   const cards = new Map([...root.querySelectorAll("[data-view]")].map((card) => [card.dataset.view, card]));
-  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "mysterySetup", "compare", "catalog", "travelers"]
+  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "mysterySetup", "hexSetup", "compare", "catalog", "travelers"]
     .forEach((view) => cards.get(view) && root.append(cards.get(view)));
 }
 
@@ -451,6 +452,109 @@ $("#mysteryInput").onkeydown = (event) => {
   const exact = mysteryGame.pool.find((player) => norm(player.name) === norm(event.target.value));
   if (exact) submitMysteryGuess(exact);
 };
+
+function hexCriterionHtml(criterion) {
+  if (criterion.type === "club") {
+    const club = clubMap.get(+criterion.value);
+    return `${logo(club)}<b>${esc(club?.name || criterion.label)}</b><small>Kulüp</small>`;
+  }
+  const icons = { league: "🏆", nation: "🌍", birthDecade: "🎂", appearances: "👕", goals: "⚽", clubs: "🧳", nationalCaps: "🌐" };
+  return `<span class="hex-icon">${icons[criterion.type] || "⬢"}</span><b>${esc(criterion.label)}</b><small>${esc(criterion.meta || "Kariyer")}</small>`;
+}
+
+function buildHexCriteria(pool, difficulty, selectedLeagues) {
+  const criteria = [], used = new Set(), add = (criterion) => {
+    const key = `${criterion.type}:${criterion.value}`;
+    if (!used.has(key) && pool.filter((player) => IkiFormaCore.playerMatchesHexCriterion(player, criterion, clubMap)).length >= 8) { used.add(key); criteria.push(criterion); }
+  };
+  const poolIds = new Set(pool.map((player) => player.id));
+  const allowedClubIds = new Set(clubs.filter((club) => !selectedLeagues.size || selectedLeagues.has(club.leagueId || `${club.country}:${club.league}`)).map((club) => club.id));
+  const clubCandidates = clubs.filter((club) => allowedClubIds.has(club.id) && (clubPlayers.get(club.id) || []).some((player) => poolIds.has(player.id))).sort((a, b) => difficulty === "hard" ? (a.popularityScore || 0) - (b.popularityScore || 0) : (b.popularityScore || 0) - (a.popularityScore || 0));
+  clubCandidates.slice(0, 13).forEach((club) => add({ type: "club", value: club.id, label: club.name }));
+  const leagueMap = new Map();
+  for (const club of clubs.filter((club) => allowedClubIds.has(club.id))) leagueMap.set(club.leagueId || club.league, club.league);
+  [...leagueMap].slice(0, 6).forEach(([value, label]) => add({ type: "league", value, label, meta: "Lig kariyeri" }));
+  const nations = new Map();
+  for (const player of pool) if (player.nationalityCode) nations.set(player.nationalityCode, { label: player.nationality, count: (nations.get(player.nationalityCode)?.count || 0) + 1 });
+  [...nations.entries()].sort((a, b) => b[1].count - a[1].count).slice(0, 6).forEach(([value, item]) => add({ type: "nation", value, label: item.label, meta: "Milliyet" }));
+  for (const decade of [1970, 1980, 1990, 2000]) add({ type: "birthDecade", value: decade, label: `${decade}'lerde doğdu`, meta: "Doğum dönemi" });
+  const thresholds = difficulty === "easy" ? [["appearances", 100, "100+ maç"], ["goals", 25, "25+ gol"], ["clubs", 3, "3+ kulüp"], ["nationalCaps", 10, "10+ milli maç"]] : difficulty === "hard" ? [["appearances", 400, "400+ maç"], ["goals", 150, "150+ gol"], ["clubs", 7, "7+ kulüp"], ["nationalCaps", 60, "60+ milli maç"]] : [["appearances", 250, "250+ maç"], ["goals", 75, "75+ gol"], ["clubs", 5, "5+ kulüp"], ["nationalCaps", 30, "30+ milli maç"]];
+  thresholds.forEach(([type, value, label]) => add({ type, value, label, meta: "Kariyer eşiği" }));
+  for (const club of clubCandidates.slice(13)) { if (criteria.length >= 25) break; add({ type: "club", value: club.id, label: club.name }); }
+  return criteria.sort(() => Math.random() - .5).slice(0, 25);
+}
+
+function renderHexBoard() {
+  $("#hexBoard").innerHTML = Array.from({ length: 5 }, (_, row) => `<div class="hex-row">${hexGame.cells.filter((cell) => cell.r === row).map((cell) => `<button class="hex-cell ${cell.claimed ? "claimed" : ""} ${hexGame.selected?.id === cell.id ? "selected" : ""}" data-hex-cell="${cell.id}" style="--heat:${Math.min(cell.heat, 4)}">${hexCriterionHtml(cell.criterion)}${cell.claimed ? `<i>${cell.heat}</i>` : ""}</button>`).join("")}</div>`).join("");
+  $$("[data-hex-cell]").forEach((button) => button.onclick = () => selectHexCell(+button.dataset.hexCell));
+  $("#hexScore").textContent = `Skor ${hexGame.score}`;
+  $("#hexProgress").textContent = `${hexGame.cells.filter((cell) => cell.claimed).length}/${hexGame.cells.length} hücre`;
+}
+
+function selectHexCell(id) {
+  const cell = hexGame.cells.find((item) => item.id === id);
+  if (!cell || cell.claimed) return;
+  hexGame.selected = cell;
+  $("#hexPrompt").textContent = cell.criterion.label;
+  $("#hexDescription").textContent = "Bu koşulu sağlayan bir futbolcu seç. Uyan komşular da komboya katılır.";
+  $("#hexInput").disabled = false;
+  $("#hexInput").value = "";
+  $("#hexInput").focus();
+  $("#hexMessage").textContent = "";
+  renderHexBoard();
+}
+
+function submitHexPlayer(player) {
+  const selected = hexGame.selected;
+  if (!selected || !player || hexGame.used.has(player.id)) return;
+  if (!IkiFormaCore.playerMatchesHexCriterion(player, selected.criterion, clubMap)) {
+    $("#hexMessage").textContent = `${player.name}, “${selected.criterion.label}” koşulunu sağlamıyor.`;
+    return;
+  }
+  const affected = [selected, ...IkiFormaCore.hexNeighbors(hexGame.cells, selected)].filter((cell) => IkiFormaCore.playerMatchesHexCriterion(player, cell.criterion, clubMap));
+  const newCells = affected.filter((cell) => !cell.claimed), reheated = affected.filter((cell) => cell.claimed);
+  newCells.forEach((cell) => { cell.claimed = true; cell.heat = 1; cell.playerId = player.id; });
+  reheated.forEach((cell) => { cell.heat++; });
+  const gained = IkiFormaCore.scoreHexMove(newCells.length, reheated.length);
+  hexGame.score += gained;
+  hexGame.used.add(player.id);
+  hexGame.selected = null;
+  $("#hexInput").disabled = true;
+  $("#hexInput").value = "";
+  $("#hexSuggestions").innerHTML = "";
+  $("#hexMessage").textContent = `${player.name}: ${newCells.length} yeni hücre, ${reheated.length} ısıtma · +${gained} puan`;
+  $("#hexLastMove").innerHTML = `<b>${esc(player.name)}</b><small>${newCells.map((cell) => esc(cell.criterion.label)).join(" · ")}</small>`;
+  renderHexBoard();
+  if (hexGame.cells.every((cell) => cell.claimed)) $("#hexPrompt").textContent = `Petek tamamlandı! Skor ${hexGame.score}`;
+}
+
+function startHexGame() {
+  const selectedLeagues = new Set([...$$("#hexLeagueOptions input:checked")].map((input) => input.value));
+  const allowedClubIds = new Set(clubs.filter((club) => !selectedLeagues.size || selectedLeagues.has(club.leagueId || `${club.country}:${club.league}`)).map((club) => club.id));
+  const pool = players.filter((player) => player.clubIds.some((id) => allowedClubIds.has(id)));
+  const criteria = buildHexCriteria(pool, $("#hexDifficulty").value, selectedLeagues);
+  if (criteria.length < 19) return toast("Seçilen liglerde yeterli ve güvenilir kategori üretilemedi.");
+  const cells = criteria.map((criterion, index) => { const r = Math.floor(index / 5), column = index % 5; return { id: index, q: column - Math.floor(r / 2), r, criterion, claimed: false, heat: 0 }; });
+  hexGame = { pool, cells, score: 0, selected: null, used: new Set() };
+  show("hexGame");
+  $("#hexPrompt").textContent = "Bir altıgen seç";
+  $("#hexDescription").textContent = "Seçtiğin koşulu sağlayan bir futbolcu yaz.";
+  $("#hexInput").disabled = true;
+  $("#hexMessage").textContent = "";
+  $("#hexLastMove").innerHTML = "";
+  renderHexBoard();
+}
+
+$("#startHexGame").onclick = startHexGame;
+$("#newHexGame").onclick = startHexGame;
+$("#hexInput").oninput = (event) => {
+  const query = norm(event.target.value);
+  if (query.length < 2) return ($("#hexSuggestions").innerHTML = "");
+  const hits = hexGame.pool.filter((player) => !hexGame.used.has(player.id) && norm(player.name).includes(query)).slice(0, 10);
+  $("#hexSuggestions").innerHTML = hits.map((player) => `<button type="button" data-hex-player="${player.id}">${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")} · ${new Set(player.clubIds).size} kulüp</small></span></button>`).join("");
+  $$("[data-hex-player]").forEach((button) => button.onclick = () => submitHexPlayer(indexes.playerById.get(+button.dataset.hexPlayer)));
+};
+$("#hexInput").onkeydown = (event) => { if (event.key === "Enter") { const player = hexGame.pool.find((item) => norm(item.name) === norm(event.target.value)); if (player) submitHexPlayer(player); } };
 function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
   const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
   const pools = Object.fromEntries(levels.map((level) => [level, buildPairsForDifficulty(mode, level, selectedLeagues)]));
@@ -1976,6 +2080,7 @@ async function init() {
     enhanceLeagueSelector($("#gridSetup"));
     enhanceLeagueSelector($("#twinSetup"));
     enhanceLeagueSelector($("#randomFiveSetup"));
+    enhanceLeagueSelector($("#hexSetup"));
     enhanceLeagueSelector($("#onlineHostSettings"));
     $("#onlineHostSettings .league-options").addEventListener("change", () => { online.leagueSelectionDirty = true; });
     organizeHomeMenu();
