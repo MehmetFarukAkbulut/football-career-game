@@ -4,7 +4,7 @@
 
 Ana menüdeki **FC 26 Reyting Düellosu**, iki oyuncudan overall değeri daha yüksek olanı seçtirir. Kolay, normal ve zor seviyeleri sırasıyla belirgin, dengeli ve yakın reyting farkları üretir. Oyuncuların ana ve alternatif mevkileri veri paketinde tutulur; bu alanlar ileride ülke bazlı ilk 11 kurma oyunlarında kullanılabilir.
 
-Veri çalışma anında internetten çağrılmaz. `data/fc26-ratings.json`, EA Sports FC 26 ratings verisinin update 2 sürümünden üretilmiş statik bir pakettir. Paket; EA oyuncu kimliği, ad, cinsiyet, overall, ana/alternatif mevkiler, ülke, kulüp, resmi EA oyuncu sayfası ve kart görseli bağlantısını içerir. Reytingleri yenilemek için:
+Reyting verisi çalışma anında internetten çağrılmaz. `data/fc26-ratings.json`, EA Sports FC 26 ratings verisinin update 2 sürümünden üretilmiş statik bir pakettir. Paket; EA oyuncu kimliği, ad, cinsiyet, overall, ana/alternatif mevkiler, ülke, kulüp ve resmi EA oyuncu sayfasını içerir. Oyunda reytingi açığa çıkaran kart görselleri kullanılmaz. Önce mevcut kariyer paketindeki doğrulanmış Transfermarkt portresi eşleştirilir; eşleşmeyen kayıtlarda EA oyuncu kimliğiyle eşleşen normal SoFIFA portresi kullanılır. Reytingleri ve fotoğraf eşlemelerini yenilemek için:
 
 ```powershell
 npm run ratings:fc26

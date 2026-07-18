@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=19">',
+  '<link rel="stylesheet" href="web/grid.css?v=20">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -84,6 +84,12 @@ document.addEventListener(
   (event) => {
     if (event.target.matches?.(".club-logo-wrap img"))
       event.target.parentElement.classList.add("asset-error");
+    if (event.target.matches?.(".rating-card-image img")) {
+      const fallback = document.createElement("span");
+      fallback.className = "avatar";
+      fallback.textContent = event.target.parentElement.dataset.initials || "?";
+      event.target.replaceWith(fallback);
+    }
   },
   true,
 );
@@ -310,7 +316,7 @@ function renderRatingRound() {
   $("#ratingRound").textContent = `Tur ${ratingGame.round}/${ratingGame.total}`;
   $("#ratingScore").textContent = `Skor ${ratingGame.score}`;
   $("#ratingMessage").textContent = "Bir futbolcu seç.";
-  $("#ratingChoices").innerHTML = pair.map((player) => `<button class="rating-player" data-rating-player="${player.eaId}" aria-label="${esc(player.name)} futbolcusunu seç"><span class="rating-card-image">${player.cardUrl ? `<img src="${esc(player.cardUrl)}" alt="${esc(player.name)} oyuncu fotoğrafı">` : `<span class="avatar">${esc(initials(player.name))}</span>`}</span><strong>${esc(player.name)}</strong><span>${esc(player.team || "Kulüp bilgisi yok")}</span><small>${esc(player.nation)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small><b class="rating-value" hidden>${player.overall}</b></button>`).join("");
+  $("#ratingChoices").innerHTML = pair.map((player) => `<button class="rating-player" data-rating-player="${player.eaId}" aria-label="${esc(player.name)} futbolcusunu seç"><span class="rating-card-image" data-initials="${esc(initials(player.name))}">${player.photoUrl ? `<img src="${esc(player.photoUrl)}" alt="${esc(player.name)} oyuncu fotoğrafı">` : `<span class="avatar">${esc(initials(player.name))}</span>`}</span><strong>${esc(player.name)}</strong><span>${esc(player.team || "Kulüp bilgisi yok")}</span><small>${esc(player.nation)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small><b class="rating-value" hidden>${player.overall}</b></button>`).join("");
   $$("[data-rating-player]").forEach((button) => button.onclick = () => answerRating(+button.dataset.ratingPlayer));
 }
 
