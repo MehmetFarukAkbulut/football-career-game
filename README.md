@@ -12,7 +12,9 @@ npm run ratings:fc26
 
 ## Turnuva 11'i
 
-Turnuva 11'i, yalnız güncel FC 26 paketinde overall ve mevki kaydı bulunan aktif futbolcularla 4-3-3 kadrosu kurdurur. Her mevki için üç aday gösterilir; seçilen 11'in overall ortalaması, seçilen zorlukla birlikte turnuva performans olasılığını belirler. Emekli olmuş ve güncel FC 26 reytingi bulunmayan futbolcular havuza alınmaz.
+Turnuva 11'i, yalnız güncel FC 26 paketinde overall ve mevki kaydı bulunan aktif futbolcularla 4-3-3 kadrosu kurdurur. Her mevki için seçim biçimine göre üç aday veya beş kutu gösterilir; seçilen 11'in overall ortalaması, seçilen zorlukla birlikte turnuva performans olasılığını belirler. Emekli olmuş ve güncel FC 26 reytingi bulunmayan futbolcular havuza alınmaz.
+
+Oyunda iki seçim biçimi vardır. **Klasik seçimde** üç futbolcunun kimliği ve kariyer bilgisi görünür, overall değerleri karar verilene kadar gizli kalır ve seçimden sonra tüm adayların reytingleri açılır. **Şans kutusunda** beş kapalı kutudan biri seçilir; kutu açılınca seçilen oyuncuyla birlikte kaçırılan dört oyuncu ve tüm reytingler gösterilir. Şans havuzu kolay seviyede 2 yüksek/2 orta/1 düşük, normalde 1 yüksek/2 orta/2 düşük, zorda 1 yüksek/1 orta/3 düşük reyting katmanından oluşturulur.
 
 Lig filtresi yalnız futbolcunun güncel kulübüne bakmaz. FC 26 kaydı güvenli biçimde kariyer veri setindeki tekil oyuncuyla eşleşiyorsa `careerPlayerId` ve `careerClubIds` statik rating paketine yazılır; oyuncunun geçmişte filtrelenen ligde A takım kariyeri bulunması da yeterlidir. Güvenli kariyer eşleşmesi bulunmayan FC 26 oyuncularında güncel lig bilgisi kullanılmaya devam eder.
 

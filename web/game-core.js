@@ -629,6 +629,30 @@ function playerFitsXiSlot(player, slot) {
   return (POSITION_GROUPS[slot] || [slot]).some((position) => positions.includes(position));
 }
 
+function xiLuckTierCounts(difficulty = "normal") {
+  if (difficulty === "easy") return { high: 2, middle: 2, low: 1 };
+  if (difficulty === "hard") return { high: 1, middle: 1, low: 3 };
+  return { high: 1, middle: 2, low: 2 };
+}
+
+function generateXiLuckChoices(players, difficulty = "normal", rng = Math.random) {
+  const eligible = [...players].sort((a, b) => b.overall - a.overall), counts = xiLuckTierCounts(difficulty);
+  if (eligible.length < 5) return [];
+  const highEnd = Math.max(counts.high, Math.ceil(eligible.length * .2));
+  const middleStart = Math.min(highEnd, eligible.length - 1), middleEnd = Math.min(eligible.length - counts.low, Math.max(middleStart + counts.middle, Math.ceil(eligible.length * .68)));
+  const buckets = { high: eligible.slice(0, highEnd), middle: eligible.slice(middleStart, Math.min(middleEnd, eligible.length)), low: eligible.slice(Math.min(middleEnd, eligible.length)) };
+  const selected = [], used = new Set(), take = (bucket, count) => {
+    const available = bucket.filter((player) => !used.has(player.eaId));
+    for (let index = 0; index < count && available.length; index++) {
+      const pickIndex = Math.floor(rng() * available.length), [player] = available.splice(pickIndex, 1);
+      selected.push(player); used.add(player.eaId);
+    }
+  };
+  for (const tier of ["high", "middle", "low"]) take(buckets[tier], counts[tier]);
+  if (selected.length < 5) take(eligible, 5 - selected.length);
+  return selected.length === 5 ? selected.sort(() => rng() - .5) : [];
+}
+
 function tournamentWinChance(teamRating, opponentRating) {
   return 1 / (1 + Math.pow(10, (+opponentRating - +teamRating) / 10));
 }
@@ -735,6 +759,8 @@ const api = {
   compareTrumpStat,
   XI_SLOTS,
   playerFitsXiSlot,
+  xiLuckTierCounts,
+  generateXiLuckChoices,
   tournamentWinChance,
   simulateTournamentMatch,
   simulateXiTournament,
