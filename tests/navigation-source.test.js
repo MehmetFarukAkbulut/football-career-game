@@ -58,3 +58,9 @@ test("Rastgele Beşler online tahminleri oyuncu bazlı ve eşzamanlı gönderir"
   assert.match(source, /Diğer oyuncular bekleniyor/);
   assert.match(source, /Object\.keys\(randomFive\.guessIds \|\| \{\}\)\.length !== online\.state\.players\.length/);
 });
+
+test("online özel oyun bitince oda sonuç lobisine güvenilir biçimde taşınır", () => {
+  assert.match(source, /async function completeOnlineMatch\(\)/);
+  assert.match(source, /if \(synced\) await completeOnlineMatch\(\)/);
+  assert.match(source, /show\("onlineLobby"\); renderOnlineLobby\(\)/);
+});
