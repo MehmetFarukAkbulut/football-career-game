@@ -192,3 +192,15 @@ test("ızgara kulüp, lig, ülke ve karışık kriter kesişimlerini doğrular",
   assert.deepEqual(new Set(core.getPlayersForCriteria(country, club1, indexes).map((p) => p.id)), new Set([10, 11]));
   assert.ok(core.generateCriteriaMultipleChoiceQuestion({ first: club1, second: club2, indexes, rng: () => 0 }));
 });
+
+test("ülke kriterli ızgara seçeneklerinin tamamı hedef ülkedendir", () => {
+  const core = require("../web/game-core"), indexes = buildIndexes({ ...data, players: [...data.players,
+    { id: 16, name: "Türk 3", clubIds: [3], nationalityCode: "TR" },
+    { id: 17, name: "Türk 4", clubIds: [3], nationalityCode: "TR" },
+  ] });
+  indexes.leagueClubIds.set("GB1", new Set([1]));
+  const question = core.generateCriteriaMultipleChoiceQuestion({ first: { type: "country", code: "TR" }, second: { type: "league", id: "GB1" }, indexes, rng: () => 0 });
+  assert.ok(question);
+  assert.ok(question.optionPlayerIds.every((id) => core.playerNationalityCode(indexes.playerById.get(id)) === "TR"));
+  assert.equal(question.optionPlayerIds.filter((id) => core.playerMatchesCriterion(indexes.playerById.get(id), { type: "league", id: "GB1" }, indexes)).length, 1);
+});

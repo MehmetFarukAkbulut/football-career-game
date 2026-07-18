@@ -1237,7 +1237,8 @@ function openGridEntry(i) {
   if (grid.answerMethod === "multiple") {
     grid.question = IkiFormaCore.generateCriteriaMultipleChoiceQuestion({ first: r, second: c, indexes, difficulty: grid.difficulty });
     if (!grid.question) { $("#gridEntry").hidden = true; return toast("Bu hücre için dört geçerli seçenek üretilemedi."); }
-    renderPlayerChoices($("#gridChoices"), grid.question.optionPlayerIds.map((id) => indexes.playerById.get(id)), submitGridPlayer);
+    const hasCountryCriterion = r.type === "country" || c.type === "country";
+    renderPlayerChoices($("#gridChoices"), grid.question.optionPlayerIds.map((id) => indexes.playerById.get(id)), submitGridPlayer, { showBirthYear: hasCountryCriterion });
   } else $("#gridInput").focus();
 }
 async function submitGridPlayer(player) {
@@ -1411,9 +1412,9 @@ function shuffle(items) {
   }
   return result;
 }
-function renderPlayerChoices(root, choices, callback) {
+function renderPlayerChoices(root, choices, callback, { showBirthYear = false } = {}) {
   root.classList.add("inline-choices");
-  root.innerHTML = choices.map((player, index) => `<button class="player-suggestion" data-choice="${player.id}"><span class="choice-key">${index + 1}</span>${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")}</small></span></button>`).join("");
+  root.innerHTML = choices.map((player, index) => { const meta = showBirthYear ? (player.birthDate ? `Doğum: ${esc(player.birthDate.slice(0, 4))}` : "Doğum yılı bilinmiyor") : esc(player.nationality || ""); return `<button class="player-suggestion" data-choice="${player.id}"><span class="choice-key">${index + 1}</span>${person(player)}<span><b>${esc(player.name)}</b><small>${meta}</small></span></button>`; }).join("");
   root.querySelectorAll("[data-choice]").forEach((button) => button.onclick = () => callback(indexes.playerById.get(+button.dataset.choice)));
 }
 function buildRandomFiveSet(allowedClubs, pool) {

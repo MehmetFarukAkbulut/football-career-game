@@ -289,13 +289,21 @@ function getOneCriterionOnlyPlayers(first, second, indexes, used = new Set()) {
   });
 }
 
+function getCountryCriterionDistractors(country, other, indexes, used = new Set()) {
+  const countryCode = String(country.code || country.id).toUpperCase();
+  return [...(indexes.nationalityPlayerIds.get(countryCode) || new Set())]
+    .filter((id) => !used.has(+id))
+    .map((id) => indexes.playerById.get(+id))
+    .filter((player) => player && !playerMatchesCriterion(player, other, indexes));
+}
+
 function generateCriteriaMultipleChoiceQuestion({ first, second, indexes, used = new Set(), difficulty = "normal", optionCount = 4, rng = Math.random }) {
   const correctPool = getPlayersForCriteria(first, second, indexes, used);
   let wrongPool;
   const country = first.type === "country" ? first : second.type === "country" ? second : null;
-  const club = first.type === "club" ? first : second.type === "club" ? second : null;
-  if (country && club)
-    wrongPool = getCountryOnlyDistractors(country.code || country.id, club.id, indexes, used);
+  const other = country ? (first === country ? second : first) : null;
+  if (country)
+    wrongPool = getCountryCriterionDistractors(country, other, indexes, used);
   else wrongPool = getOneCriterionOnlyPlayers(first, second, indexes, used);
   if (!correctPool.length || wrongPool.length < optionCount - 1) return null;
   const correct = selectPlayerByDifficulty(correctPool, difficulty, rng);
@@ -553,6 +561,7 @@ const api = {
   playerMatchesCriterion,
   getPlayersForCriteria,
   getOneCriterionOnlyPlayers,
+  getCountryCriterionDistractors,
   generateCriteriaMultipleChoiceQuestion,
   fillQuestionPoolByDifficulty,
   createGridState,
