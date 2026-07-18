@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=14">',
+  '<link rel="stylesheet" href="web/grid.css?v=15">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -482,6 +482,10 @@ function renderOnlineLobby() {
   if (online.playerIndex === 0 && state.settings) {
     $("#onlineGameType").value = state.settings.gameType || "clubs"; $("#onlineRounds").value = state.settings.rounds || 5;
     $("#onlineSeconds").value = state.settings.seconds || 30; $("#onlineDifficulty").value = state.settings.difficulty || "normal"; $("#onlineAnswerMethod").value = state.settings.answerMethod || "multiple";
+    if (!online.leagueSelectionDirty) {
+      const selectedLeagues = new Set(state.settings.leagueIds || []);
+      $$("#onlineHostSettings .league-options input[type=checkbox]").forEach((input) => { input.checked = selectedLeagues.has(input.value); input.onchange?.(); });
+    }
   }
   const ranking = state.status === "finished"
     ? state.players.map((player, index) => ({ name: player.name, score: +((state.totalScores || state.scores)[index] || 0) }))
@@ -520,21 +524,23 @@ $("#openOnlineHome").onclick = openOnlineHub;
 $("#copyRoomCode").onclick = async () => { await navigator.clipboard.writeText(online.state.roomCode); toast("Oda kodu kopyalandı."); };
 $("#onlineReady").onclick = () => mutateOnline({ type: "ready", ready: !online.state.players[online.playerIndex].ready });
 $("#onlineApplySettings").onclick = async () => {
-  const settings = { gameType: $("#onlineGameType").value, rounds: +$("#onlineRounds").value, seconds: +$("#onlineSeconds").value, difficulty: $("#onlineDifficulty").value, answerMethod: $("#onlineAnswerMethod").value, optionCount: 4, repeatPlayers: true, leagueIds: [] };
+  const settings = { gameType: $("#onlineGameType").value, rounds: +$("#onlineRounds").value, seconds: +$("#onlineSeconds").value, difficulty: $("#onlineDifficulty").value, answerMethod: $("#onlineAnswerMethod").value, optionCount: 4, repeatPlayers: true, leagueIds: $$("#onlineHostSettings .league-options input:checked").map((input) => input.value) };
   settings.lastModeState = online.state.settings?.lastModeState || null;
   settings.randomFiveHistory = online.state.settings?.randomFiveHistory || [];
+  const selectedLeagues = new Set(settings.leagueIds), allowedClubIds = new Set(clubs.filter((club) => !selectedLeagues.size || selectedLeagues.has(club.leagueId || `${club.country}:${club.league}`)).map((club) => club.id));
   if (settings.gameType === "grid") {
-    const board = generateGrid(new Set(), "mixed"), initialState = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: online.state.players.map((player) => player.name) });
+    const board = generateGrid(selectedLeagues, "mixed"), initialState = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: online.state.players.map((player) => player.name) });
     if (!board) return toast("Bu ayarlarla geçerli ızgara üretilemedi."); initialState.grid = board; initialState.answerMethod = settings.answerMethod; settings.initialState = initialState;
   }
   if (settings.gameType === "randomFive") {
-    const pool = players, allowedClubs = clubs.filter((club) => club.active !== false), sets = Array.from({ length: settings.rounds }, () => buildRandomFiveSet(allowedClubs, pool));
+    const allowedClubs = clubs.filter((club) => club.active !== false && allowedClubIds.has(club.id)), pool = players.filter((player) => player.clubIds.some((id) => allowedClubIds.has(id))), sets = Array.from({ length: settings.rounds }, () => buildRandomFiveSet(allowedClubs, pool));
     settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds: sets.map((set) => set.map((club) => club.id)), choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
   }
   if (settings.gameType === "twin") {
-    const pool = twinPool(), targets = pool.filter((player) => player.appearances >= 200 && player.goals >= 15).sort(() => Math.random() - .5).slice(0, settings.rounds);
+    const pool = twinPool().filter((player) => player.clubIds.some((id) => allowedClubIds.has(id))), targets = pool.filter((player) => player.appearances >= 200 && player.goals >= 15).sort(() => Math.random() - .5).slice(0, settings.rounds);
     settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, rounds: settings.rounds, metric: 0, guesses: [], targetIds: targets.map((player) => player.id), choiceIds: buildTwinChoiceIds(targets, pool) };
   }
+  online.leagueSelectionDirty = false;
   const state = await mutateOnline({ type: "configure", settings });
   if (state) online.settings = settings;
 };
@@ -1786,6 +1792,8 @@ async function init() {
     enhanceLeagueSelector($("#gridSetup"));
     enhanceLeagueSelector($("#twinSetup"));
     enhanceLeagueSelector($("#randomFiveSetup"));
+    enhanceLeagueSelector($("#onlineHostSettings"));
+    $("#onlineHostSettings .league-options").addEventListener("change", () => { online.leagueSelectionDirty = true; });
     organizeHomeMenu();
     if (await restoreOnlineSession()) return;
     const requested = location.hash.slice(1);
