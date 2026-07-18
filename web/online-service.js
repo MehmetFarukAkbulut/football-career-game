@@ -34,7 +34,7 @@
     async join({ code, playerName }) {
       const token = randomToken();
       const state = await this.rpc("join_game_room", { p_room_code: normalizeCode(code), p_guest_token: token, p_player_name: playerName });
-      return { state, token, playerIndex: 1 };
+      return { state, token, playerIndex: state.players.length - 1 };
     }
     get(code, token) { return this.rpc("get_game_room", { p_room_code: normalizeCode(code), p_player_token: token }); }
     mutate(code, token, expectedVersion, action) { return this.rpc("apply_game_room_action", { p_room_code: normalizeCode(code), p_player_token: token, p_expected_version: expectedVersion, p_action: action }); }
@@ -53,11 +53,11 @@
     read(code) { const value = localStorage.getItem(this.prefix + normalizeCode(code)); return value ? JSON.parse(value) : null; }
     write(state) { localStorage.setItem(this.prefix + state.roomCode, JSON.stringify(state)); this.channel?.postMessage({ stateVersion: state.stateVersion }); return state; }
     async create({ code, playerName, settings }) { const roomCode = normalizeCode(code); if (this.read(roomCode)) throw new Error("ROOM_EXISTS"); return { state: this.write(global.IkiFormaOnlineCore.createOnlineRoom({ code: roomCode, hostName: playerName, settings })), token: "local-host", playerIndex: 0 }; }
-    async join({ code, playerName }) { const state = this.read(code); if (!state) throw new Error("ROOM_NOT_FOUND"); return { state: this.write(global.IkiFormaOnlineCore.joinOnlineRoom(state, { playerName, expectedVersion: state.stateVersion })), token: "local-guest", playerIndex: 1 }; }
+    async join({ code, playerName }) { const state = this.read(code); if (!state) throw new Error("ROOM_NOT_FOUND"); const playerIndex = state.players.length, token = `local-player-${playerIndex}`; return { state: this.write(global.IkiFormaOnlineCore.joinOnlineRoom(state, { playerName, expectedVersion: state.stateVersion })), token, playerIndex }; }
     async get(code) { const state = this.read(code); if (!state) throw new Error("ROOM_NOT_FOUND"); return state; }
     async mutate(code, token, expectedVersion, action) {
       const state = this.read(code); let next;
-      const playerIndex = token === "local-host" ? 0 : 1, args = { ...action, playerIndex, expectedVersion };
+      const playerIndex = token === "local-host" ? 0 : +(token.split("-").at(-1)), args = { ...action, playerIndex, expectedVersion };
       if (action.type === "ready") next = global.IkiFormaOnlineCore.setOnlineReady(state, args);
       else if (action.type === "start") next = global.IkiFormaOnlineCore.startOnlineGame(state, args);
       else if (action.type === "question") next = global.IkiFormaOnlineCore.publishOnlineQuestion(state, { ...args, question: action.question });
@@ -66,6 +66,7 @@
       else if (action.type === "finish") next = global.IkiFormaOnlineCore.finishOnlineGame(state, args);
       else if (action.type === "mode_state") next = global.IkiFormaOnlineCore.syncOnlineModeState(state, args);
       else if (action.type === "connection") next = global.IkiFormaOnlineCore.updateConnection(state, args);
+      else if (action.type === "configure") next = global.IkiFormaOnlineCore.configureOnlineMatch(state, args);
       else throw new Error("UNKNOWN_ACTION");
       return this.write(next);
     }

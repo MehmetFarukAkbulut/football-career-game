@@ -4,7 +4,7 @@
 
 Zor soru havuzu yetmezse normal, ardından kolay havuz tekrarsız biçimde kullanılır. Ülke × Kulüp çoktan seçmelide tüm seçenekler hedef vatandaşlıktandır. Izgara; Kulüp × Kulüp, Lig × Kulüp, Ülke × Kulüp ve Karışık kriterlerini serbest metin veya çoktan seçmeli destekler; lig kriterleri Premier League, LaLiga, Serie A, Bundesliga, Ligue 1 ve Süper Lig ile sınırlıdır.
 
-GitHub Pages üzerinde çalışan, 28 binden fazla doğrulanmış oyuncu kariyerini kullanan futbol bilgi oyunu. İki Forma ve Ülke × Forma oyunları serbest metin veya dört seçenekli oynanabilir; tek oyuncu, aynı cihazda iki oyuncu, bilgisayara karşı ve Supabase destekli online iki oyuncu biçimleri bulunur.
+GitHub Pages üzerinde çalışan, 28 binden fazla doğrulanmış oyuncu kariyerini kullanan futbol bilgi oyunu. İki Forma ve Ülke × Forma oyunları serbest metin veya dört seçenekli oynanabilir; tek oyuncu, aynı cihazda iki oyuncu, bilgisayara karşı ve Supabase destekli beş kişiye kadar online oda biçimleri bulunur.
 
 Kulüp Izgarası, Kariyer İkizi ve Rastgele Beşler de aynı oda kodlu online altyapıyı kullanır. Kariyer İkizi ve Rastgele Beşler serbest metin veya dört seçenekli oynanabilir. Futbolcular farklı sorularda ve hücrelerde tekrar kullanılabilir; bunun için ayrıca bir ayar gösterilmez.
 
@@ -55,7 +55,9 @@ Her değişiklik `FOR UPDATE` kilidi ve `stateVersion` kontrolü kullanır. Eski
 
 ## Online state ve yeniden bağlantı
 
-Senkronize state; oda kodu, oyuncular, bağlantı/hazır durumu, kilitli ayarlar, soru kimliği, kulüp/ülke kimlikleri, seçenek kimlikleri, aktif sıra, cevaplayan, seçim, sonuç, skor, soru sırası ve sürümü taşır. Oturum token'ı `sessionStorage` içinde tutulur; sayfa yenilendiğinde oda tekrar alınır. Realtime bildirimi kaçarsa sonraki RPC yine yetkili güncel state'i döndürür.
+Senkronize state; oda kodu, en fazla beş oyuncu, bağlantı/hazır durumu, kilitli ayarlar, soru kimliği, kulüp/ülke kimlikleri, seçenek kimlikleri, oyuncu bazlı kapalı cevaplar, sonuç, skor, soru sırası ve sürümü taşır. Her oyuncunun cevabı ayrı kaydedilir; doğru cevap ve tüm seçimler ancak herkes cevapladıktan sonra iki saniyelik sonuç aşamasında açılır. Oturum token'ı `localStorage` içinde tutulur; sayfa yenilendiğinde oda tekrar alınır. Realtime bildirimi kaçarsa sonraki RPC yine yetkili güncel state'i döndürür.
+
+Oda maçtan sonra kapanmaz. Son sıralama lobide gösterilir; oda sahibi aynı oyunu yeniden başlatabilir veya İki Forma, Ülke × Kulüp, Kulüp Izgarası, Kariyer İkizi ve Rastgele Beşler arasında yeni oyun/kurallar seçebilir. Her yeni maç öncesinde bütün oyuncular yeniden hazır olmalıdır.
 
 Gerçek cihazlar arası çalışma Supabase projesi ve public yapılandırma olmadan etkinleşmez. Disabled durumda arayüz kurulum gerektiğini açıkça söyler; sahte oda sistemini production online oyun olarak sunmaz.
 

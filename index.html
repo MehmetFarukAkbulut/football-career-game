@@ -15,7 +15,7 @@
     <title>İki Forma — Futbol Kariyer Oyunu</title>
     <link rel="preconnect" href="https://tmssl.akamaized.net" />
     <link rel="stylesheet" href="web/app.css" />
-    <link rel="stylesheet" href="web/multiple-choice.css?v=1" />
+    <link rel="stylesheet" href="web/multiple-choice.css?v=2" />
     <link rel="stylesheet" href="web/setup-fixes.css?v=1" />
   </head>
   <body>
@@ -31,7 +31,7 @@
       <nav>
         <button data-view="home">Ana Sayfa</button
         ><button data-view="catalog">Futbolcular</button
-        ><button data-view="compare">Karşılaştır</button>
+        ><button data-view="compare">Karşılaştır</button><button id="openOnlineHub">Oyuna katıl</button>
       </nav>
       <div class="score-pill"><span>Skor</span><b id="score">0</b></div>
     </header>
@@ -62,6 +62,9 @@
           </div>
         </div>
         <div class="mode-grid">
+          <button id="openOnlineHome" class="mode-card featured">
+            <span class="icon">🌐</span><span><b>Online odaya katıl</b><small>Oyun açmadan oda kodunu yaz ve arkadaşlarınla aynı lobiye gir.</small></span><i>Katıl →</i>
+          </button>
           <button class="mode-card featured" data-view="classicSetup">
             <span class="icon">⚔️</span
             ><span
@@ -122,7 +125,19 @@
           <div id="onlineRoomState" hidden>
             <div class="room-code"><small>Oda kodu</small><strong id="onlineRoomCode"></strong><button id="copyRoomCode" class="secondary">Kopyala</button></div>
             <div id="onlinePlayers" class="online-players"></div>
+            <div id="onlineHostSettings" class="online-host-settings" hidden>
+              <h3>Sonraki oyun</h3>
+              <div class="setup-grid">
+                <label>Oyun<select id="onlineGameType"><option value="clubs">İki Forma</option><option value="country">Ülke × Kulüp</option><option value="grid">Kulüp Izgarası</option><option value="twin">Kariyer İkizi</option><option value="randomFive">Rastgele Beşler</option></select></label>
+                <label>Tur<select id="onlineRounds"><option>3</option><option selected>5</option><option>10</option></select></label>
+                <label>Süre<select id="onlineSeconds"><option>15</option><option selected>30</option><option>45</option></select></label>
+                <label>Zorluk<select id="onlineDifficulty"><option value="easy">Kolay</option><option value="normal" selected>Normal</option><option value="hard">Zor</option></select></label>
+                <label>Cevap<select id="onlineAnswerMethod"><option value="text">Serbest metin</option><option value="multiple" selected>Çoktan seçmeli</option></select></label>
+              </div>
+              <button id="onlineApplySettings" class="secondary">Oyun ayarlarını uygula</button>
+            </div>
             <dl class="room-details"><div><dt>Bağlantı</dt><dd id="onlineConnection"></dd></div><div><dt>Aktif oyuncu</dt><dd id="onlineTurn"></dd></div><div><dt>Skor</dt><dd id="onlineScore"></dd></div></dl>
+            <div id="onlineRanking" class="online-ranking" hidden></div>
             <p id="onlineLobbyMessage" class="message" aria-live="polite"></p>
             <div class="online-actions"><button id="onlineReady" class="cta">Hazırım</button><button id="onlineStart" class="cta" hidden>Oyunu başlat</button></div>
           </div>
@@ -422,8 +437,8 @@
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=2" defer></script>
     <script src="web/game-core.js?v=13" defer></script>
-    <script src="web/online-core.js?v=1" defer></script>
-    <script src="web/online-service.js?v=1" defer></script>
-    <script src="web/app.js?v=14" defer></script>
+    <script src="web/online-core.js?v=2" defer></script>
+    <script src="web/online-service.js?v=2" defer></script>
+    <script src="web/app.js?v=15" defer></script>
   </body>
 </html>

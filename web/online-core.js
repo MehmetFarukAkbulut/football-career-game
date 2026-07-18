@@ -1,5 +1,6 @@
 "use strict";
 const ROOM_TTL_MS = 2 * 60 * 60 * 1000;
+const MAX_ROOM_PLAYERS = 5;
 const ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 function secureRandomBytes(length) {
   if (globalThis.crypto?.getRandomValues) return globalThis.crypto.getRandomValues(new Uint8Array(length));
@@ -8,8 +9,8 @@ function secureRandomBytes(length) {
 function generateRoomCode(bytes = secureRandomBytes(6)) {
   return [...bytes].map((byte) => ROOM_CODE_ALPHABET[byte % ROOM_CODE_ALPHABET.length]).join("").slice(0, 6);
 }
-function createOnlineRoom({ code, hostName = "Oyuncu 1", settings, now = Date.now() }) {
-  return { roomCode: code || generateRoomCode(), stateVersion: 1, status: "waiting", createdAt: now, expiresAt: now + ROOM_TTL_MS, questionSequence: 0, settings: { ...settings, locked: false }, currentTurn: 0, scores: [0, 0], usedPlayerIds: [], players: [{ name: hostName.trim() || "Oyuncu 1", ready: false, connected: true, host: true }, null], question: null, answeredBy: null, selectedPlayerId: null, answerResult: null };
+function createOnlineRoom({ code, hostName = "Oyuncu 1", settings = {}, now = Date.now() }) {
+  return { roomCode: code || generateRoomCode(), stateVersion: 1, status: "waiting", createdAt: now, expiresAt: now + ROOM_TTL_MS, matchNumber: 0, questionSequence: 0, settings: { ...settings, locked: false }, currentTurn: 0, scores: [0], usedPlayerIds: [], players: [{ name: hostName.trim() || "Oyuncu 1", ready: false, connected: true, host: true }], question: null, roundAnswers: {}, revealUntil: null, answerResult: null };
 }
 function assertMutable(state, expectedVersion, now = Date.now()) {
   if (!state) throw new Error("ROOM_NOT_FOUND");
@@ -19,8 +20,8 @@ function assertMutable(state, expectedVersion, now = Date.now()) {
 function advance(state, patch) { return { ...state, ...patch, stateVersion: state.stateVersion + 1 }; }
 function joinOnlineRoom(state, { playerName = "Oyuncu 2", expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
-  if (state.status !== "waiting" || state.players[1]) throw new Error("ROOM_FULL");
-  return advance(state, { players: [state.players[0], { name: playerName.trim() || "Oyuncu 2", ready: false, connected: true, host: false }] });
+  if (state.status === "playing" || state.players.length >= MAX_ROOM_PLAYERS) throw new Error("ROOM_FULL");
+  return advance(state, { players: [...state.players, { name: playerName.trim() || `Oyuncu ${state.players.length + 1}`, ready: false, connected: true, host: false }], scores: [...state.scores, 0] });
 }
 function updateConnection(state, { playerIndex, connected, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
@@ -30,35 +31,34 @@ function updateConnection(state, { playerIndex, connected, expectedVersion, now 
 }
 function setOnlineReady(state, { playerIndex, ready = true, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
-  if (state.status !== "waiting" || !state.players[playerIndex]) throw new Error("READY_NOT_ALLOWED");
+  if (!['waiting', 'finished'].includes(state.status) || !state.players[playerIndex]) throw new Error("READY_NOT_ALLOWED");
   const players = state.players.map((player, index) => index === playerIndex ? { ...player, ready: Boolean(ready) } : player);
   return advance(state, { players });
 }
 function startOnlineGame(state, { playerIndex, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
-  if (state.status !== "waiting" || !state.players.every((player) => player?.ready)) throw new Error("PLAYERS_NOT_READY");
-  return advance(state, { status: "playing", settings: { ...state.settings, locked: true } });
+  if (!['waiting', 'finished'].includes(state.status) || state.players.length < 2 || !state.players.every((player) => player?.ready)) throw new Error("PLAYERS_NOT_READY");
+  return advance(state, { status: "playing", matchNumber: (state.matchNumber || 0) + 1, questionSequence: 0, scores: state.players.map(() => 0), settings: { ...state.settings, locked: true }, question: null, roundAnswers: {}, revealUntil: null, modeState: null });
 }
 function publishOnlineQuestion(state, { playerIndex, question, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
   if (state.status !== "playing" || !state.settings.locked) throw new Error("GAME_NOT_STARTED");
-  if (state.question && state.answeredBy === null) throw new Error("QUESTION_ACTIVE");
-  return advance(state, { question: { ...question }, questionSequence: state.questionSequence + 1, answeredBy: null, selectedPlayerId: null, answerResult: null });
+  if (state.question && !state.revealUntil) throw new Error("QUESTION_ACTIVE");
+  return advance(state, { question: { ...question }, questionSequence: state.questionSequence + 1, roundAnswers: {}, revealUntil: null, answerResult: null });
 }
 function submitOnlineAnswer(state, { playerIndex, questionId, selectedPlayerId, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (state.status !== "playing" || !state.question) throw new Error("QUESTION_NOT_ACTIVE");
-  if (state.currentTurn !== playerIndex) throw new Error("NOT_YOUR_TURN");
-  if (state.answeredBy !== null) throw new Error("QUESTION_ALREADY_ANSWERED");
+  if (state.roundAnswers && Object.hasOwn(state.roundAnswers, playerIndex)) throw new Error("QUESTION_ALREADY_ANSWERED");
   if (state.question.questionId !== questionId) throw new Error("STALE_QUESTION");
   if (state.question.optionPlayerIds?.length && !state.question.optionPlayerIds.map(Number).includes(+selectedPlayerId)) throw new Error("INVALID_OPTION");
   const correctIds = (state.question.validPlayerIds || [state.question.correctPlayerId]).map(Number);
-  const correct = correctIds.includes(+selectedPlayerId), scores = [...state.scores];
+  const correct = correctIds.includes(+selectedPlayerId), scores = [...state.scores], roundAnswers = { ...(state.roundAnswers || {}), [playerIndex]: { selectedPlayerId: +selectedPlayerId, result: correct ? "correct" : "wrong" } };
   if (correct) scores[playerIndex] += 1;
-  const usedPlayerIds = state.usedPlayerIds;
-  return advance(state, { scores, usedPlayerIds, answeredBy: playerIndex, selectedPlayerId: +selectedPlayerId, answerResult: correct ? "correct" : "wrong", currentTurn: correct ? playerIndex : playerIndex ? 0 : 1 });
+  const allAnswered = state.players.every((_, index) => Object.hasOwn(roundAnswers, index));
+  return advance(state, { scores, roundAnswers, revealUntil: allAnswered ? now + 2000 : null, answerResult: allAnswered ? "revealed" : null });
 }
 function passOnlineTurn(state, { playerIndex, questionId, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
@@ -70,8 +70,14 @@ function passOnlineTurn(state, { playerIndex, questionId, expectedVersion, now =
 function finishOnlineGame(state, { playerIndex, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
   if (playerIndex !== 0) throw new Error("HOST_ONLY");
-  if (state.status !== "playing" || state.answeredBy === null) throw new Error("FINISH_NOT_ALLOWED");
-  return advance(state, { status: "finished", finishedAt: now });
+  if (state.status !== "playing" || !state.revealUntil) throw new Error("FINISH_NOT_ALLOWED");
+  return advance(state, { status: "finished", finishedAt: now, players: state.players.map((player) => ({ ...player, ready: false })) });
+}
+function configureOnlineMatch(state, { playerIndex, settings, expectedVersion, now = Date.now() }) {
+  assertMutable(state, expectedVersion, now);
+  if (playerIndex !== 0) throw new Error("HOST_ONLY");
+  if (!['waiting', 'finished'].includes(state.status)) throw new Error("SETTINGS_LOCKED");
+  return advance(state, { status: "waiting", settings: { ...settings, locked: false }, players: state.players.map((player) => ({ ...player, ready: false })), scores: state.players.map(() => 0), question: null, roundAnswers: {}, revealUntil: null, modeState: null });
 }
 function syncOnlineModeState(state, { playerIndex, modeState, currentTurn, scores, expectedVersion, now = Date.now() }) {
   assertMutable(state, expectedVersion, now);
@@ -81,6 +87,6 @@ function syncOnlineModeState(state, { playerIndex, modeState, currentTurn, score
   return advance(state, { modeState, currentTurn: Number(currentTurn) || 0, scores: Array.isArray(scores) ? scores : state.scores });
 }
 function isRoomExpired(state, now = Date.now()) { return !state || now >= state.expiresAt; }
-const onlineApi = { ROOM_TTL_MS, generateRoomCode, createOnlineRoom, joinOnlineRoom, updateConnection, setOnlineReady, startOnlineGame, publishOnlineQuestion, submitOnlineAnswer, passOnlineTurn, finishOnlineGame, syncOnlineModeState, isRoomExpired };
+const onlineApi = { ROOM_TTL_MS, MAX_ROOM_PLAYERS, generateRoomCode, createOnlineRoom, joinOnlineRoom, updateConnection, setOnlineReady, startOnlineGame, publishOnlineQuestion, submitOnlineAnswer, passOnlineTurn, finishOnlineGame, configureOnlineMatch, syncOnlineModeState, isRoomExpired };
 if (typeof module !== "undefined") module.exports = onlineApi;
 if (typeof window !== "undefined") window.IkiFormaOnlineCore = onlineApi;

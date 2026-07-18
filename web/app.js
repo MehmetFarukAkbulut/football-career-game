@@ -402,8 +402,12 @@ function openSpecialOnlineLobby(settings) {
   show("onlineLobby");
 }
 
+function openOnlineHub() {
+  openSpecialOnlineLobby({ gameType: "clubs", rounds: 5, seconds: 30, difficulty: "normal", answerMethod: "multiple", optionCount: 4, repeatPlayers: true, leagueIds: [] });
+}
+
 function saveOnlineSession() {
-  sessionStorage.setItem("iki-forma-online-session", JSON.stringify({ code: online.state.roomCode, token: online.token, playerIndex: online.playerIndex }));
+  localStorage.setItem("iki-forma-online-session", JSON.stringify({ code: online.state.roomCode, token: online.token, playerIndex: online.playerIndex }));
 }
 
 async function connectOnlineRoom(kind) {
@@ -437,7 +441,7 @@ async function refreshOnlineRoom() {
 }
 
 async function restoreOnlineSession() {
-  const saved = sessionStorage.getItem("iki-forma-online-session");
+  const saved = localStorage.getItem("iki-forma-online-session");
   if (!saved || !IkiFormaOnlineService.configured) return false;
   try {
     const session = JSON.parse(saved), service = await IkiFormaOnlineService.createRoomService();
@@ -448,7 +452,7 @@ async function restoreOnlineSession() {
     await mutateOnline({ type: "connection", connected: true });
     return true;
   } catch (error) {
-    sessionStorage.removeItem("iki-forma-online-session");
+    localStorage.removeItem("iki-forma-online-session");
     return false;
   }
 }
@@ -458,18 +462,24 @@ function renderOnlineLobby() {
   if (!state) return;
   $("#onlineEntry").hidden = true; $("#onlineRoomState").hidden = false;
   $("#onlineRoomCode").textContent = state.roomCode;
-  $("#onlinePlayers").innerHTML = state.players.map((player, index) => player
-    ? `<article class="online-player ${player.connected ? "is-connected" : ""}"><b>${esc(player.name)} ${player.host ? "👑" : ""}</b><small>Oyuncu ${index + 1} · ${player.connected ? "Bağlı" : "Yeniden bağlanıyor"}</small><span>${player.ready ? "✓ Hazır" : "Bekleniyor"}</span></article>`
-    : `<article class="online-player"><b>Oyuncu 2</b><small>Rakip bekleniyor…</small></article>`).join("");
-  $("#onlineTurn").textContent = state.players[state.currentTurn]?.name || "—";
-  $("#onlineScore").textContent = `${state.scores[0]} — ${state.scores[1]}`;
+  $("#onlinePlayers").innerHTML = state.players.map((player, index) => `<article class="online-player ${player.connected ? "is-connected" : ""}"><b>${esc(player.name)} ${player.host ? "👑" : ""}</b><small>Oyuncu ${index + 1} · ${player.connected ? "Bağlı" : "Yeniden bağlanıyor"}</small><span>${player.ready ? "✓ Hazır" : "Bekleniyor"}</span></article>`).join("");
+  $("#onlineTurn").textContent = state.status === "playing" ? `${Object.keys(state.roundAnswers || {}).length}/${state.players.length} cevap` : "Herkes aynı anda";
+  $("#onlineScore").textContent = state.players.map((player, index) => `${player.name}: ${state.scores[index] || 0}`).join(" · ");
   const me = state.players[online.playerIndex];
   $("#onlineReady").textContent = me?.ready ? "Hazır değilim" : "Hazırım";
-  $("#onlineReady").hidden = state.status !== "waiting";
-  $("#onlineStart").hidden = online.playerIndex !== 0 || state.status !== "waiting";
-  $("#onlineStart").disabled = !state.players.every((player) => player?.ready);
-  $("#onlineLobbyMessage").textContent = state.status === "playing" ? "Oyun başladı; soru hazırlanıyor…" : state.players[1] ? "İki oyuncu da hazır olduğunda oda sahibi oyunu başlatabilir." : "Oda kodunu arkadaşınızla paylaşın.";
-  if (state.status === "playing" || state.status === "finished") handleOnlineState();
+  $("#onlineReady").hidden = !["waiting", "finished"].includes(state.status);
+  $("#onlineStart").hidden = online.playerIndex !== 0 || !["waiting", "finished"].includes(state.status);
+  $("#onlineStart").disabled = state.players.length < 2 || !state.players.every((player) => player?.ready);
+  $("#onlineHostSettings").hidden = online.playerIndex !== 0 || !["waiting", "finished"].includes(state.status);
+  if (online.playerIndex === 0 && state.settings) {
+    $("#onlineGameType").value = state.settings.gameType || "clubs"; $("#onlineRounds").value = state.settings.rounds || 5;
+    $("#onlineSeconds").value = state.settings.seconds || 30; $("#onlineDifficulty").value = state.settings.difficulty || "normal"; $("#onlineAnswerMethod").value = state.settings.answerMethod || "multiple";
+  }
+  const ranking = state.players.map((player, index) => ({ name: player.name, score: state.scores[index] || 0 })).sort((a, b) => b.score - a.score);
+  $("#onlineRanking").hidden = state.status !== "finished";
+  $("#onlineRanking").innerHTML = state.status === "finished" ? `<h3>🏆 Oyun sıralaması</h3>${ranking.map((row, index) => `<p><b>${index + 1}. ${esc(row.name)}</b><span>${row.score} puan</span></p>`).join("")}` : "";
+  $("#onlineLobbyMessage").textContent = state.status === "playing" ? "Oyun başladı; herkes kendi cevabını veriyor…" : state.status === "finished" ? "Oda açık. Oda sahibi aynı oyunu başlatabilir veya yeni oyun seçebilir; herkes yeniden hazır olmalıdır." : state.players.length > 1 ? "Tüm oyuncular hazır olduğunda oda sahibi oyunu başlatabilir." : "Oda kodunu arkadaşlarınızla paylaşın (en fazla 5 oyuncu).";
+  if (state.status === "playing") handleOnlineState();
 }
 
 async function mutateOnline(action) {
@@ -486,8 +496,27 @@ async function mutateOnline(action) {
 
 $("#createOnlineRoom").onclick = () => connectOnlineRoom("create");
 $("#joinOnlineRoom").onclick = () => connectOnlineRoom("join");
+$("#openOnlineHub").onclick = openOnlineHub;
+$("#openOnlineHome").onclick = openOnlineHub;
 $("#copyRoomCode").onclick = async () => { await navigator.clipboard.writeText(online.state.roomCode); toast("Oda kodu kopyalandı."); };
 $("#onlineReady").onclick = () => mutateOnline({ type: "ready", ready: !online.state.players[online.playerIndex].ready });
+$("#onlineApplySettings").onclick = async () => {
+  const settings = { gameType: $("#onlineGameType").value, rounds: +$("#onlineRounds").value, seconds: +$("#onlineSeconds").value, difficulty: $("#onlineDifficulty").value, answerMethod: $("#onlineAnswerMethod").value, optionCount: 4, repeatPlayers: true, leagueIds: [] };
+  if (settings.gameType === "grid") {
+    const board = generateGrid(new Set(), "mixed"), initialState = IkiFormaCore.createGridState({ mode: "duo", difficulty: settings.difficulty, names: online.state.players.map((player) => player.name) });
+    if (!board) return toast("Bu ayarlarla geçerli ızgara üretilemedi."); initialState.grid = board; initialState.answerMethod = settings.answerMethod; settings.initialState = initialState;
+  }
+  if (settings.gameType === "randomFive") {
+    const pool = players, allowedClubs = clubs.filter((club) => club.active !== false), sets = Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool));
+    settings.rounds = 5; settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, guesses: [], setIds: sets.map((set) => set.map((club) => club.id)) };
+  }
+  if (settings.gameType === "twin") {
+    const pool = twinPool(), targets = pool.filter((player) => player.appearances >= 200 && player.goals >= 15).sort(() => Math.random() - .5).slice(0, settings.rounds);
+    settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, rounds: settings.rounds, metric: 0, guesses: [], targetIds: targets.map((player) => player.id) };
+  }
+  const state = await mutateOnline({ type: "configure", settings });
+  if (state) online.settings = settings;
+};
 $("#onlineStart").onclick = async () => {
   const state = await mutateOnline({ type: "start" });
   if (state) startOnlineMatch();
@@ -507,7 +536,7 @@ async function startOnlineSpecialMatch() {
     if (settings.gameType === "grid") modeState = { kind: "grid", value: settings.initialState };
     if (settings.gameType === "twin") modeState = { kind: "twin", value: settings.initialState };
     if (settings.gameType === "randomFive") modeState = { kind: "randomFive", value: settings.initialState };
-    await mutateOnline({ type: "mode_state", modeState, currentTurn: 0, scores: [0, 0] });
+    await mutateOnline({ type: "mode_state", modeState, currentTurn: 0, scores: online.state.players.map(() => 0) });
   }
   handleOnlineSpecialState();
 }
@@ -516,19 +545,21 @@ function handleOnlineSpecialState() {
   if (!snapshot) return;
   if (snapshot.kind === "grid") {
     show("grid"); grid = snapshot.value; grid.mode = "online"; grid.online = true;
-    grid.players = online.state.players.map((player, index) => ({ ...grid.players[index], name: player.name, computer: false }));
+    grid.players = online.state.players.map((player, index) => ({ ...(grid.players[index] || {}), name: player.name, computer: false }));
+    for (const key of ["scores", "correct", "wrong"]) grid[key] = online.state.players.map((_, index) => grid[key]?.[index] || 0);
     $("#gridSetup").hidden = true; $("#gridGame").hidden = false; $("#gridResults").hidden = true; setGridPlaying(true); renderGrid(); announceTurn();
     if (grid.status === "finished") finishGrid();
   } else if (snapshot.kind === "twin") {
-    hydrateOnlineTwin(snapshot.value); show("twinGame"); if (snapshot.value.finished) return renderOnlineSpecialFinished("twin"); renderTwinTurn(); if (twin.guesses.length === 2) renderTwinSnapshotReveal();
+    hydrateOnlineTwin(snapshot.value); show("twinGame"); if (snapshot.value.finished) return renderOnlineSpecialFinished("twin"); renderTwinTurn(); if (twin.guesses.length === online.state.players.length) renderTwinSnapshotReveal();
   } else if (snapshot.kind === "randomFive") {
-    hydrateOnlineRandomFive(snapshot.value); show("randomFiveGame"); if (snapshot.value.finished) return renderOnlineSpecialFinished("randomFive"); renderRandomFiveRound(); if (randomFive.guesses.length === 2) renderRandomFiveSnapshotReveal();
+    hydrateOnlineRandomFive(snapshot.value); show("randomFiveGame"); if (snapshot.value.finished) return renderOnlineSpecialFinished("randomFive"); renderRandomFiveRound(); if (randomFive.guesses.length === online.state.players.length) renderRandomFiveSnapshotReveal();
   }
 }
 function renderOnlineSpecialFinished(kind) {
-  const state = kind === "twin" ? twin : randomFive, winner = state.scores[0] === state.scores[1] ? "Berabere!" : `${state.names[state.scores[0] > state.scores[1] ? 0 : 1]} kazandı!`;
+  const state = kind === "twin" ? twin : randomFive, best = Math.max(...state.scores), leaders = state.names.filter((_, index) => state.scores[index] === best), winner = leaders.length > 1 ? "Berabere!" : `${leaders[0]} kazandı!`;
   const prompt = kind === "twin" ? $("#twinPrompt") : $("#randomFivePrompt"), turn = kind === "twin" ? $("#twinTurn") : $("#randomFiveTurn");
-  prompt.textContent = `🏆 ${winner}`; turn.textContent = `${state.names[0]}: ${state.scores[0]} · ${state.names[1]}: ${state.scores[1]}`;
+  prompt.textContent = `🏆 ${winner}`; turn.textContent = state.names.map((name, index) => `${name}: ${state.scores[index] || 0}`).join(" · ");
+  if (online.playerIndex === 0 && !online.finishingSpecial) { online.finishingSpecial = true; mutateOnline({ type: "finish" }).finally(() => { online.finishingSpecial = false; }); }
 }
 async function syncSpecialState(kind, value, currentTurn, scores) {
   online.state = await online.service.mutate(online.state.roomCode, online.token, online.state.stateVersion, { type: "mode_state", modeState: { kind, value }, currentTurn, scores });
@@ -569,10 +600,8 @@ function handleOnlineState() {
   if (["grid", "twin", "randomFive"].includes(state.settings.gameType)) return handleOnlineSpecialState();
   if (state.status === "finished") {
     clearInterval(timer);
-    const names = state.players.map((player) => player.name), winner = state.scores[0] === state.scores[1] ? "Berabere" : `${names[state.scores[0] > state.scores[1] ? 0 : 1]} kazandı`;
-    $("#finalScore").textContent = `${winner} · ${state.scores[0]} — ${state.scores[1]}`;
-    $("#roundResults").innerHTML = `<article><b>Oda ${esc(state.roomCode)}</b><small>Online oyun tamamlandı.</small></article>`;
-    return show("results");
+    show("onlineLobby");
+    return renderOnlineLobby();
   }
   show("game");
   if (!state.question) return;
@@ -585,23 +614,28 @@ function handleOnlineState() {
       answers: (question.validPlayerIds || [question.correctPlayerId]).map((id) => indexes.playerById.get(+id)).filter(Boolean),
     },
   };
-  $("#gameRound").textContent = `Online · Tur ${state.questionSequence}/${state.settings.rounds} · ${state.players[state.currentTurn].name}`;
-  $("#gameContext").textContent = `${state.roomCode} · ${state.settings.answerMethod === "multiple" ? "Çoktan seçmeli" : "Serbest metin"} · ${state.scores[0]}—${state.scores[1]}`;
+  $("#gameRound").textContent = `Online · Tur ${state.questionSequence}/${state.settings.rounds} · ${Object.keys(state.roundAnswers || {}).length}/${state.players.length} cevap`;
+  $("#gameContext").textContent = `${state.roomCode} · ${state.settings.answerMethod === "multiple" ? "Çoktan seçmeli" : "Serbest metin"} · ${state.players.map((player, index) => `${player.name}: ${state.scores[index] || 0}`).join(" · ")}`;
   $("#sideA").innerHTML = side(game.current.a); $("#sideB").innerHTML = side(game.current.b);
   $("#answerInput").closest(".answer-box").hidden = game.answerMethod === "multiple";
   $("#multipleChoiceOptions").hidden = game.answerMethod !== "multiple";
-  $("#pass").disabled = state.currentTurn !== online.playerIndex || state.answeredBy !== null;
+  const myAnswer = state.roundAnswers?.[online.playerIndex];
+  $("#pass").hidden = true;
   if (game.answerMethod === "multiple") renderMultipleChoice(); else $("#answerInput").focus();
-  if (state.answeredBy !== null) {
-    const selected = indexes.playerById.get(+state.selectedPlayerId), correct = indexes.playerById.get(+question.correctPlayerId);
-    $("#gameMessage").textContent = state.answerResult === "correct" ? `✓ Doğru: ${selected?.name}` : state.answerResult === "pass" ? "Pas geçildi; sıra rakipte." : `✕ Yanlış. Doğru cevap: ${correct?.name}`;
-    if (game.answerMethod === "multiple") $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +question.correctPlayerId) button.classList.add("is-correct"); if (+button.dataset.playerId === +state.selectedPlayerId && state.answerResult !== "correct") button.classList.add("is-wrong"); });
+  if (state.revealUntil) {
+    const correct = indexes.playerById.get(+question.correctPlayerId);
+    const choices = state.players.map((player, index) => { const answer = state.roundAnswers?.[index], selected = indexes.playerById.get(+answer?.selectedPlayerId); return `${player.name}: ${selected?.name || "—"} ${answer?.result === "correct" ? "✓" : "✕"}`; }).join(" · ");
+    $("#gameMessage").textContent = `Doğru cevap: ${correct?.name}. ${choices}`;
+    if (game.answerMethod === "multiple") $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +question.correctPlayerId) button.classList.add("is-correct"); if (+button.dataset.playerId === +myAnswer?.selectedPlayerId && myAnswer?.result !== "correct") button.classList.add("is-wrong"); });
     if (online.playerIndex === 0 && online.advanceScheduledSeq !== state.questionSequence) {
       online.advanceScheduledSeq = state.questionSequence;
-      setTimeout(() => { refreshOnlineRoom().then(publishNextOnlineQuestion); }, 1400);
+      setTimeout(() => { refreshOnlineRoom().then(publishNextOnlineQuestion); }, Math.max(0, state.revealUntil - Date.now()));
     }
+  } else if (myAnswer) {
+    $("#gameMessage").textContent = `✓ Seçiminiz kaydedildi. Diğer oyuncular bekleniyor (${Object.keys(state.roundAnswers || {}).length}/${state.players.length}).`;
+    if (game.answerMethod === "multiple") $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +myAnswer.selectedPlayerId) button.classList.add("is-selected"); });
   } else {
-    $("#gameMessage").textContent = state.currentTurn === online.playerIndex ? "Sıra sizde." : `${state.players[state.currentTurn].name} cevaplıyor…`;
+    $("#gameMessage").textContent = "Seçiminizi yapın; sonuç herkes cevapladıktan sonra gösterilecek.";
   }
   clearInterval(timer);
   const updateOnlineTime = () => { const left = Math.max(0, Math.ceil((question.deadlineAt - Date.now()) / 1000)); $("#timer").textContent = `${left} sn`; $("#timebar").style.width = `${Math.min(100, left / state.settings.seconds * 100)}%`; if (!left) clearInterval(timer); };
@@ -609,8 +643,18 @@ function handleOnlineState() {
 }
 
 async function submitOnlinePlayer(playerId) {
-  if (online.state.currentTurn !== online.playerIndex) return toast("Sıra rakibinizde.");
-  await mutateOnline({ type: "answer", questionId: online.state.question.questionId, selectedPlayerId: +playerId });
+  if (online.state.roundAnswers?.[online.playerIndex]) return toast("Bu turdaki seçiminiz kaydedildi.");
+  const questionId = online.state.question.questionId;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      online.state = await online.service.mutate(online.state.roomCode, online.token, online.state.stateVersion, { type: "answer", questionId, selectedPlayerId: +playerId });
+      break;
+    } catch (error) {
+      if (!error.message.includes("STALE_STATE")) return toast(`Seçim kaydedilemedi: ${error.message}`);
+      await refreshOnlineRoom();
+      if (online.state.roundAnswers?.[online.playerIndex]) break;
+    }
+  }
   handleOnlineState();
 }
 
@@ -1019,7 +1063,7 @@ function renderGrid() {
         m = grid.grid.marks[i],
         p = m && indexes.playerById.get(m.playerId),
         winning = grid.winningLine?.includes(i) ? "winning" : "";
-      html += `<button class="grid-cell ${m ? `owner-${m.owner}` : ""} ${grid.selectedCell === i ? "selected" : ""} ${winning}" data-cell="${i}" role="gridcell" aria-label="${esc(r.name)} ve ${esc(c.name)}" ${m || grid.thinking ? "disabled" : ""}>${m ? `<b>${m.owner ? "O" : "X"}</b><small>${esc(p.name)}</small>` : "?"}</button>`;
+      html += `<button class="grid-cell ${m ? `owner-${m.owner}` : ""} ${grid.selectedCell === i ? "selected" : ""} ${winning}" data-cell="${i}" role="gridcell" aria-label="${esc(r.name)} ve ${esc(c.name)}" ${m || grid.thinking ? "disabled" : ""}>${m ? `<b>${m.owner + 1}</b><small>${esc(p.name)}</small>` : "?"}</button>`;
     });
   });
   $("#gridBoard").innerHTML = html;
@@ -1031,8 +1075,7 @@ function renderGrid() {
 function renderGridStatus() {
   $("#gridTurn").innerHTML =
     `<strong>Sıra: ${esc(grid.players[grid.currentTurn].name)}</strong>${grid.thinking ? " <span>Bilgisayar düşünüyor…</span>" : ""}`;
-  $("#gridScores").textContent =
-    `${grid.players[0].name}: ${grid.scores[0]} • ${grid.players[1].name}: ${grid.scores[1]}`;
+  $("#gridScores").textContent = grid.players.map((player, index) => `${player.name}: ${grid.scores[index] || 0}`).join(" • ");
   $("#gridHistory").innerHTML = grid.history
     .slice(-6)
     .reverse()
@@ -1137,24 +1180,21 @@ function finishGrid() {
   const hasLineWinner = Number.isInteger(grid.winner),
     winnerIndex = hasLineWinner
       ? grid.winner
-      : grid.scores[0] === grid.scores[1]
-        ? null
-        : grid.scores[0] > grid.scores[1]
-          ? 0
-          : 1,
+      : grid.scores.filter((score) => score === Math.max(...grid.scores)).length > 1 ? null : grid.scores.indexOf(Math.max(...grid.scores)),
     winner =
       winnerIndex === null
         ? "Berabere"
         : `${grid.players[winnerIndex].name} kazandı`,
     outcome = hasLineWinner
-      ? `<p><strong>${esc(grid.players[winnerIndex ? 0 : 1].name)} kaybetti.</strong> Üçlü XOX çizgisi tamamlandı.</p>`
+      ? `<p><strong>${esc(grid.players[winnerIndex].name)}</strong> üçlü çizgiyi tamamladı.</p>`
       : "<p>Geçerli hamleler tamamlandı; sonuç skora göre belirlendi.</p>";
   $("#gridGame").hidden = true;
   $("#gridResults").hidden = false;
   setGridPlaying(true);
   $("#gridResults").innerHTML =
-    `<span class="trophy">🏆</span><h2>${esc(winner)}</h2>${outcome}<p>${esc(grid.players[0].name)}: ${grid.scores[0]} • ${esc(grid.players[1].name)}: ${grid.scores[1]}</p><p>Doğru: ${grid.correct.join(" / ")} • Yanlış: ${grid.wrong.join(" / ")}</p><button id="gridAgain" class="cta">Yeni oyun</button>`;
-  $("#gridAgain").onclick = showGridSetup;
+    `<span class="trophy">🏆</span><h2>${esc(winner)}</h2>${outcome}<p>${grid.players.map((player, index) => `${esc(player.name)}: ${grid.scores[index] || 0}`).join(" • ")}</p><p>Doğru: ${grid.correct.join(" / ")} • Yanlış: ${grid.wrong.join(" / ")}</p><button id="gridAgain" class="cta">Odaya dön</button>`;
+  $("#gridAgain").onclick = grid.online ? () => show("onlineLobby") : showGridSetup;
+  if (grid.online && online.playerIndex === 0 && !online.finishingSpecial) { online.finishingSpecial = true; mutateOnline({ type: "finish" }).finally(() => { online.finishingSpecial = false; }); }
   localStorage.removeItem("iki-forma-grid");
 }
 function saveGrid() {
@@ -1277,7 +1317,7 @@ function renderRandomFiveRound() {
   const set = randomFive.sets[randomFive.round];
   if (!randomFive.online) randomFive.guesses = [];
   $("#randomFiveRound").textContent = `Set ${randomFive.round + 1}/5`;
-  $("#randomFiveScore").innerHTML = `<b>${esc(randomFive.names[0])} ${randomFive.scores[0]}</b><span>—</span><b>${randomFive.scores[1]} ${esc(randomFive.names[1])}</b>`;
+  $("#randomFiveScore").innerHTML = randomFive.names.map((name, index) => `<b>${esc(name)} ${randomFive.scores[index] || 0}</b>`).join("<span>·</span>");
   $("#randomFiveClubs").innerHTML = set.map((club) => `<article>${logo(club)}<b>${esc(club.name)}</b><small>${esc(club.league || "")}</small></article>`).join("");
   $("#randomFivePrompt").textContent = "Bu beşlinin kaçında oynayan bir futbolcu bulabilirsin?";
   $("#randomFiveTurn").textContent = `${randomFive.names[0]} tahminini girsin.`;
@@ -1310,8 +1350,8 @@ async function submitRandomFiveGuess(player) {
       renderPlayerChoices($("#randomFiveSuggestions"), randomFive.choiceEntries.map((entry) => entry.player), submitRandomFiveGuess);
     return $("#randomFiveInput").focus();
   }
-  if (randomFive.online && randomFive.guesses.length === 1) {
-    await syncSpecialState("randomFive", serializeOnlineRandomFive(), 1, randomFive.scores);
+  if (randomFive.online && randomFive.guesses.length < online.state.players.length) {
+    await syncSpecialState("randomFive", serializeOnlineRandomFive(), (online.state.currentTurn + 1) % online.state.players.length, randomFive.scores);
     return handleOnlineSpecialState();
   }
   if (randomFive.mode === "computer" && randomFive.guesses.length === 1) {
@@ -1343,7 +1383,7 @@ function revealRandomFiveRound() {
   $("#randomFiveReveal").hidden = false;
   $("#randomFiveNext").textContent = randomFive.round === 4 ? "Sonucu gör →" : "Sonraki set →";
   $("#randomFiveNext").hidden = false;
-  $("#randomFiveScore").innerHTML = `<b>${esc(randomFive.names[0])} ${randomFive.scores[0]}</b><span>—</span><b>${randomFive.scores[1]} ${esc(randomFive.names[1])}</b>`;
+  $("#randomFiveScore").innerHTML = randomFive.names.map((name, index) => `<b>${esc(name)} ${randomFive.scores[index] || 0}</b>`).join("<span>·</span>");
 }
 async function nextRandomFiveRound() {
   if (randomFive.online && online.playerIndex !== 0) return toast("Sonraki seti oda sahibi açar.");
@@ -1363,11 +1403,12 @@ function renderRandomFiveSnapshotReveal() {
   const ids = randomFive.sets[randomFive.round].map((club) => club.id), points = randomFive.guesses.map((player) => IkiFormaCore.randomFiveScore(player, ids));
   $("#randomFiveReveal").innerHTML = randomFive.guesses.map((player, index) => `<article class="${points[index] === Math.max(...points) ? "winner" : ""}">${person(player)}<div><small>${esc(randomFive.names[index])}</small><b>${esc(player.name)}</b><span>${points[index]} kulüp</span></div></article>`).join("");
   $("#randomFiveReveal").hidden = false; $("#randomFiveNext").hidden = online.playerIndex !== 0; $("#randomFiveInput").disabled = true;
+  const key = `random-${randomFive.round}`; if (online.playerIndex === 0 && online.specialAdvanceKey !== key) { online.specialAdvanceKey = key; setTimeout(nextRandomFiveRound, 2000); }
 }
 function serializeOnlineRandomFive() { return { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: randomFive.scores, round: randomFive.round, guesses: randomFive.guesses.map((player) => player.id), setIds: randomFive.sets.map((set) => set.map((club) => club.id)), finished: randomFive.round >= 5 }; }
 function hydrateOnlineRandomFive(value) {
   const selected = new Set(online.state.settings.leagueIds || []), clubIds = new Set(clubs.filter((club) => !selected.size || selected.has(club.leagueId)).map((club) => club.id));
-  randomFive = { ...value, online: true, mode: "online", names: online.state.players.map((player) => player.name), pool: players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), sets: value.setIds.map((set) => set.map((id) => clubMap.get(+id))), guesses: value.guesses.map((id) => indexes.playerById.get(+id)).filter(Boolean), used: [new Set(), new Set()] };
+  randomFive = { ...value, scores: online.state.players.map((_, index) => value.scores[index] || 0), online: true, mode: "online", names: online.state.players.map((player) => player.name), pool: players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), sets: value.setIds.map((set) => set.map((id) => clubMap.get(+id))), guesses: value.guesses.map((id) => indexes.playerById.get(+id)).filter(Boolean), used: online.state.players.map(() => new Set()) };
 }
 $("#randomFiveInput").oninput = (event) => {
   const q = norm(event.target.value), ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [];
@@ -1415,7 +1456,7 @@ function beginTwinRound() {
 function renderTwinTurn() {
   const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric];
   $("#twinRound").textContent = `Futbolcu ${twin.round + 1}/${twin.rounds}`;
-  $("#twinScore").innerHTML = `<b>${esc(twin.names[0])} ${twin.scores[0]}</b><span>—</span><b>${twin.scores[1]} ${esc(twin.names[1])}</b>`;
+  $("#twinScore").innerHTML = twin.names.map((name, index) => `<b>${esc(name)} ${twin.scores[index] || 0}</b>`).join("<span>·</span>");
   $("#twinTarget").innerHTML = `${person(target)}<div><span class="kicker">HEDEF FUTBOLCU</span><h2>${esc(target.name)}</h2><p>${esc(target.nationality || "")}</p></div><div class="twin-metrics">${IkiFormaCore.TWIN_METRICS.map((m, i) => `<div class="${i === twin.metric ? "active" : ""}"><small>${esc(m.label)}</small><b>${Number(target[m.key]).toLocaleString("tr-TR")}</b></div>`).join("")}</div>`;
   $("#twinMetricStep").textContent = `METRİK ${twin.metric + 1}/4`;
   $("#twinPrompt").textContent = `${metric.label} değerine en yakın futbolcu kim?`;
@@ -1450,8 +1491,8 @@ async function submitTwinGuess(player) {
     $("#twinInput").focus();
     return;
   }
-  if (twin.online && twin.guesses.length === 1) {
-    await syncSpecialState("twin", serializeOnlineTwin(), 1, twin.scores);
+  if (twin.online && twin.guesses.length < online.state.players.length) {
+    await syncSpecialState("twin", serializeOnlineTwin(), (online.state.currentTurn + 1) % online.state.players.length, twin.scores);
     return handleOnlineSpecialState();
   }
   if (twin.mode === "computer" && twin.guesses.length === 1) {
@@ -1464,16 +1505,15 @@ async function submitTwinGuess(player) {
   if (twin.online) await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores);
 }
 function revealTwinMetric() {
-  const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric], result = IkiFormaCore.scoreTwinGuesses(target, metric.key, twin.guesses[0], twin.guesses[1]);
-  if (result.winner === null) twin.scores = twin.scores.map((x) => x + 1);
-  else twin.scores[result.winner]++;
+  const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric], distances = twin.guesses.map((player) => Math.abs(Number(player[metric.key]) - Number(target[metric.key]))), minimum = Math.min(...distances), winners = distances.map((distance, index) => distance === minimum ? index : -1).filter((index) => index >= 0);
+  winners.forEach((index) => twin.scores[index]++);
   $("#twinInput").disabled = true;
-  $("#twinTurn").textContent = result.winner === null ? "Eşit yakınlık: iki taraf da puan aldı." : `${twin.names[result.winner]} bu metriği kazandı!`;
-  $("#twinReveal").innerHTML = twin.guesses.map((p, i) => `<article class="${result.winner === null || result.winner === i ? "winner" : ""}">${person(p)}<div><small>${esc(twin.names[i])}</small><b>${esc(p.name)}</b><span>${Number(p[metric.key]).toLocaleString("tr-TR")} · fark ${result.distances[i].toLocaleString("tr-TR")}</span></div></article>`).join("");
+  $("#twinTurn").textContent = winners.length > 1 ? "Eşit yakınlık: en yakın oyuncular puan aldı." : `${twin.names[winners[0]]} bu metriği kazandı!`;
+  $("#twinReveal").innerHTML = twin.guesses.map((p, i) => `<article class="${winners.includes(i) ? "winner" : ""}">${person(p)}<div><small>${esc(twin.names[i])}</small><b>${esc(p.name)}</b><span>${Number(p[metric.key]).toLocaleString("tr-TR")} · fark ${distances[i].toLocaleString("tr-TR")}</span></div></article>`).join("");
   $("#twinReveal").hidden = false;
   $("#twinNext").textContent = twin.metric === 3 ? (twin.round + 1 === twin.rounds ? "Sonucu gör →" : "Sonraki futbolcu →") : "Sonraki metrik →";
   $("#twinNext").hidden = false;
-  $("#twinScore").innerHTML = `<b>${esc(twin.names[0])} ${twin.scores[0]}</b><span>—</span><b>${twin.scores[1]} ${esc(twin.names[1])}</b>`;
+  $("#twinScore").innerHTML = twin.names.map((name, index) => `<b>${esc(name)} ${twin.scores[index] || 0}</b>`).join("<span>·</span>");
 }
 async function nextTwinStep() {
   if (twin.online && online.playerIndex !== 0) return toast("Sonraki adımı oda sahibi açar.");
@@ -1492,15 +1532,16 @@ async function nextTwinStep() {
   if (twin.online) await syncSpecialState("twin", serializeOnlineTwin(), 0, twin.scores);
 }
 function renderTwinSnapshotReveal() {
-  const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric], result = IkiFormaCore.scoreTwinGuesses(target, metric.key, twin.guesses[0], twin.guesses[1]);
-  $("#twinReveal").innerHTML = twin.guesses.map((player, index) => `<article class="${result.winner === null || result.winner === index ? "winner" : ""}">${person(player)}<div><small>${esc(twin.names[index])}</small><b>${esc(player.name)}</b><span>${Number(player[metric.key]).toLocaleString("tr-TR")} · fark ${result.distances[index].toLocaleString("tr-TR")}</span></div></article>`).join("");
+  const target = twin.targets[twin.round], metric = IkiFormaCore.TWIN_METRICS[twin.metric], distances = twin.guesses.map((player) => Math.abs(Number(player[metric.key]) - Number(target[metric.key]))), minimum = Math.min(...distances);
+  $("#twinReveal").innerHTML = twin.guesses.map((player, index) => `<article class="${distances[index] === minimum ? "winner" : ""}">${person(player)}<div><small>${esc(twin.names[index])}</small><b>${esc(player.name)}</b><span>${Number(player[metric.key]).toLocaleString("tr-TR")} · fark ${distances[index].toLocaleString("tr-TR")}</span></div></article>`).join("");
   $("#twinReveal").hidden = false; $("#twinNext").hidden = online.playerIndex !== 0; $("#twinInput").disabled = true;
+  const key = `twin-${twin.round}-${twin.metric}`; if (online.playerIndex === 0 && online.specialAdvanceKey !== key) { online.specialAdvanceKey = key; setTimeout(nextTwinStep, 2000); }
 }
 function serializeOnlineTwin() { return { difficulty: twin.difficulty, answerMethod: twin.answerMethod, scores: twin.scores, round: twin.round, rounds: twin.rounds, metric: twin.metric, guesses: twin.guesses.map((player) => player.id), targetIds: twin.targets.map((player) => player.id), finished: twin.round >= twin.rounds }; }
 function hydrateOnlineTwin(value) {
   const selected = new Set(online.state.settings.leagueIds || []), clubIds = new Set(clubs.filter((club) => !selected.size || selected.has(club.leagueId)).map((club) => club.id));
   const pool = players.filter((player) => player.statisticsComplete && player.appearances >= 50 && player.clubIds.some((id) => clubIds.has(id)) && IkiFormaCore.TWIN_METRICS.every((metric) => Number.isFinite(Number(player[metric.key]))));
-  twin = { ...value, online: true, mode: "online", names: online.state.players.map((player) => player.name), pool, targets: value.targetIds.map((id) => indexes.playerById.get(+id)), guesses: value.guesses.map((id) => indexes.playerById.get(+id)).filter(Boolean), used: [new Set(), new Set()] };
+  twin = { ...value, scores: online.state.players.map((_, index) => value.scores[index] || 0), online: true, mode: "online", names: online.state.players.map((player) => player.name), pool, targets: value.targetIds.map((id) => indexes.playerById.get(+id)), guesses: value.guesses.map((id) => indexes.playerById.get(+id)).filter(Boolean), used: online.state.players.map(() => new Set()) };
 }
 $("#twinInput").oninput = (event) => {
   const q = norm(event.target.value);

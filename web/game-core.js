@@ -372,7 +372,7 @@ function applyAttempt(state, { cellIndex, playerId, valid }) {
     next.grid.marks[cellIndex] = { owner: turn, playerId };
   } else next.wrong[turn]++;
   next.history.push({ turn, cellIndex, playerId, valid });
-  next.currentTurn = turn ? 0 : 1;
+  next.currentTurn = (turn + 1) % Math.max(2, state.players?.length || 2);
   const line = next.grid ? winningLine(next.grid.marks) : null;
   if (line) {
     next.status = "finished";
