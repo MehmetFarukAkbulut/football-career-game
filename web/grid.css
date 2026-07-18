@@ -121,6 +121,7 @@
 .online-host-settings .online-league-options { max-height:none; margin:10px 0 4px; padding:10px; }
 .online-host-settings .online-league-options .league-tools { grid-template-columns:minmax(160px,1fr) auto auto; }
 .online-host-settings .online-league-options .league-list { max-height:150px; overflow:auto; }
+.online-host-settings label[hidden] { display:none!important; }
 @media (min-width:901px) {
   .setup .surface.online-lobby {
     display:block;
