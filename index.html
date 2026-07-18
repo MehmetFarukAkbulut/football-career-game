@@ -116,6 +116,9 @@
           <button class="mode-card hex-card" data-view="hexSetup">
             <span class="icon">⬢</span><span><b>Kariyer Peteği</b><small>Bir futbolcuyla komşu kariyer koşullarını birleştir ve büyük kombolar kur.</small></span><i>Oyna →</i>
           </button>
+          <button class="mode-card trumps-card" data-view="trumpsSetup">
+            <span class="icon">🃏</span><span><b>Kariyer Kozları</b><small>Açık kartından bir kariyer metriği seç ve sıradaki gizli oyuncuyu yen.</small></span><i>Oyna →</i>
+          </button>
         </div>
       </section>
       <section id="ratingSetup" class="view setup">
@@ -141,6 +144,14 @@
       <section id="hexGame" class="view">
         <div class="game-top"><button class="back" data-view="hexSetup">← Oyundan çık</button><div><span id="hexScore">Skor 0</span><span id="hexProgress"></span></div></div>
         <div class="hex-layout"><div id="hexBoard" class="hex-board" aria-label="Kariyer peteği"></div><aside class="surface hex-panel"><span class="kicker">HAMLE ALANI</span><h2 id="hexPrompt">Bir altıgen seç</h2><p id="hexDescription">Seçtiğin koşulu sağlayan bir futbolcu yaz.</p><div class="answer-box"><input id="hexInput" autocomplete="off" placeholder="Futbolcu adı yaz…" disabled><div id="hexSuggestions" class="suggestions"></div></div><p id="hexMessage" class="message" aria-live="polite"></p><div id="hexLastMove" class="hex-last-move"></div><button id="newHexGame" class="secondary">Yeni petek</button></aside></div>
+      </section>
+      <section id="trumpsSetup" class="view setup">
+        <button class="back" data-view="home">← Ana sayfa</button>
+        <div class="surface trumps-setup"><span class="kicker">KARİYER KARTI MEYDAN OKUMASI</span><h2>Kariyer Kozları</h2><p>Kartındaki bir metriği seç. Değerin sıradaki gizli oyuncudan yüksek veya eşitse ilerlersin. İkinci hatada oyun biter.</p><div class="setup-grid"><label>Paket boyutu<select id="trumpsPackSize"><option>7</option><option selected>11</option><option>15</option></select></label></div><fieldset id="trumpsLeagueOptions" class="league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend></fieldset><button id="startTrumpsGame" class="cta">Paketi aç →</button></div>
+      </section>
+      <section id="trumpsGame" class="view">
+        <div class="game-top"><button class="back" data-view="trumpsSetup">← Oyundan çık</button><div><span id="trumpsProgress"></span><span id="trumpsCards">Kart yok</span></div></div>
+        <div class="trumps-table"><article id="trumpsCurrent" class="surface trump-card"></article><div class="trumps-versus">VS</div><article id="trumpsNext" class="surface trump-card hidden-card"></article></div><p id="trumpsMessage" class="message" aria-live="polite">Bir kariyer metriği seç.</p><div class="trumps-status"><span id="trumpsYellow">🟨 0</span><span id="trumpsRed">🟥 0</span></div><button id="restartTrumps" class="cta" hidden>Yeni paket →</button>
       </section>
       <section id="classicSetup" class="view setup"></section>
       <section id="countrySetup" class="view setup"></section>
@@ -471,9 +482,9 @@
     </footer>
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=2" defer></script>
-    <script src="web/game-core.js?v=18" defer></script>
+    <script src="web/game-core.js?v=19" defer></script>
     <script src="web/online-core.js?v=9" defer></script>
     <script src="web/online-service.js?v=5" defer></script>
-    <script src="web/app.js?v=38" defer></script>
+    <script src="web/app.js?v=39" defer></script>
   </body>
 </html>

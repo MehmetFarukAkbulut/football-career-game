@@ -603,6 +603,24 @@ function scoreHexMove(newCells, reheatedCells = 0) {
   return (+newCells * (+newCells + 1)) / 2 + +reheatedCells;
 }
 
+const TRUMP_METRICS = [
+  { key: "appearances", label: "Kariyer maçı" },
+  { key: "goals", label: "Gol" },
+  { key: "assists", label: "Asist" },
+  { key: "nationalCaps", label: "Millî maç" },
+  { key: "clubCount", label: "Kulüp sayısı" },
+];
+
+function trumpMetricValue(player, key) {
+  if (key === "clubCount") return new Set(player?.clubIds || []).size;
+  return Number(player?.[key]) || 0;
+}
+
+function compareTrumpStat(current, next, key) {
+  const currentValue = trumpMetricValue(current, key), nextValue = trumpMetricValue(next, key);
+  return { currentValue, nextValue, correct: currentValue >= nextValue };
+}
+
 const api = {
   DIFFICULTIES,
   WINNING_LINES,
@@ -650,6 +668,9 @@ const api = {
   playerMatchesHexCriterion,
   hexNeighbors,
   scoreHexMove,
+  TRUMP_METRICS,
+  trumpMetricValue,
+  compareTrumpStat,
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;

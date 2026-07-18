@@ -9,7 +9,7 @@
     "start": "node scripts/launch-electron.js",
     "dev": "node scripts/launch-electron.js",
     "test": "node --test tests/*.test.js",
-    "test:web": "node --test tests/normalize.test.js tests/web-data.test.js tests/game-core.test.js tests/online-core.test.js tests/web-model.test.js tests/ipc.test.js tests/navigation-source.test.js tests/random-five-core.test.js tests/twin-core.test.js tests/fc26-ratings.test.js tests/hex-core.test.js",
+    "test:web": "node --test tests/normalize.test.js tests/web-data.test.js tests/game-core.test.js tests/online-core.test.js tests/web-model.test.js tests/ipc.test.js tests/navigation-source.test.js tests/random-five-core.test.js tests/twin-core.test.js tests/fc26-ratings.test.js tests/hex-core.test.js tests/trumps-core.test.js",
     "lint": "node scripts/lint.js",
     "data:build": "node scripts/build-database.js",
     "data:update": "node scripts/download-open-data.js && node scripts/import-open-data.js && node scripts/import-curated-careers.js",
