@@ -557,6 +557,15 @@ function generateRatingPair(players, difficulty = "normal", rng = Math.random) {
   return null;
 }
 
+function mysteryPlayersByRatingDifficulty(players, difficulty = "normal") {
+  const sorted = (players || []).filter((player) => Number.isFinite(+player.overall)).sort((a, b) => b.overall - a.overall || a.eaId - b.eaId);
+  if (!sorted.length) return [];
+  const easyEnd = Math.max(1, Math.ceil(sorted.length * .3)), hardStart = Math.min(sorted.length - 1, Math.floor(sorted.length * .7));
+  if (difficulty === "easy") return sorted.slice(0, easyEnd);
+  if (difficulty === "hard") return sorted.slice(hardStart);
+  return sorted.slice(easyEnd, Math.max(easyEnd + 1, hardStart));
+}
+
 function compareRatingPlayers(left, right, selectedId) {
   if (!left || !right || +left.overall === +right.overall) return null;
   const correctId = +left.overall > +right.overall ? +left.eaId : +right.eaId;
@@ -749,6 +758,7 @@ const api = {
   chooseRandomFiveComputer,
   ratingPairGapRange,
   generateRatingPair,
+  mysteryPlayersByRatingDifficulty,
   compareRatingPlayers,
   evaluateMysteryGuess,
   playerMatchesHexCriterion,

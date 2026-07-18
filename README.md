@@ -26,7 +26,9 @@ Kaynaklar: [EA Sports FC resmi ratings sayfası](https://careers.ea.com/games/ea
 
 ## Gizli Futbolcu
 
-Gizli Futbolcu modunda kullanıcı seçtiği lig havuzundan gelen bulanık portredeki oyuncuyu sekiz tahminde bulur. Her tahminden sonra ülke, takım ve mevki eşleşmeleri ile yaş/overall değerinin hedefe göre yukarı veya aşağı yönü gösterilir. Doğru tahminde ya da haklar bittiğinde gerçek fotoğraf ve oyuncu adı açıklanır. Ayarlarda aranabilir lig filtresi ve 1, 3 veya 5 futbolculuk oyun seçenekleri bulunur.
+Gizli Futbolcu modunda kullanıcı seçtiği lig havuzundan gelen bulanık portredeki oyuncuyu sekiz tahminde bulur. Her tahminden sonra ülke, takım ve mevki eşleşmeleri ile yaş/overall değerinin hedefe göre yukarı veya aşağı yönü gösterilir. Doğru tahminde ya da haklar bittiğinde gerçek fotoğraf ve oyuncu adı açıklanır. Ayarlarda aranabilir lig filtresi, zorluk ve 1, 3 veya 5 futbolculuk oyun seçenekleri bulunur.
+
+Zorluk, seçilen lig havuzunun kendi güncel FC 26 overall dağılımına göre hedef oyuncuyu belirler: kolay üst %30, normal orta %40, zor alt %30. Böylece küçük bir lig seçildiğinde de o ligin görece en yüksek, orta veya düşük reytingli futbolcuları kullanılır. Bu sınıflandırma yalnız gizli hedefi sınırlar; kullanıcı tahmin yaparken seçili liglerdeki bütün uygun futbolcuları arayabilir.
 
 ## Kariyer Peteği
 
