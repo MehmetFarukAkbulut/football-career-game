@@ -539,6 +539,30 @@ function chooseRandomFiveComputer({ pool, clubIds, difficulty = "normal", exclud
   return candidates[Math.floor(rng() * candidates.length)];
 }
 
+function ratingPairGapRange(difficulty = "normal") {
+  if (difficulty === "easy") return [5, Infinity];
+  if (difficulty === "hard") return [1, 2];
+  return [2, 5];
+}
+
+function generateRatingPair(players, difficulty = "normal", rng = Math.random) {
+  const valid = (players || []).filter((player) => Number.isFinite(+player.overall));
+  const [minimum, maximum] = ratingPairGapRange(difficulty);
+  for (let attempt = 0; attempt < 250; attempt++) {
+    const left = valid[Math.floor(rng() * valid.length)];
+    const candidates = valid.filter((right) => right.eaId !== left?.eaId && Math.abs(+right.overall - +left.overall) >= minimum && Math.abs(+right.overall - +left.overall) <= maximum);
+    const right = candidates[Math.floor(rng() * candidates.length)];
+    if (left && right) return rng() < .5 ? [left, right] : [right, left];
+  }
+  return null;
+}
+
+function compareRatingPlayers(left, right, selectedId) {
+  if (!left || !right || +left.overall === +right.overall) return null;
+  const correctId = +left.overall > +right.overall ? +left.eaId : +right.eaId;
+  return { correctId, isCorrect: +selectedId === correctId };
+}
+
 const api = {
   DIFFICULTIES,
   WINNING_LINES,
@@ -579,6 +603,9 @@ const api = {
   generateTwinOptions,
   chooseTwinComputerOption,
   chooseRandomFiveComputer,
+  ratingPairGapRange,
+  generateRatingPair,
+  compareRatingPlayers,
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;

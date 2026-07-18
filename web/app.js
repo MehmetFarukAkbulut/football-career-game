@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=17">',
+  '<link rel="stylesheet" href="web/grid.css?v=18">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -35,6 +35,7 @@ const norm = (s) =>
       .join("")
       .toUpperCase();
 let DATA,
+  FC26_DATA,
   clubs = [],
   players = [],
   clubMap,
@@ -46,6 +47,7 @@ let DATA,
   grid = {},
   twin = {},
   randomFive = {},
+  ratingGame = {},
   online = {},
   computerTimer;
 function toast(message) {
@@ -285,9 +287,56 @@ function organizeHomeMenu() {
   const root = $("#home .mode-grid");
   if (!root) return;
   const cards = new Map([...root.querySelectorAll("[data-view]")].map((card) => [card.dataset.view, card]));
-  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "compare", "catalog", "travelers"]
+  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "compare", "catalog", "travelers"]
     .forEach((view) => cards.get(view) && root.append(cards.get(view)));
 }
+
+function renderRatingRound() {
+  if (ratingGame.round >= ratingGame.total) {
+    $("#ratingRound").textContent = `Tur ${ratingGame.total}/${ratingGame.total}`;
+    $("#ratingChoices").innerHTML = `<div class="rating-finish"><span>🏆</span><h2>Oyun bitti</h2><p>${ratingGame.total} düelloda ${ratingGame.score} doğru seçim yaptın.</p><button class="cta" data-view="ratingSetup">Tekrar oyna</button></div>`;
+    $("#ratingMessage").textContent = "";
+    $("#ratingNext").hidden = true;
+    return;
+  }
+  const pair = IkiFormaCore.generateRatingPair(FC26_DATA.players, ratingGame.difficulty);
+  if (!pair) return toast("Bu zorlukta reyting çifti üretilemedi.");
+  ratingGame.pair = pair;
+  ratingGame.round++;
+  $("#ratingRound").textContent = `Tur ${ratingGame.round}/${ratingGame.total}`;
+  $("#ratingScore").textContent = `Skor ${ratingGame.score}`;
+  $("#ratingMessage").textContent = "Bir futbolcu seç.";
+  $("#ratingNext").hidden = true;
+  $("#ratingChoices").innerHTML = pair.map((player) => `<button class="rating-player" data-rating-player="${player.eaId}" aria-label="${esc(player.name)} futbolcusunu seç"><span class="rating-card-image">${player.cardUrl ? `<img src="${esc(player.cardUrl)}" alt="${esc(player.name)} FC 26 kartı">` : `<span class="avatar">${esc(initials(player.name))}</span>`}</span><strong>${esc(player.name)}</strong><span>${esc(player.team || "Kulüp bilgisi yok")}</span><small>${esc(player.nation)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small><b class="rating-value" hidden>${player.overall}</b></button>`).join("");
+  $$("[data-rating-player]").forEach((button) => button.onclick = () => answerRating(+button.dataset.ratingPlayer));
+}
+
+function answerRating(selectedId) {
+  if (ratingGame.answered) return;
+  const result = IkiFormaCore.compareRatingPlayers(...ratingGame.pair, selectedId);
+  if (!result) return;
+  ratingGame.answered = true;
+  ratingGame.score += result.isCorrect ? 1 : 0;
+  $$("[data-rating-player]").forEach((button) => {
+    button.disabled = true;
+    button.querySelector(".rating-value").hidden = false;
+    const id = +button.dataset.ratingPlayer;
+    if (id === result.correctId) button.classList.add("correct");
+    if (id === selectedId && !result.isCorrect) button.classList.add("wrong");
+  });
+  $("#ratingScore").textContent = `Skor ${ratingGame.score}`;
+  $("#ratingMessage").textContent = result.isCorrect ? "✓ Doğru seçim!" : "✕ Yanlış seçim. Yüksek reytingli futbolcu işaretlendi.";
+  $("#ratingNext").hidden = false;
+}
+
+function startRatingGame() {
+  ratingGame = { total: +$("#ratingRounds").value, difficulty: $("#ratingDifficulty").value, round: 0, score: 0, answered: false };
+  show("ratingGame");
+  renderRatingRound();
+}
+
+$("#startRatingGame").onclick = startRatingGame;
+$("#ratingNext").onclick = () => { ratingGame.answered = false; renderRatingRound(); };
 function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
   const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
   const pools = Object.fromEntries(levels.map((level) => [level, buildPairsForDifficulty(mode, level, selectedLeagues)]));
@@ -1745,9 +1794,16 @@ $("#startTwin").onclick = startTwinGame;
 $$('input[name="twinMode"]').forEach((radio) => radio.onchange = () => { const duo = $('input[name="twinMode"]:checked').value === "duo"; $("#twinDifficultyWrap").hidden = duo; $("#twinNameTwoWrap").hidden = !duo; });
 async function init() {
   try {
-    const response = await fetch("data/web-data.json");
-    if (!response.ok) throw new Error("Veri paketi bulunamadı");
-    DATA = await response.json();
+    const [response, ratingResponse] = await Promise.all([
+      fetch("data/web-data.json"),
+      fetch("data/fc26-ratings.json?v=fc26-update-2"),
+    ]);
+    if (!response.ok || !ratingResponse.ok)
+      throw new Error("Veri paketi bulunamadı");
+    [DATA, FC26_DATA] = await Promise.all([
+      response.json(),
+      ratingResponse.json(),
+    ]);
     clubs = DATA.clubs;
     players = DATA.players;
     clubMap = new Map(clubs.map((c) => [c.id, c]));

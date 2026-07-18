@@ -1,5 +1,17 @@
 # İki Forma
 
+## FC 26 Reyting Düellosu
+
+Ana menüdeki **FC 26 Reyting Düellosu**, iki oyuncudan overall değeri daha yüksek olanı seçtirir. Kolay, normal ve zor seviyeleri sırasıyla belirgin, dengeli ve yakın reyting farkları üretir. Oyuncuların ana ve alternatif mevkileri veri paketinde tutulur; bu alanlar ileride ülke bazlı ilk 11 kurma oyunlarında kullanılabilir.
+
+Veri çalışma anında internetten çağrılmaz. `data/fc26-ratings.json`, EA Sports FC 26 ratings verisinin update 2 sürümünden üretilmiş statik bir pakettir. Paket; EA oyuncu kimliği, ad, cinsiyet, overall, ana/alternatif mevkiler, ülke, kulüp, resmi EA oyuncu sayfası ve kart görseli bağlantısını içerir. Reytingleri yenilemek için:
+
+```powershell
+npm run ratings:fc26
+```
+
+Kaynaklar: [EA Sports FC resmi ratings sayfası](https://careers.ea.com/games/ea-sports-fc/ratings) ve bunun makinece okunabilir alanlarını sunan [EAFC API dokümantasyonu](https://api.msmc.cc/eafc/). Reytingler oyun güncellemeleriyle değişebildiği için paket sürümü ve üretim tarihi JSON metadata'sında saklanır.
+
 > Veri denetimi: `npm run data:audit` üretilmiş paketteki bütün oyuncuları Transfermarkt/player ID eşitliği, benzersiz kimlik, isim, milliyet kodu, doğum tarihi, fotoğraf URL'si, A takım kariyeri, kulüp referansları ve istatistik alanları açısından tarar. Rapor `data/player-data-audit.json` dosyasına yazılır. İsim benzerliğiyle kayıt birleştirilmez; kalıcı düzeltmeler generated JSON yerine override/export katmanına eklenir.
 
 Zor soru havuzu yetmezse normal, ardından kolay havuz tekrarsız biçimde kullanılır. Ülke × Kulüp çoktan seçmelide tüm seçenekler hedef vatandaşlıktandır. Izgara; Kulüp × Kulüp, Lig × Kulüp, Ülke × Kulüp ve Karışık kriterlerini serbest metin veya çoktan seçmeli destekler; lig kriterleri Premier League, LaLiga, Serie A, Bundesliga, Ligue 1 ve Süper Lig ile sınırlıdır.
