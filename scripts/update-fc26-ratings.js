@@ -22,6 +22,7 @@ async function main() {
         ? row["alternative positions"]
         : String(row["alternative positions"] || "").split(",").map((value) => value.trim()).filter(Boolean),
       nation: row.nation || "",
+      league: row.league || "",
       team: row.team || "",
       cardUrl: row.card || "",
       eaUrl: row.url || "",

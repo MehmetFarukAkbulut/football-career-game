@@ -49,7 +49,8 @@ let DATA,
   randomFive = {},
   ratingGame = {},
   online = {},
-  computerTimer;
+  computerTimer,
+  ratingTimer;
 function toast(message) {
   $("#toast").textContent = message;
   $("#toast").classList.add("show");
@@ -58,6 +59,7 @@ function toast(message) {
 let handlingPopState = false;
 function show(id, options = {}) {
   clearInterval(timer);
+  clearTimeout(ratingTimer);
   if (id !== "grid") clearTimeout(computerTimer);
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === id));
   scrollTo({
@@ -296,17 +298,18 @@ function renderRatingRound() {
     $("#ratingRound").textContent = `Tur ${ratingGame.total}/${ratingGame.total}`;
     $("#ratingChoices").innerHTML = `<div class="rating-finish"><span>🏆</span><h2>Oyun bitti</h2><p>${ratingGame.total} düelloda ${ratingGame.score} doğru seçim yaptın.</p><button class="cta" data-view="ratingSetup">Tekrar oyna</button></div>`;
     $("#ratingMessage").textContent = "";
-    $("#ratingNext").hidden = true;
     return;
   }
-  const pair = IkiFormaCore.generateRatingPair(FC26_DATA.players, ratingGame.difficulty);
-  if (!pair) return toast("Bu zorlukta reyting çifti üretilemedi.");
+  const pair = IkiFormaCore.generateRatingPair(ratingGame.pool, ratingGame.difficulty);
+  if (!pair) {
+    toast("Seçilen ligler ve zorluk için reyting çifti üretilemedi.");
+    return show("ratingSetup");
+  }
   ratingGame.pair = pair;
   ratingGame.round++;
   $("#ratingRound").textContent = `Tur ${ratingGame.round}/${ratingGame.total}`;
   $("#ratingScore").textContent = `Skor ${ratingGame.score}`;
   $("#ratingMessage").textContent = "Bir futbolcu seç.";
-  $("#ratingNext").hidden = true;
   $("#ratingChoices").innerHTML = pair.map((player) => `<button class="rating-player" data-rating-player="${player.eaId}" aria-label="${esc(player.name)} futbolcusunu seç"><span class="rating-card-image">${player.cardUrl ? `<img src="${esc(player.cardUrl)}" alt="${esc(player.name)} oyuncu fotoğrafı">` : `<span class="avatar">${esc(initials(player.name))}</span>`}</span><strong>${esc(player.name)}</strong><span>${esc(player.team || "Kulüp bilgisi yok")}</span><small>${esc(player.nation)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small><b class="rating-value" hidden>${player.overall}</b></button>`).join("");
   $$("[data-rating-player]").forEach((button) => button.onclick = () => answerRating(+button.dataset.ratingPlayer));
 }
@@ -326,17 +329,30 @@ function answerRating(selectedId) {
   });
   $("#ratingScore").textContent = `Skor ${ratingGame.score}`;
   $("#ratingMessage").textContent = result.isCorrect ? "✓ Doğru seçim!" : "✕ Yanlış seçim. Yüksek reytingli futbolcu işaretlendi.";
-  $("#ratingNext").hidden = false;
+  ratingTimer = setTimeout(() => {
+    ratingGame.answered = false;
+    renderRatingRound();
+  }, 1800);
 }
 
 function startRatingGame() {
-  ratingGame = { total: +$("#ratingRounds").value, difficulty: $("#ratingDifficulty").value, round: 0, score: 0, answered: false };
+  const selectedLeagues = new Set([...$$("#ratingLeagueOptions input:checked")].map((input) => input.value));
+  const pool = FC26_DATA.players.filter((player) => !selectedLeagues.size || selectedLeagues.has(player.league));
+  ratingGame = { total: +$("#ratingRounds").value, difficulty: $("#ratingDifficulty").value, round: 0, score: 0, answered: false, pool };
   show("ratingGame");
   renderRatingRound();
 }
 
 $("#startRatingGame").onclick = startRatingGame;
-$("#ratingNext").onclick = () => { ratingGame.answered = false; renderRatingRound(); };
+
+function setupRatingLeagueSelector() {
+  const root = $("#ratingLeagueOptions"), leagues = [...new Set(FC26_DATA.players.map((player) => player.league).filter(Boolean))].sort((a, b) => a.localeCompare(b, "tr"));
+  root.insertAdjacentHTML("beforeend", `<div class="league-tools"><input type="search" placeholder="Lig ara…" aria-label="FC 26 ligi ara"><button type="button" class="secondary" data-rating-leagues="all">Tümünü seç</button><button type="button" class="secondary" data-rating-leagues="clear">Temizle</button></div><div class="league-list">${leagues.map((league) => `<label data-search="${esc(norm(league))}"><input type="checkbox" value="${esc(league)}"><span><b>${esc(league)}</b><small>${FC26_DATA.players.filter((player) => player.league === league).length.toLocaleString("tr-TR")} futbolcu</small></span></label>`).join("")}</div>`);
+  const search = root.querySelector('input[type="search"]'), checks = () => [...root.querySelectorAll('.league-list input')];
+  search.oninput = () => root.querySelectorAll('.league-list label').forEach((label) => { label.hidden = !label.dataset.search.includes(norm(search.value)); });
+  root.querySelector('[data-rating-leagues="all"]').onclick = () => checks().filter((input) => !input.closest("label").hidden).forEach((input) => { input.checked = true; });
+  root.querySelector('[data-rating-leagues="clear"]').onclick = () => checks().forEach((input) => { input.checked = false; });
+}
 function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
   const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
   const pools = Object.fromEntries(levels.map((level) => [level, buildPairsForDifficulty(mode, level, selectedLeagues)]));
@@ -1804,6 +1820,7 @@ async function init() {
       response.json(),
       ratingResponse.json(),
     ]);
+    setupRatingLeagueSelector();
     clubs = DATA.clubs;
     players = DATA.players;
     clubMap = new Map(clubs.map((c) => [c.id, c]));

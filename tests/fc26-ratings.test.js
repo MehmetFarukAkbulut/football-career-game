@@ -9,9 +9,18 @@ test("FC 26 paketi güncel update 2 oyuncularını ve mevkileri içerir", () => 
   assert.equal(data.version, "fc26-update-2");
   assert.ok(data.players.length >= 17000);
   assert.equal(new Set(data.players.map((player) => player.eaId)).size, data.players.length);
-  assert.ok(data.players.every((player) => player.name && player.position && Number.isInteger(player.overall)));
+  assert.ok(data.players.every((player) => player.name && player.position && player.league && Number.isInteger(player.overall)));
   assert.ok(data.players.every((player) => Array.isArray(player.alternativePositions)));
   assert.equal(data.players.filter((player) => player.cardUrl).length, data.players.length);
+});
+
+test("reyting oyunu lig filtresi kullanır ve cevaptan sonra otomatik ilerler", async () => {
+  const source = await require("node:fs/promises").readFile(require("node:path").join(__dirname, "..", "web", "app.js"), "utf8");
+  const html = await require("node:fs/promises").readFile(require("node:path").join(__dirname, "..", "index.html"), "utf8");
+  assert.match(html, /id="ratingLeagueOptions"/);
+  assert.doesNotMatch(html, /id="ratingNext"/);
+  assert.match(source, /selectedLeagues\.has\(player\.league\)/);
+  assert.match(source, /ratingTimer = setTimeout\([\s\S]*renderRatingRound\(\);[\s\S]*1800\)/);
 });
 
 test("reyting cevabını açan kart alanı yerine kırpılmış portre gösterilir", async () => {
