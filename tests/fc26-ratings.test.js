@@ -74,13 +74,28 @@ test("Gizli Futbolcu ipuçları eşitlik ve hedef yönünü doğru hesaplar", ()
   assert.equal(core.evaluateMysteryGuess(target, { ...target }).correct, true);
 });
 
+test("Gizli Futbolcu zorluğu oyuncuları overall katmanlarına ayırır", () => {
+  const players = Array.from({ length: 10 }, (_, index) => ({ eaId: index + 1, overall: 90 - index }));
+  const easy = core.mysteryPlayersByRatingDifficulty(players, "easy");
+  const normal = core.mysteryPlayersByRatingDifficulty(players, "normal");
+  const hard = core.mysteryPlayersByRatingDifficulty(players, "hard");
+  assert.deepEqual(easy.map((player) => player.overall), [90, 89, 88]);
+  assert.deepEqual(normal.map((player) => player.overall), [87, 86, 85, 84]);
+  assert.deepEqual(hard.map((player) => player.overall), [83, 82, 81]);
+  assert.ok(Math.min(...easy.map((player) => player.overall)) > Math.max(...normal.map((player) => player.overall)));
+  assert.ok(Math.min(...normal.map((player) => player.overall)) > Math.max(...hard.map((player) => player.overall)));
+});
+
 test("Gizli Futbolcu sekiz tahmin ve lig filtresiyle ana menüde bulunur", async () => {
   const fs = require("node:fs/promises"), path = require("node:path");
   const html = await fs.readFile(path.join(__dirname, "..", "index.html"), "utf8");
   const source = await fs.readFile(path.join(__dirname, "..", "web", "app.js"), "utf8");
   assert.match(html, /id="mysteryAttempts"[\s\S]*selected>8</);
   assert.match(html, /id="mysteryLeagueOptions"/);
+  assert.match(html, /id="mysteryDifficulty"/);
   assert.match(source, /selectedLeagues\.has\(player\.league\)/);
+  assert.match(source, /mysteryPlayersByRatingDifficulty\(pool, difficulty\)/);
+  assert.match(source, /mysteryGame\.targetPool/);
   assert.match(source, /priority = \["Premier League", "LALIGA EA SPORTS", "Serie A Enilive", "Ligue 1 McDonald's", "Bundesliga", "Trendyol Süper Lig"\]/);
   assert.match(source, /class="flag" src=/);
   assert.match(source, /Lig veya ülke ara/);

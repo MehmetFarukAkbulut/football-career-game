@@ -402,7 +402,7 @@ function nextMysteryPlayer() {
     $("#mysteryNext").hidden = true;
     return;
   }
-  const available = mysteryGame.pool.filter((player) => !mysteryGame.used.has(player.eaId));
+  const available = mysteryGame.targetPool.filter((player) => !mysteryGame.used.has(player.eaId));
   if (!available.length) return toast("Seçilen liglerde yeni futbolcu kalmadı.");
   mysteryGame.target = available[Math.floor(Math.random() * available.length)];
   mysteryGame.used.add(mysteryGame.target.eaId);
@@ -452,8 +452,12 @@ function submitMysteryGuess(player) {
 function startMysteryGame() {
   const selectedLeagues = new Set([...$$("#mysteryLeagueOptions input:checked")].map((input) => input.value));
   const pool = FC26_DATA.players.filter((player) => player.photoUrl && player.age && (!selectedLeagues.size || selectedLeagues.has(player.league)));
-  if (pool.length < +$("#mysteryRounds").value) return toast("Seçilen liglerde yeterli futbolcu bulunamadı.");
-  mysteryGame = { pool, rounds: +$("#mysteryRounds").value, attempts: +$("#mysteryAttempts").value, round: 0, score: 0, used: new Set(), guesses: [] };
+  const rounds = +$("#mysteryRounds").value;
+  const difficulty = $("#mysteryDifficulty").value;
+  const targetPool = IkiFormaCore.mysteryPlayersByRatingDifficulty(pool, difficulty);
+  if (targetPool.length < rounds) return toast("Seçilen liglerde bu zorluk seviyesi için yeterli futbolcu bulunamadı.");
+  mysteryGame = { pool, targetPool, difficulty, rounds, attempts: +$("#mysteryAttempts").value, round: 0, score: 0, used: new Set(), guesses: [] };
+  $("#mysteryDifficultyLabel").textContent = difficulty === "easy" ? "Kolay · yüksek reyting" : difficulty === "hard" ? "Zor · düşük reyting" : "Normal · orta reyting";
   show("mysteryGame");
   nextMysteryPlayer();
 }
