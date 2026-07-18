@@ -95,3 +95,11 @@ test("online özel oyunlar her maçta önceki paketten farklı sorular üretir",
   assert.match(source, /function randomFiveSetKey/);
   assert.match(source, /signature\(board\) === signature\(previous\.grid\)/);
 });
+
+test("Rastgele Beşler online set sayısı oda ayarındaki tur değerini korur", () => {
+  assert.doesNotMatch(source, /settings\.rounds = 5/);
+  assert.match(source, /length: settings\.rounds/);
+  assert.match(source, /buildFreshRandomFiveSets\(allowedClubs, pool, used, settings\.rounds\)/);
+  assert.match(source, /randomFive\.round < randomFive\.sets\.length/);
+  assert.match(source, /finished: randomFive\.round >= randomFive\.sets\.length/);
+});
