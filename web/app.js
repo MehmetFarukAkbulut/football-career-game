@@ -1235,11 +1235,19 @@ function openGridEntry(i) {
   $("#gridEntry").hidden = false;
   renderGrid();
   if (grid.answerMethod === "multiple") {
-    grid.question = IkiFormaCore.generateCriteriaMultipleChoiceQuestion({ first: r, second: c, indexes, difficulty: grid.difficulty });
+    const questionKey = `${i}:${grid.currentTurn}:${grid.history.length}`;
+    grid.choiceQuestions ||= {};
+    grid.question = grid.choiceQuestions[questionKey] || IkiFormaCore.generateCriteriaMultipleChoiceQuestion({ first: r, second: c, indexes, difficulty: grid.difficulty, rng: seededGridQuestionRng(`${grid.questionSeed || 0}:${questionKey}`) });
     if (!grid.question) { $("#gridEntry").hidden = true; return toast("Bu hücre için dört geçerli seçenek üretilemedi."); }
+    grid.choiceQuestions[questionKey] = grid.question;
     const hasCountryCriterion = r.type === "country" || c.type === "country";
     renderPlayerChoices($("#gridChoices"), grid.question.optionPlayerIds.map((id) => indexes.playerById.get(id)), submitGridPlayer, { showBirthYear: hasCountryCriterion });
   } else $("#gridInput").focus();
+}
+function seededGridQuestionRng(seedText) {
+  let state = 2166136261;
+  for (const character of seedText) { state ^= character.charCodeAt(0); state = Math.imul(state, 16777619); }
+  return () => { state += 0x6d2b79f5; let value = state; value = Math.imul(value ^ value >>> 15, value | 1); value ^= value + Math.imul(value ^ value >>> 7, value | 61); return ((value ^ value >>> 14) >>> 0) / 4294967296; };
 }
 async function submitGridPlayer(player) {
   if (!player || grid.selectedCell == null) return;

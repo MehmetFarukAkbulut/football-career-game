@@ -350,6 +350,8 @@ function createGridState({
     selectedCell: null,
     usedPlayerIds: [],
     attempts: {},
+    choiceQuestions: {},
+    questionSeed: Math.floor(Math.random() * 0x100000000),
     history: [],
     status: "playing",
     thinking: false,
