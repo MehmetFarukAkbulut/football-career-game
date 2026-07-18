@@ -50,9 +50,11 @@ let DATA,
   ratingGame = {},
   mysteryGame = {},
   hexGame = {},
+  trumpsGame = {},
   online = {},
   computerTimer,
-  ratingTimer;
+  ratingTimer,
+  trumpsTimer;
 function toast(message) {
   $("#toast").textContent = message;
   $("#toast").classList.add("show");
@@ -62,6 +64,7 @@ let handlingPopState = false;
 function show(id, options = {}) {
   clearInterval(timer);
   clearTimeout(ratingTimer);
+  clearTimeout(trumpsTimer);
   if (id !== "grid") clearTimeout(computerTimer);
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === id));
   scrollTo({
@@ -303,7 +306,7 @@ function organizeHomeMenu() {
   const root = $("#home .mode-grid");
   if (!root) return;
   const cards = new Map([...root.querySelectorAll("[data-view]")].map((card) => [card.dataset.view, card]));
-  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "mysterySetup", "hexSetup", "compare", "catalog", "travelers"]
+  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "mysterySetup", "hexSetup", "trumpsSetup", "compare", "catalog", "travelers"]
     .forEach((view) => cards.get(view) && root.append(cards.get(view)));
 }
 
@@ -555,6 +558,71 @@ $("#hexInput").oninput = (event) => {
   $$("[data-hex-player]").forEach((button) => button.onclick = () => submitHexPlayer(indexes.playerById.get(+button.dataset.hexPlayer)));
 };
 $("#hexInput").onkeydown = (event) => { if (event.key === "Enter") { const player = hexGame.pool.find((item) => norm(item.name) === norm(event.target.value)); if (player) submitHexPlayer(player); } };
+
+function trumpClub(player) {
+  const currentCareer = (player.careers || []).find((career) => !career.endDate) || (player.careers || [])[0];
+  return clubMap.get(+currentCareer?.clubId) || clubMap.get(+(player.clubIds || [])[0]);
+}
+
+function renderTrumpCard(player, hidden = false, revealed = false) {
+  if (hidden && !revealed) return `<div class="trump-mystery"><span>?</span><b>Sıradaki futbolcu</b><small>Bir metrik seçtiğinde açılır</small></div>`;
+  const club = trumpClub(player);
+  return `<div class="trump-player">${person(player)}<div><small>${esc(player.nationality || "")}</small><h2>${esc(player.name)}</h2><span>${esc(club?.name || "Kulüp bilgisi yok")}</span></div>${club ? logo(club) : ""}</div><div class="trump-metrics">${IkiFormaCore.TRUMP_METRICS.map((metric) => `<button type="button" data-trump-metric="${metric.key}" ${revealed ? "disabled" : ""}><strong>${IkiFormaCore.trumpMetricValue(player, metric.key).toLocaleString("tr-TR")}</strong><span>${metric.label}</span></button>`).join("")}</div>`;
+}
+
+function renderTrumpsRound() {
+  const current = trumpsGame.pack[trumpsGame.index], next = trumpsGame.pack[trumpsGame.index + 1];
+  $("#trumpsCurrent").innerHTML = renderTrumpCard(current);
+  $("#trumpsNext").innerHTML = renderTrumpCard(next, true);
+  $("#trumpsNext").classList.add("hidden-card");
+  $("#trumpsProgress").textContent = `Kart ${trumpsGame.index + 1}/${trumpsGame.pack.length}`;
+  $("#trumpsCards").textContent = `${trumpsGame.pack.length - trumpsGame.index - 1} gizli kart`;
+  $("#trumpsMessage").textContent = "Açık karttan güçlü olduğunu düşündüğün metriği seç.";
+  $("#trumpsYellow").textContent = `🟨 ${Math.min(trumpsGame.errors, 1)}`;
+  $("#trumpsRed").textContent = `🟥 ${trumpsGame.errors >= 2 ? 1 : 0}`;
+  $$("[data-trump-metric]").forEach((button) => button.onclick = () => playTrumpMetric(button.dataset.trumpMetric));
+}
+
+function finishTrumps(won) {
+  $("#trumpsMessage").textContent = won ? `🏆 Paketin tamamını açtın! ${trumpsGame.pack.length} karta ulaştın.` : `🟥 İkinci hata: oyun bitti. ${trumpsGame.index + 1} kart ilerledin.`;
+  $("#restartTrumps").hidden = false;
+  $$("[data-trump-metric]").forEach((button) => { button.disabled = true; });
+}
+
+function playTrumpMetric(key) {
+  if (trumpsGame.resolving) return;
+  trumpsGame.resolving = true;
+  const current = trumpsGame.pack[trumpsGame.index], next = trumpsGame.pack[trumpsGame.index + 1], comparison = IkiFormaCore.compareTrumpStat(current, next, key), metric = IkiFormaCore.TRUMP_METRICS.find((item) => item.key === key);
+  $("#trumpsNext").innerHTML = renderTrumpCard(next, false, true);
+  $("#trumpsNext").classList.remove("hidden-card");
+  $$("[data-trump-metric]").forEach((button) => { button.disabled = true; if (button.dataset.trumpMetric === key) button.classList.add(comparison.correct ? "winner" : "loser"); });
+  if (!comparison.correct) trumpsGame.errors++;
+  $("#trumpsYellow").textContent = `🟨 ${Math.min(trumpsGame.errors, 1)}`;
+  $("#trumpsRed").textContent = `🟥 ${trumpsGame.errors >= 2 ? 1 : 0}`;
+  $("#trumpsMessage").textContent = comparison.correct ? `✓ ${metric.label}: ${comparison.currentValue.toLocaleString("tr-TR")} ≥ ${comparison.nextValue.toLocaleString("tr-TR")}` : `✕ ${metric.label}: ${comparison.currentValue.toLocaleString("tr-TR")} < ${comparison.nextValue.toLocaleString("tr-TR")}`;
+  trumpsTimer = setTimeout(() => {
+    if (trumpsGame.errors >= 2) return finishTrumps(false);
+    trumpsGame.index++;
+    if (trumpsGame.index >= trumpsGame.pack.length - 1) return finishTrumps(true);
+    trumpsGame.resolving = false;
+    renderTrumpsRound();
+  }, 1900);
+}
+
+function startTrumpsGame() {
+  const selectedLeagues = new Set([...$$("#trumpsLeagueOptions input:checked")].map((input) => input.value));
+  const allowedClubIds = new Set(clubs.filter((club) => !selectedLeagues.size || selectedLeagues.has(club.leagueId || `${club.country}:${club.league}`)).map((club) => club.id));
+  const pool = players.filter((player) => player.statisticsComplete && [player.appearances, player.goals, player.assists, player.nationalCaps].every((value) => value !== null && value !== undefined && Number.isFinite(Number(value))) && player.clubIds.some((id) => allowedClubIds.has(id)));
+  const size = +$("#trumpsPackSize").value;
+  if (pool.length < size) return toast("Seçilen liglerde paket için yeterli doğrulanmış futbolcu yok.");
+  trumpsGame = { pack: [...pool].sort(() => Math.random() - .5).slice(0, size), index: 0, errors: 0, resolving: false };
+  show("trumpsGame");
+  $("#restartTrumps").hidden = true;
+  renderTrumpsRound();
+}
+
+$("#startTrumpsGame").onclick = startTrumpsGame;
+$("#restartTrumps").onclick = startTrumpsGame;
 function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
   const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
   const pools = Object.fromEntries(levels.map((level) => [level, buildPairsForDifficulty(mode, level, selectedLeagues)]));
@@ -2081,6 +2149,7 @@ async function init() {
     enhanceLeagueSelector($("#twinSetup"));
     enhanceLeagueSelector($("#randomFiveSetup"));
     enhanceLeagueSelector($("#hexSetup"));
+    enhanceLeagueSelector($("#trumpsSetup"));
     enhanceLeagueSelector($("#onlineHostSettings"));
     $("#onlineHostSettings .league-options").addEventListener("change", () => { online.leagueSelectionDirty = true; });
     organizeHomeMenu();
