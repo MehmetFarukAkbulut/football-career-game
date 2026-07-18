@@ -125,6 +125,13 @@ test("ülke kriterli ızgara seçenekleri doğum yılını gösterir", () => {
   assert.match(source, /Doğum yılı bilinmiyor/);
 });
 
+test("ızgara çoktan seçmeli seçenekleri aynı sıra ve hücrede sabit kalır", () => {
+  assert.match(source, /const questionKey = `\$\{i\}:\$\{grid\.currentTurn\}:\$\{grid\.history\.length\}`/);
+  assert.match(source, /grid\.choiceQuestions\[questionKey\] \|\|/);
+  assert.match(source, /seededGridQuestionRng\(`\$\{grid\.questionSeed \|\| 0\}:\$\{questionKey\}`\)/);
+  assert.match(source, /grid\.choiceQuestions\[questionKey\] = grid\.question/);
+});
+
 test("online oda masaüstünde dar setup sütununa sıkışmadan tam genişliği kullanır", () => {
   assert.match(styles, /\.setup \.surface\.online-lobby/);
   assert.match(styles, /grid-template-columns:minmax\(300px,.8fr\) minmax\(0,1.2fr\)/);
