@@ -75,3 +75,9 @@ test("online maç yalnız hazır oyuncuları kullanır ve lobi eylemleri görün
   assert.match(source, /readyCount < 2 \|\| !me\?\.ready/);
   assert.match(choiceStyles, /\.online-actions\{position:sticky/);
 });
+
+test("online oyuncu maçı bırakıp puanlarıyla odaya dönebilir", () => {
+  assert.match(source, /type: "leave_match"/);
+  assert.match(source, /online-room-return/);
+  assert.match(source, /online\.specialAdvanceKey = null/);
+});
