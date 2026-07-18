@@ -878,6 +878,66 @@
 @media (min-width: 1100px) {
   #home .mode-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* The landing page now contains many real game modes. Give every card a
+   predictable row instead of squeezing implicit rows into the old 2-row grid. */
+@media (min-width: 901px) {
+  #home.active {
+    grid-template-rows: minmax(150px, 0.42fr) minmax(390px, 1fr);
+    gap: 12px;
+  }
+  #home .hero {
+    grid-template-columns: minmax(0, 1.35fr) minmax(210px, 0.65fr);
+  }
+  #home .hero h1 {
+    margin: 5px 0;
+    font-size: clamp(36px, 4.1vw, 54px);
+    line-height: .96;
+  }
+  #home .hero .kicker { font-size: 10px; }
+  #home .hero p { margin: 5px 0; font-size: 14px; }
+  #home .hero .cta { margin-top: 5px; padding: 9px 15px; }
+  #home .orbit { width: 150px; height: 150px; }
+  #home .orbit > span { font-size: 55px; }
+  #home .orbit i:nth-child(2) { transform: translate(74px); }
+  #home .orbit i:nth-child(3) { transform: rotate(120deg) translate(74px); }
+  #home .orbit i:nth-child(4) { transform: rotate(240deg) translate(74px); }
+  #home .stat { right: 8%; padding: 8px 13px; }
+  #home .stat b { font-size: 19px; }
+  #home .mode-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(82px, 1fr));
+    grid-auto-rows: minmax(82px, 1fr);
+    align-content: stretch;
+    gap: 9px;
+  }
+  #home .mode-card {
+    grid-template-columns: 36px minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    align-items: center;
+    align-content: stretch;
+    padding: 10px 13px;
+    gap: 10px;
+    border-radius: 14px;
+  }
+  #home .mode-card .icon { font-size: 23px; text-align: center; }
+  #home .mode-card > span:nth-child(2) { min-width: 0; align-self: center; }
+  #home .mode-card b { font-size: 15px; line-height: 1.2; }
+  #home .mode-card small {
+    font-size: 11px;
+    line-height: 1.25;
+    -webkit-line-clamp: 2;
+  }
+  #home .mode-card i { display: none; }
+}
+
+@media (min-width: 1500px) and (min-height: 800px) {
+  #home.active { grid-template-rows: minmax(190px, .48fr) minmax(430px, 1fr); }
+  #home .mode-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(110px, 1fr)); }
+  #home .mode-card { padding: 14px 16px; }
+  #home .mode-card b { font-size: 16px; }
+  #home .mode-card small { font-size: 12px; }
+}
 @media (max-width: 700px) {
   .twin-settings, .twin-reveal { grid-template-columns: 1fr; }
   .twin-target { grid-template-columns: auto 1fr; padding: 14px; gap: 12px; }

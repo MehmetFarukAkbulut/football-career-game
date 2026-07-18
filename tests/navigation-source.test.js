@@ -138,3 +138,10 @@ test("online oda masaüstünde dar setup sütununa sıkışmadan tam genişliği
   assert.match(styles, /\.online-host-settings \.online-league-options \{ grid-column:2/);
   assert.match(styles, /max-height:none/);
 });
+
+test("ana menüde tüm oyun kartları taşmadan gerçek satırlara dağıtılır", () => {
+  assert.match(styles, /grid-template-rows: repeat\(4, minmax\(82px, 1fr\)\)/);
+  assert.match(styles, /grid-auto-rows: minmax\(82px, 1fr\)/);
+  assert.match(styles, /#home \.mode-card i \{ display: none; \}/);
+  assert.match(styles, /#home \.mode-card > span:nth-child\(2\) \{ min-width: 0/);
+});
