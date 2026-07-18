@@ -528,8 +528,8 @@ $("#onlineApplySettings").onclick = async () => {
     if (!board) return toast("Bu ayarlarla geçerli ızgara üretilemedi."); initialState.grid = board; initialState.answerMethod = settings.answerMethod; settings.initialState = initialState;
   }
   if (settings.gameType === "randomFive") {
-    const pool = players, allowedClubs = clubs.filter((club) => club.active !== false), sets = Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool));
-    settings.rounds = 5; settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds: sets.map((set) => set.map((club) => club.id)), choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
+    const pool = players, allowedClubs = clubs.filter((club) => club.active !== false), sets = Array.from({ length: settings.rounds }, () => buildRandomFiveSet(allowedClubs, pool));
+    settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds: sets.map((set) => set.map((club) => club.id)), choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
   }
   if (settings.gameType === "twin") {
     const pool = twinPool(), targets = pool.filter((player) => player.appearances >= 200 && player.goals >= 15).sort(() => Math.random() - .5).slice(0, settings.rounds);
@@ -572,7 +572,7 @@ function buildFreshOnlineSpecialState(settings, active) {
     if (settings.gameType === "randomFive") {
       const pool = players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), used = new Set((settings.randomFiveHistory || []).map((set) => randomFiveSetKey(set)));
       for (const set of previous.setIds || []) used.add(randomFiveSetKey(set));
-      const sets = buildFreshRandomFiveSets(allowedClubs, pool, used);
+      const sets = buildFreshRandomFiveSets(allowedClubs, pool, used, settings.rounds);
       if (!sets) continue;
       const setIds = sets.map((set) => set.map((club) => club.id));
       return { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: active.map(() => 0), round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds, choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
@@ -595,9 +595,9 @@ function buildFreshOnlineSpecialState(settings, active) {
   return null;
 }
 function randomFiveSetKey(set) { return [...set].map(Number).sort((a, b) => a - b).join("-"); }
-function buildFreshRandomFiveSets(allowedClubs, pool, used) {
+function buildFreshRandomFiveSets(allowedClubs, pool, used, roundCount = 5) {
   const sets = [];
-  for (let round = 0; round < 5; round++) {
+  for (let round = 0; round < roundCount; round++) {
     let accepted = null;
     for (let attempt = 0; attempt < 80; attempt++) {
       const candidate = buildRandomFiveSet(allowedClubs, pool), key = randomFiveSetKey(candidate.map((club) => club.id));
@@ -1451,7 +1451,7 @@ function renderRandomFiveRound() {
   clearTimeout(randomFive.nextTimer);
   const set = randomFive.sets[randomFive.round];
   if (!randomFive.online) randomFive.guesses = [];
-  $("#randomFiveRound").textContent = `Set ${randomFive.round + 1}/5`;
+  $("#randomFiveRound").textContent = `Set ${randomFive.round + 1}/${randomFive.sets.length}`;
   $("#randomFiveScore").innerHTML = randomFive.names.map((name, index) => `<b>${esc(name)} ${randomFive.scores[index] || 0}</b>`).join("<span>·</span>");
   $("#randomFiveClubs").innerHTML = set.map((club) => `<article>${logo(club)}<b>${esc(club.name)}</b><small>${esc(club.league || "")}</small></article>`).join("");
   $("#randomFivePrompt").textContent = "Bu beşlinin kaçında oynayan bir futbolcu bulabilirsin?";
@@ -1524,7 +1524,7 @@ function revealRandomFiveRound() {
   $("#randomFiveTurn").textContent = points[0] === points[1] ? `Bu set ${points[0]}-${points[1]} berabere.` : `${randomFive.names[points[0] > points[1] ? 0 : 1]} sette daha çok kulüp buldu.`;
   $("#randomFiveReveal").innerHTML = randomFive.guesses.map((player, index) => `<article class="${points[index] === Math.max(...points) ? "winner" : ""}">${person(player)}<div><small>${esc(randomFive.names[index])}</small><b>${esc(player.name)}</b><span>${points[index]} kulüp · +${points[index]} puan</span></div></article>`).join("");
   $("#randomFiveReveal").hidden = false;
-  $("#randomFiveNext").textContent = randomFive.round === 4 ? "Sonucu gör →" : "Sonraki set →";
+  $("#randomFiveNext").textContent = randomFive.round === randomFive.sets.length - 1 ? "Sonucu gör →" : "Sonraki set →";
   $("#randomFiveNext").hidden = randomFive.online;
   $("#randomFiveScore").innerHTML = randomFive.names.map((name, index) => `<b>${esc(name)} ${randomFive.scores[index] || 0}</b>`).join("<span>·</span>");
 }
@@ -1541,7 +1541,7 @@ async function nextRandomFiveRound() {
     randomFive.guessIds = {}; randomFive.revealUntil = null; randomFive.guesses = [];
   }
   randomFive.round++;
-  if (randomFive.round < 5) { randomFive.guesses = []; if (randomFive.online) { const synced = await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores); online.specialAdvancing = false; if (!synced || online.state.modeState?.value?.round !== previousRound + 1) { online.specialAdvanceKey = null; setTimeout(handleOnlineSpecialState, 500); return; } } return renderRandomFiveRound(); }
+  if (randomFive.round < randomFive.sets.length) { randomFive.guesses = []; if (randomFive.online) { const synced = await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores); online.specialAdvancing = false; if (!synced || online.state.modeState?.value?.round !== previousRound + 1) { online.specialAdvanceKey = null; setTimeout(handleOnlineSpecialState, 500); return; } } return renderRandomFiveRound(); }
   const best = Math.max(...randomFive.scores), leaders = randomFive.names.filter((_, index) => randomFive.scores[index] === best), winner = leaders.length > 1 ? "Berabere!" : `${leaders[0]} kazandı!`;
   $("#randomFiveClubs").innerHTML = "";
   $("#randomFivePrompt").textContent = `🏆 ${winner}`;
@@ -1562,7 +1562,7 @@ function renderRandomFiveSnapshotReveal() {
   $("#randomFiveReveal").hidden = false; $("#randomFiveNext").hidden = true; $("#randomFiveInput").disabled = true;
   const key = `random-${randomFive.round}`; if (online.playerIndex === 0 && online.specialAdvanceKey !== key) { online.specialAdvanceKey = key; setTimeout(nextRandomFiveRound, 2000); }
 }
-function serializeOnlineRandomFive() { return { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: randomFive.scores, round: randomFive.round, guesses: randomFive.guesses.map((player) => player.id), guessIds: randomFive.guessIds || {}, revealUntil: randomFive.revealUntil || null, setIds: randomFive.sets.map((set) => set.map((club) => club.id)), choiceIds: randomFive.choiceIds, finished: randomFive.round >= 5 }; }
+function serializeOnlineRandomFive() { return { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: randomFive.scores, round: randomFive.round, guesses: randomFive.guesses.map((player) => player.id), guessIds: randomFive.guessIds || {}, revealUntil: randomFive.revealUntil || null, setIds: randomFive.sets.map((set) => set.map((club) => club.id)), choiceIds: randomFive.choiceIds, finished: randomFive.round >= randomFive.sets.length }; }
 function hydrateOnlineRandomFive(value) {
   const selected = new Set(online.state.settings.leagueIds || []), clubIds = new Set(clubs.filter((club) => !selected.size || selected.has(club.leagueId)).map((club) => club.id));
   const active = onlineGamePlayers(), guessIds = value.guessIds || {}, orderedGuesses = active.map((_, index) => indexes.playerById.get(+guessIds[index])).filter(Boolean);
