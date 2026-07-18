@@ -48,6 +48,7 @@ let DATA,
   twin = {},
   randomFive = {},
   ratingGame = {},
+  mysteryGame = {},
   online = {},
   computerTimer,
   ratingTimer;
@@ -88,6 +89,12 @@ document.addEventListener(
       const fallback = document.createElement("span");
       fallback.className = "avatar";
       fallback.textContent = event.target.parentElement.dataset.initials || "?";
+      event.target.replaceWith(fallback);
+    }
+    if (event.target.matches?.(".mystery-photo img")) {
+      const fallback = document.createElement("span");
+      fallback.className = "mystery-silhouette";
+      fallback.textContent = "?";
       event.target.replaceWith(fallback);
     }
   },
@@ -295,7 +302,7 @@ function organizeHomeMenu() {
   const root = $("#home .mode-grid");
   if (!root) return;
   const cards = new Map([...root.querySelectorAll("[data-view]")].map((card) => [card.dataset.view, card]));
-  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "compare", "catalog", "travelers"]
+  ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup", "ratingSetup", "mysterySetup", "compare", "catalog", "travelers"]
     .forEach((view) => cards.get(view) && root.append(cards.get(view)));
 }
 
@@ -351,14 +358,99 @@ function startRatingGame() {
 
 $("#startRatingGame").onclick = startRatingGame;
 
-function setupRatingLeagueSelector() {
-  const root = $("#ratingLeagueOptions"), leagues = [...new Set(FC26_DATA.players.map((player) => player.league).filter(Boolean))].sort((a, b) => a.localeCompare(b, "tr"));
-  root.insertAdjacentHTML("beforeend", `<div class="league-tools"><input type="search" placeholder="Lig ara…" aria-label="FC 26 ligi ara"><button type="button" class="secondary" data-rating-leagues="all">Tümünü seç</button><button type="button" class="secondary" data-rating-leagues="clear">Temizle</button></div><div class="league-list">${leagues.map((league) => `<label data-search="${esc(norm(league))}"><input type="checkbox" value="${esc(league)}"><span><b>${esc(league)}</b><small>${FC26_DATA.players.filter((player) => player.league === league).length.toLocaleString("tr-TR")} futbolcu</small></span></label>`).join("")}</div>`);
+function setupFcLeagueSelector(selector) {
+  const root = $(selector), leagues = [...new Set(FC26_DATA.players.map((player) => player.league).filter(Boolean))].sort((a, b) => a.localeCompare(b, "tr"));
+  root.insertAdjacentHTML("beforeend", `<div class="league-tools"><input type="search" placeholder="Lig ara…" aria-label="FC 26 ligi ara"><button type="button" class="secondary" data-fc-leagues="all">Tümünü seç</button><button type="button" class="secondary" data-fc-leagues="clear">Temizle</button></div><div class="league-list">${leagues.map((league) => `<label data-search="${esc(norm(league))}"><input type="checkbox" value="${esc(league)}"><span><b>${esc(league)}</b><small>${FC26_DATA.players.filter((player) => player.league === league).length.toLocaleString("tr-TR")} futbolcu</small></span></label>`).join("")}</div>`);
   const search = root.querySelector('input[type="search"]'), checks = () => [...root.querySelectorAll('.league-list input')];
   search.oninput = () => root.querySelectorAll('.league-list label').forEach((label) => { label.hidden = !label.dataset.search.includes(norm(search.value)); });
-  root.querySelector('[data-rating-leagues="all"]').onclick = () => checks().filter((input) => !input.closest("label").hidden).forEach((input) => { input.checked = true; });
-  root.querySelector('[data-rating-leagues="clear"]').onclick = () => checks().forEach((input) => { input.checked = false; });
+  root.querySelector('[data-fc-leagues="all"]').onclick = () => checks().filter((input) => !input.closest("label").hidden).forEach((input) => { input.checked = true; });
+  root.querySelector('[data-fc-leagues="clear"]').onclick = () => checks().forEach((input) => { input.checked = false; });
 }
+
+function mysteryArrow(value) {
+  return value === "equal" ? "✓" : value === "up" ? "↑" : value === "down" ? "↓" : "✕";
+}
+
+function nextMysteryPlayer() {
+  if (mysteryGame.round >= mysteryGame.rounds) {
+    $("#mysteryPhoto").innerHTML = `<div class="mystery-finish">🏆</div>`;
+    $("#mysteryName").textContent = `Oyun bitti · ${mysteryGame.score}/${mysteryGame.rounds}`;
+    $("#mysteryInput").closest(".answer-box").hidden = true;
+    $("#mysteryMessage").textContent = "Gizli futbolcular tamamlandı.";
+    $("#mysteryNext").hidden = true;
+    return;
+  }
+  const available = mysteryGame.pool.filter((player) => !mysteryGame.used.has(player.eaId));
+  if (!available.length) return toast("Seçilen liglerde yeni futbolcu kalmadı.");
+  mysteryGame.target = available[Math.floor(Math.random() * available.length)];
+  mysteryGame.used.add(mysteryGame.target.eaId);
+  mysteryGame.round++;
+  mysteryGame.guesses = [];
+  $("#mysteryRound").textContent = `Futbolcu ${mysteryGame.round}/${mysteryGame.rounds}`;
+  $("#mysteryRemaining").textContent = `${mysteryGame.attempts} tahmin`;
+  $("#mysteryLeague").textContent = mysteryGame.target.league;
+  $("#mysteryPhoto").innerHTML = `<img src="${esc(mysteryGame.target.photoUrl)}" alt="Gizli futbolcu fotoğrafı">`;
+  $("#mysteryPhoto").classList.remove("revealed");
+  $("#mysteryPhoto").style.setProperty("--mystery-blur", "20px");
+  $("#mysteryName").textContent = "?";
+  $("#mysteryHistory").innerHTML = "";
+  $("#mysteryMessage").textContent = "Futbolcu adını yazıp listeden seç.";
+  $("#mysteryNext").hidden = true;
+  $("#mysteryInput").closest(".answer-box").hidden = false;
+  $("#mysteryInput").disabled = false;
+  $("#mysteryInput").value = "";
+  $("#mysterySuggestions").innerHTML = "";
+}
+
+function finishMysteryPlayer(correct) {
+  $("#mysteryPhoto").classList.add("revealed");
+  $("#mysteryName").textContent = mysteryGame.target.name;
+  $("#mysteryInput").disabled = true;
+  $("#mysterySuggestions").innerHTML = "";
+  if (correct) mysteryGame.score++;
+  $("#mysteryMessage").textContent = correct ? `✓ Doğru! ${mysteryGame.guesses.length}. tahminde buldun.` : `Tahmin hakkı bitti. Doğru cevap: ${mysteryGame.target.name}`;
+  $("#mysteryNext").textContent = mysteryGame.round >= mysteryGame.rounds ? "Sonucu gör →" : "Sonraki futbolcu →";
+  $("#mysteryNext").hidden = false;
+}
+
+function submitMysteryGuess(player) {
+  if (!player || $("#mysteryInput").disabled || mysteryGame.guesses.some((guess) => guess.eaId === player.eaId)) return;
+  const result = IkiFormaCore.evaluateMysteryGuess(mysteryGame.target, player);
+  mysteryGame.guesses.push(player);
+  const cell = (value, label) => `<span class="mystery-clue ${value === "exact" || value === "equal" ? "exact" : "wrong"}" title="${esc(label)}"><small>${esc(label)}</small><strong>${mysteryArrow(value)}</strong></span>`;
+  $("#mysteryHistory").insertAdjacentHTML("beforeend", `<article class="mystery-row"><b>${esc(player.name)}</b>${cell(result.nation, player.nation)}${cell(result.team, player.team)}${cell(result.position, player.position)}${cell(result.age, String(player.age))}${cell(result.overall, String(player.overall))}</article>`);
+  const remaining = mysteryGame.attempts - mysteryGame.guesses.length;
+  $("#mysteryRemaining").textContent = `${remaining} tahmin`;
+  $("#mysteryPhoto").style.setProperty("--mystery-blur", `${Math.max(5, 20 - mysteryGame.guesses.length * 2)}px`);
+  $("#mysteryInput").value = "";
+  $("#mysterySuggestions").innerHTML = "";
+  if (result.correct || remaining <= 0) finishMysteryPlayer(result.correct);
+}
+
+function startMysteryGame() {
+  const selectedLeagues = new Set([...$$("#mysteryLeagueOptions input:checked")].map((input) => input.value));
+  const pool = FC26_DATA.players.filter((player) => player.photoUrl && player.age && (!selectedLeagues.size || selectedLeagues.has(player.league)));
+  if (pool.length < +$("#mysteryRounds").value) return toast("Seçilen liglerde yeterli futbolcu bulunamadı.");
+  mysteryGame = { pool, rounds: +$("#mysteryRounds").value, attempts: +$("#mysteryAttempts").value, round: 0, score: 0, used: new Set(), guesses: [] };
+  show("mysteryGame");
+  nextMysteryPlayer();
+}
+
+$("#startMysteryGame").onclick = startMysteryGame;
+$("#mysteryNext").onclick = nextMysteryPlayer;
+$("#mysteryInput").oninput = (event) => {
+  const query = norm(event.target.value);
+  if (query.length < 2) return ($("#mysterySuggestions").innerHTML = "");
+  const guessed = new Set(mysteryGame.guesses.map((player) => player.eaId));
+  const hits = mysteryGame.pool.filter((player) => !guessed.has(player.eaId) && norm(player.name).includes(query)).slice(0, 9);
+  $("#mysterySuggestions").innerHTML = hits.map((player) => `<button type="button" data-mystery-player="${player.eaId}"><span><b>${esc(player.name)}</b><small>${esc(player.team)} · ${esc(player.league)}</small></span></button>`).join("");
+  $$("[data-mystery-player]").forEach((button) => button.onclick = () => submitMysteryGuess(mysteryGame.pool.find((player) => player.eaId === +button.dataset.mysteryPlayer)));
+};
+$("#mysteryInput").onkeydown = (event) => {
+  if (event.key !== "Enter") return;
+  const exact = mysteryGame.pool.find((player) => norm(player.name) === norm(event.target.value));
+  if (exact) submitMysteryGuess(exact);
+};
 function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
   const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
   const pools = Object.fromEntries(levels.map((level) => [level, buildPairsForDifficulty(mode, level, selectedLeagues)]));
@@ -1826,7 +1918,8 @@ async function init() {
       response.json(),
       ratingResponse.json(),
     ]);
-    setupRatingLeagueSelector();
+    setupFcLeagueSelector("#ratingLeagueOptions");
+    setupFcLeagueSelector("#mysteryLeagueOptions");
     clubs = DATA.clubs;
     players = DATA.players;
     clubMap = new Map(clubs.map((c) => [c.id, c]));

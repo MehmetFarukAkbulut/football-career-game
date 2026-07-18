@@ -12,6 +12,10 @@ npm run ratings:fc26
 
 Kaynaklar: [EA Sports FC resmi ratings sayfası](https://careers.ea.com/games/ea-sports-fc/ratings) ve bunun makinece okunabilir alanlarını sunan [EAFC API dokümantasyonu](https://api.msmc.cc/eafc/). Reytingler oyun güncellemeleriyle değişebildiği için paket sürümü ve üretim tarihi JSON metadata'sında saklanır.
 
+## Gizli Futbolcu
+
+Gizli Futbolcu modunda kullanıcı seçtiği lig havuzundan gelen bulanık portredeki oyuncuyu sekiz tahminde bulur. Her tahminden sonra ülke, takım ve mevki eşleşmeleri ile yaş/overall değerinin hedefe göre yukarı veya aşağı yönü gösterilir. Doğru tahminde ya da haklar bittiğinde gerçek fotoğraf ve oyuncu adı açıklanır. Ayarlarda aranabilir lig filtresi ve 1, 3 veya 5 futbolculuk oyun seçenekleri bulunur.
+
 > Veri denetimi: `npm run data:audit` üretilmiş paketteki bütün oyuncuları Transfermarkt/player ID eşitliği, benzersiz kimlik, isim, milliyet kodu, doğum tarihi, fotoğraf URL'si, A takım kariyeri, kulüp referansları ve istatistik alanları açısından tarar. Rapor `data/player-data-audit.json` dosyasına yazılır. İsim benzerliğiyle kayıt birleştirilmez; kalıcı düzeltmeler generated JSON yerine override/export katmanına eklenir.
 
 Zor soru havuzu yetmezse normal, ardından kolay havuz tekrarsız biçimde kullanılır. Ülke × Kulüp çoktan seçmelide tüm seçenekler hedef vatandaşlıktandır. Izgara; Kulüp × Kulüp, Lig × Kulüp, Ülke × Kulüp ve Karışık kriterlerini serbest metin veya çoktan seçmeli destekler; lig kriterleri Premier League, LaLiga, Serie A, Bundesliga, Ligue 1 ve Süper Lig ile sınırlıdır.
