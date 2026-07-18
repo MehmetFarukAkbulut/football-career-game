@@ -90,6 +90,9 @@
 .trump-metrics button span { color: var(--muted); }
 .trump-metrics button.winner { border-color: var(--mint); background: #146348; }
 .trump-metrics button.loser { border-color: var(--danger); background: #6d2e40; }
+.trump-metrics.concealed button { cursor: default; border-style: dashed; background: #0b2135; }
+.trump-metrics.concealed button strong { color: var(--gold); }
+.trump-hidden-note { margin: 10px 0 0; color: var(--muted); text-align: center; font-size: 13px; }
 .trump-mystery { min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
 .trump-mystery > span { width: 180px; height: 180px; border-radius: 50%; background: #1b3854; color: #94abc0; font-size: 110px; display: grid; place-items: center; }
 .trump-mystery b { font-size: 22px; }

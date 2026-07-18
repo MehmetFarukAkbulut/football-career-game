@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=22">',
+  '<link rel="stylesheet" href="web/grid.css?v=23">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -583,9 +583,9 @@ function trumpClub(player) {
 }
 
 function renderTrumpCard(player, hidden = false, revealed = false) {
-  if (hidden && !revealed) return `<div class="trump-mystery"><span>?</span><b>Sıradaki futbolcu</b><small>Bir metrik seçtiğinde açılır</small></div>`;
   const club = trumpClub(player);
-  return `<div class="trump-player">${person(player)}<div><small>${esc(player.nationality || "")}</small><h2>${esc(player.name)}</h2><span>${esc(club?.name || "Kulüp bilgisi yok")}</span></div>${club ? logo(club) : ""}</div><div class="trump-metrics">${IkiFormaCore.TRUMP_METRICS.map((metric) => `<button type="button" data-trump-metric="${metric.key}" ${revealed ? "disabled" : ""}><strong>${IkiFormaCore.trumpMetricValue(player, metric.key).toLocaleString("tr-TR")}</strong><span>${metric.label}</span></button>`).join("")}</div>`;
+  const concealed = hidden && !revealed;
+  return `<div class="trump-player">${person(player)}<div><small>${esc(player.nationality || "")}</small><h2>${esc(player.name)}</h2><span>${esc(club?.name || "Kulüp bilgisi yok")}</span></div>${club ? logo(club) : ""}</div><div class="trump-metrics ${concealed ? "concealed" : ""}">${IkiFormaCore.TRUMP_METRICS.map((metric) => `<button type="button" ${concealed ? "" : `data-trump-metric="${metric.key}"`} ${concealed || revealed ? "disabled" : ""}><strong>${concealed ? "?" : IkiFormaCore.trumpMetricValue(player, metric.key).toLocaleString("tr-TR")}</strong><span>${metric.label}</span></button>`).join("")}</div>${concealed ? `<p class="trump-hidden-note">İstatistikler seçimden sonra açılır</p>` : ""}`;
 }
 
 function renderTrumpsRound() {
@@ -594,7 +594,7 @@ function renderTrumpsRound() {
   $("#trumpsNext").innerHTML = renderTrumpCard(next, true);
   $("#trumpsNext").classList.add("hidden-card");
   $("#trumpsProgress").textContent = `Kart ${trumpsGame.index + 1}/${trumpsGame.pack.length}`;
-  $("#trumpsCards").textContent = `${trumpsGame.pack.length - trumpsGame.index - 1} gizli kart`;
+  $("#trumpsCards").textContent = `${trumpsGame.pack.length - trumpsGame.index - 1} rakip kart`;
   $("#trumpsMessage").textContent = "Açık karttan güçlü olduğunu düşündüğün metriği seç.";
   $("#trumpsYellow").textContent = `🟨 ${Math.min(trumpsGame.errors, 1)}`;
   $("#trumpsRed").textContent = `🟥 ${trumpsGame.errors >= 2 ? 1 : 0}`;
