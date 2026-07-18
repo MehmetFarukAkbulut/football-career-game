@@ -64,3 +64,8 @@ test("online özel oyun bitince oda sonuç lobisine güvenilir biçimde taşın�
   assert.match(source, /if \(synced\) await completeOnlineMatch\(\)/);
   assert.match(source, /show\("onlineLobby"\); renderOnlineLobby\(\)/);
 });
+
+test("oyun bitince katılan oyuncu da hazır olabileceği lobiye taşınır", () => {
+  assert.match(source, /if \(state\.status !== "playing"\) show\("onlineLobby"\)/);
+  assert.match(source, /\$\("#onlineReady"\)\.hidden = !\["waiting", "finished"\]\.includes\(state\.status\)/);
+});
