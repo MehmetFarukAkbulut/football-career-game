@@ -23,3 +23,15 @@ test("altı öncelikli lig kendine özgü rozet metadata'sı taşır", () => {
   for (const leagueId of ["GB1", "ES1", "IT1", "L1", "FR1", "TR1"])
     assert.match(source, new RegExp(`${leagueId}: \\{ code:`));
 });
+
+test("ana menü doğrudan online oda katılımı sunar", () => {
+  const html = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  assert.match(html, /id="openOnlineHome"/);
+  assert.match(source, /\$\("#openOnlineHome"\)\.onclick = openOnlineHub/);
+});
+
+test("online cevap sonucu tüm oyuncular cevaplamadan açılmaz", () => {
+  assert.match(source, /state\.roundAnswers\?\.\[online\.playerIndex\]/);
+  assert.match(source, /state\.revealUntil/);
+  assert.match(source, /Diğer oyuncular bekleniyor/);
+});
