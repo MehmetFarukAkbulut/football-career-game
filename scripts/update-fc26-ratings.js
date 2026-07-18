@@ -38,6 +38,7 @@ async function main() {
         eaId: Number(row.id),
         name: String(row.name || "").trim(),
         gender: row.gender || "",
+        age: Number(row.age) || null,
         overall: Number(row.ovr),
         position: row.position || "",
         alternativePositions: Array.isArray(row["alternative positions"])

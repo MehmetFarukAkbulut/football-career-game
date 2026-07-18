@@ -9,7 +9,7 @@ test("FC 26 paketi güncel update 2 oyuncularını ve mevkileri içerir", () => 
   assert.equal(data.version, "fc26-update-2");
   assert.ok(data.players.length >= 17000);
   assert.equal(new Set(data.players.map((player) => player.eaId)).size, data.players.length);
-  assert.ok(data.players.every((player) => player.name && player.position && player.league && Number.isInteger(player.overall)));
+  assert.ok(data.players.every((player) => player.name && player.position && player.league && Number.isInteger(player.age) && Number.isInteger(player.overall)));
   assert.ok(data.players.every((player) => Array.isArray(player.alternativePositions)));
   assert.equal(data.players.filter((player) => player.photoUrl).length, data.players.length);
   assert.equal(data.players.filter((player) => player.cardUrl).length, 0);
@@ -55,4 +55,29 @@ test("reyting oyunu ana menüde keşif araçlarından önce yer alır", async ()
   const source = await require("node:fs/promises").readFile(require("node:path").join(__dirname, "..", "web", "app.js"), "utf8");
   const order = source.match(/\["classicSetup", "countrySetup"[^\n]+/)[0];
   assert.ok(order.indexOf('"ratingSetup"') < order.indexOf('"compare"'));
+  assert.ok(order.indexOf('"mysterySetup"') < order.indexOf('"compare"'));
+});
+
+test("Gizli Futbolcu ipuçları eşitlik ve hedef yönünü doğru hesaplar", () => {
+  const target = { eaId: 1, nation: "Türkiye", team: "Galatasaray", position: "GK", alternativePositions: [], age: 30, overall: 82 };
+  const guess = { eaId: 2, nation: "Türkiye", team: "Fenerbahçe", position: "GK", alternativePositions: [], age: 27, overall: 84 };
+  assert.deepEqual(core.evaluateMysteryGuess(target, guess), {
+    correct: false,
+    nation: "exact",
+    team: "wrong",
+    position: "exact",
+    age: "up",
+    overall: "down",
+  });
+  assert.equal(core.evaluateMysteryGuess(target, { ...target }).correct, true);
+});
+
+test("Gizli Futbolcu sekiz tahmin ve lig filtresiyle ana menüde bulunur", async () => {
+  const fs = require("node:fs/promises"), path = require("node:path");
+  const html = await fs.readFile(path.join(__dirname, "..", "index.html"), "utf8");
+  const source = await fs.readFile(path.join(__dirname, "..", "web", "app.js"), "utf8");
+  assert.match(html, /id="mysteryAttempts"[\s\S]*selected>8</);
+  assert.match(html, /id="mysteryLeagueOptions"/);
+  assert.match(source, /selectedLeagues\.has\(player\.league\)/);
+  assert.match(source, /evaluateMysteryGuess/);
 });

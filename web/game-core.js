@@ -563,6 +563,21 @@ function compareRatingPlayers(left, right, selectedId) {
   return { correctId, isCorrect: +selectedId === correctId };
 }
 
+function evaluateMysteryGuess(target, guess) {
+  if (!target || !guess) return null;
+  const direction = (targetValue, guessValue) => +targetValue === +guessValue ? "equal" : +targetValue > +guessValue ? "up" : "down";
+  const targetPositions = new Set([target.position, ...(target.alternativePositions || [])]);
+  const guessPositions = [guess.position, ...(guess.alternativePositions || [])];
+  return {
+    correct: +target.eaId === +guess.eaId,
+    nation: target.nation === guess.nation ? "exact" : "wrong",
+    team: target.team === guess.team ? "exact" : "wrong",
+    position: guessPositions.some((position) => targetPositions.has(position)) ? "exact" : "wrong",
+    age: direction(target.age, guess.age),
+    overall: direction(target.overall, guess.overall),
+  };
+}
+
 const api = {
   DIFFICULTIES,
   WINNING_LINES,
@@ -606,6 +621,7 @@ const api = {
   ratingPairGapRange,
   generateRatingPair,
   compareRatingPlayers,
+  evaluateMysteryGuess,
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;

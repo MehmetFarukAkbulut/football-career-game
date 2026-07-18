@@ -110,6 +110,9 @@
           <button class="mode-card fc-rating-card" data-view="ratingSetup">
             <span class="icon">⭐</span><span><b>FC 26 Reyting Düellosu</b><small>İki futbolcudan overall reytingi yüksek olanı seç.</small></span><i>Oyna →</i>
           </button>
+          <button class="mode-card mystery-card" data-view="mysterySetup">
+            <span class="icon">🕵️</span><span><b>Gizli Futbolcu</b><small>Bulanık fotoğrafı ve karşılaştırma ipuçlarını kullanarak futbolcuyu bul.</small></span><i>Oyna →</i>
+          </button>
         </div>
       </section>
       <section id="ratingSetup" class="view setup">
@@ -119,6 +122,14 @@
       <section id="ratingGame" class="view">
         <div class="game-top"><button class="back" data-view="ratingSetup">← Oyundan çık</button><div><span id="ratingRound"></span><span id="ratingScore"></span></div></div>
         <div class="rating-stage surface"><span class="kicker">HANGİSİNİN FC 26 OVERALL REYTİNGİ DAHA YÜKSEK?</span><div id="ratingChoices" class="rating-choices"></div><p id="ratingMessage" class="message" aria-live="polite"></p></div>
+      </section>
+      <section id="mysterySetup" class="view setup">
+        <button class="back" data-view="home">← Ana sayfa</button>
+        <div class="surface narrow mystery-setup"><span class="kicker">8 TAHMİN · KARŞILAŞTIRMALI İPUÇLARI</span><h2>Gizli Futbolcu</h2><p>Bulanık fotoğraftaki futbolcuyu milliyet, takım, mevki, yaş ve overall ipuçlarıyla bul.</p><div class="setup-grid"><label>Futbolcu sayısı<select id="mysteryRounds"><option selected>1</option><option>3</option><option>5</option></select></label><label>Tahmin hakkı<select id="mysteryAttempts"><option>6</option><option selected>8</option><option>10</option></select></label></div><fieldset id="mysteryLeagueOptions" class="league-options"><legend>Oyun ligleri <small>Seçim yapılmazsa tüm ligler kullanılır</small></legend></fieldset><button id="startMysteryGame" class="cta">Oyunu başlat →</button></div>
+      </section>
+      <section id="mysteryGame" class="view">
+        <div class="game-top"><button class="back" data-view="mysterySetup">← Oyundan çık</button><div><span id="mysteryRound"></span><span id="mysteryRemaining"></span></div></div>
+        <div class="mystery-layout"><div class="surface mystery-question"><span id="mysteryLeague" class="kicker"></span><div id="mysteryPhoto" class="mystery-photo"></div><h2 id="mysteryName">?</h2><div class="answer-box"><input id="mysteryInput" autocomplete="off" placeholder="Futbolcu adı yaz…" role="combobox" aria-controls="mysterySuggestions"><div id="mysterySuggestions" class="suggestions" role="listbox"></div></div><p id="mysteryMessage" class="message" aria-live="polite"></p><button id="mysteryNext" class="cta" hidden>Sonraki futbolcu →</button></div><div class="surface mystery-feedback"><h3>Tahminler</h3><div class="mystery-head"><span>Oyuncu</span><span>Ülke</span><span>Takım</span><span>Mevki</span><span>Yaş</span><span>OVR</span></div><div id="mysteryHistory"></div><small class="mystery-help">↑ Hedef değer daha yüksek · ↓ Hedef değer daha düşük</small></div></div>
       </section>
       <section id="classicSetup" class="view setup"></section>
       <section id="countrySetup" class="view setup"></section>
@@ -449,9 +460,9 @@
     </footer>
     <div id="toast" class="toast"></div>
     <script src="web/runtime-config.js?v=2" defer></script>
-    <script src="web/game-core.js?v=16" defer></script>
+    <script src="web/game-core.js?v=17" defer></script>
     <script src="web/online-core.js?v=9" defer></script>
     <script src="web/online-service.js?v=5" defer></script>
-    <script src="web/app.js?v=36" defer></script>
+    <script src="web/app.js?v=37" defer></script>
   </body>
 </html>
