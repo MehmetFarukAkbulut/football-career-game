@@ -52,3 +52,9 @@ test("online sayaç sıfırda backend timeout işlemini tetikler", () => {
   assert.match(source, /requestOnlineQuestionTimeout\(question\.questionId, state\.questionSequence\)/);
   assert.match(source, /type: "timeout", questionId/);
 });
+
+test("Rastgele Beşler online tahminleri oyuncu bazlı ve eşzamanlı gönderir", () => {
+  assert.match(source, /submitOnlineSpecialGuess\("randomFive", randomFive\.round, player\.id\)/);
+  assert.match(source, /Diğer oyuncular bekleniyor/);
+  assert.match(source, /Object\.keys\(randomFive\.guessIds \|\| \{\}\)\.length !== online\.state\.players\.length/);
+});

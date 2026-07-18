@@ -508,7 +508,7 @@ $("#onlineApplySettings").onclick = async () => {
   }
   if (settings.gameType === "randomFive") {
     const pool = players, allowedClubs = clubs.filter((club) => club.active !== false), sets = Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool));
-    settings.rounds = 5; settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, guesses: [], setIds: sets.map((set) => set.map((club) => club.id)), choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
+    settings.rounds = 5; settings.initialState = { difficulty: settings.difficulty, answerMethod: settings.answerMethod, scores: online.state.players.map(() => 0), round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds: sets.map((set) => set.map((club) => club.id)), choiceIds: buildRandomFiveChoiceIds(sets, pool, settings.difficulty) };
   }
   if (settings.gameType === "twin") {
     const pool = twinPool(), targets = pool.filter((player) => player.appearances >= 200 && player.goals >= 15).sort(() => Math.random() - .5).slice(0, settings.rounds);
@@ -574,6 +574,19 @@ async function syncSpecialState(kind, value, currentTurn, scores) {
     }
   }
   toast("Bağlantı yenilendi; güncel oyun getirildi."); await refreshOnlineRoom(); return false;
+}
+async function submitOnlineSpecialGuess(kind, step, selectedPlayerId) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      online.state = await online.service.mutate(online.state.roomCode, online.token, online.state.stateVersion, { type: "special_guess", kind, step, selectedPlayerId: +selectedPlayerId });
+      return true;
+    } catch (error) {
+      if (!error.message.includes("STALE_STATE")) { await refreshOnlineRoom(); if (!error.message.includes("SPECIAL_GUESS_ALREADY_SUBMITTED")) toast(`Tahmin kaydedilemedi: ${error.message}`); return false; }
+      await refreshOnlineRoom();
+      if (online.state.modeState?.value?.guessIds?.[online.playerIndex] != null) return true;
+    }
+  }
+  return false;
 }
 
 async function publishNextOnlineQuestion() {
@@ -1340,7 +1353,7 @@ function startRandomFiveGame() {
     sets: Array.from({ length: 5 }, () => buildRandomFiveSet(allowedClubs, pool)),
   };
   if (mode === "online") {
-    const initialState = { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: [0, 0], round: 0, guesses: [], setIds: randomFive.sets.map((set) => set.map((club) => club.id)), choiceIds: buildRandomFiveChoiceIds(randomFive.sets, pool, randomFive.difficulty) };
+    const initialState = { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: [0, 0], round: 0, guesses: [], guessIds: {}, revealUntil: null, setIds: randomFive.sets.map((set) => set.map((club) => club.id)), choiceIds: buildRandomFiveChoiceIds(randomFive.sets, pool, randomFive.difficulty) };
     return openSpecialOnlineLobby({ gameType: "randomFive", difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, rounds: 5, leagueIds: [...context.selected], initialState });
   }
   if (randomFive.sets.some((set) => set.length < 5)) return toast("Beşli kulüp seti oluşturulamadı.");
@@ -1356,9 +1369,10 @@ function renderRandomFiveRound() {
   $("#randomFiveClubs").innerHTML = set.map((club) => `<article>${logo(club)}<b>${esc(club.name)}</b><small>${esc(club.league || "")}</small></article>`).join("");
   $("#randomFivePrompt").textContent = "Bu beşlinin kaçında oynayan bir futbolcu bulabilirsin?";
   $("#randomFiveTurn").textContent = `${randomFive.names[0]} tahminini girsin.`;
-  if (randomFive.online) $("#randomFiveTurn").textContent = `${randomFive.names[online.state.currentTurn]} tahminini girsin.`;
+  const onlineGuesses = randomFive.guessIds || {}, onlineGuessCount = Object.keys(onlineGuesses).length;
+  if (randomFive.online) $("#randomFiveTurn").textContent = onlineGuesses[online.playerIndex] != null ? `Tahmininiz kaydedildi. Diğer oyuncular bekleniyor (${onlineGuessCount}/${online.state.players.length}).` : `Tahmininizi yapın (${onlineGuessCount}/${online.state.players.length} cevap).`;
   $("#randomFiveInput").value = "";
-  const canPlay = !randomFive.online || online.state.currentTurn === online.playerIndex;
+  const canPlay = !randomFive.online || (onlineGuesses[online.playerIndex] == null && !randomFive.revealUntil);
   $("#randomFiveInput").disabled = !canPlay;
   $("#randomFiveInput").hidden = randomFive.answerMethod === "multiple";
   $("#randomFiveGame .random-five-answer").hidden = false;
@@ -1378,8 +1392,14 @@ function renderRandomFiveRound() {
 async function submitRandomFiveGuess(player) {
   if (!player) return;
   if (randomFive.online && online.specialSubmitting) return;
-  if (randomFive.online && online.state.currentTurn !== online.playerIndex) return toast("Sıra rakibinizde.");
-  if (randomFive.online) online.specialSubmitting = true;
+  if (randomFive.online && randomFive.guessIds?.[online.playerIndex] != null) return toast("Tahmininiz kaydedildi; diğer oyuncular bekleniyor.");
+  if (randomFive.online) {
+    online.specialSubmitting = true;
+    const saved = await submitOnlineSpecialGuess("randomFive", randomFive.round, player.id);
+    online.specialSubmitting = false;
+    if (saved) handleOnlineSpecialState();
+    return;
+  }
   const ids = randomFive.sets[randomFive.round].map((club) => club.id);
   randomFive.guesses.push(player);
   $("#randomFiveInput").value = "";
@@ -1389,11 +1409,6 @@ async function submitRandomFiveGuess(player) {
     if (randomFive.answerMethod === "multiple")
       renderPlayerChoices($("#randomFiveSuggestions"), randomFive.choiceEntries.map((entry) => entry.player), submitRandomFiveGuess);
     return $("#randomFiveInput").focus();
-  }
-  if (randomFive.online && randomFive.guesses.length < online.state.players.length) {
-    const synced = await syncSpecialState("randomFive", serializeOnlineRandomFive(), (online.state.currentTurn + 1) % online.state.players.length, randomFive.scores);
-    online.specialSubmitting = false; if (!synced) return;
-    return handleOnlineSpecialState();
   }
   if (randomFive.mode === "computer" && randomFive.guesses.length === 1) {
     let guess;
@@ -1412,7 +1427,6 @@ async function submitRandomFiveGuess(player) {
       if (randomFive.round === answeredRound && !$("#randomFiveNext").hidden) nextRandomFiveRound();
     }, 1600);
   }
-  if (randomFive.online) { await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores); online.specialSubmitting = false; }
 }
 function revealRandomFiveRound() {
   const ids = randomFive.sets[randomFive.round].map((club) => club.id),
@@ -1431,6 +1445,13 @@ async function nextRandomFiveRound() {
   if (randomFive.online && online.specialAdvancing) return;
   if (randomFive.online) online.specialAdvancing = true;
   const previousRound = randomFive.round;
+  if (randomFive.online) {
+    if (!randomFive.revealUntil || Object.keys(randomFive.guessIds || {}).length !== online.state.players.length) { online.specialAdvancing = false; return; }
+    const clubIds = randomFive.sets[randomFive.round].map((club) => club.id);
+    const guesses = online.state.players.map((_, index) => indexes.playerById.get(+randomFive.guessIds[index]));
+    randomFive.scores = randomFive.scores.map((score, index) => score + IkiFormaCore.randomFiveScore(guesses[index], clubIds));
+    randomFive.guessIds = {}; randomFive.revealUntil = null; randomFive.guesses = [];
+  }
   randomFive.round++;
   if (randomFive.round < 5) { randomFive.guesses = []; if (randomFive.online) { const synced = await syncSpecialState("randomFive", serializeOnlineRandomFive(), 0, randomFive.scores); online.specialAdvancing = false; if (!synced || online.state.modeState?.value?.round !== previousRound + 1) return; } return renderRandomFiveRound(); }
   const best = Math.max(...randomFive.scores), leaders = randomFive.names.filter((_, index) => randomFive.scores[index] === best), winner = leaders.length > 1 ? "Berabere!" : `${leaders[0]} kazandı!`;
@@ -1449,10 +1470,11 @@ function renderRandomFiveSnapshotReveal() {
   $("#randomFiveReveal").hidden = false; $("#randomFiveNext").hidden = true; $("#randomFiveInput").disabled = true;
   const key = `random-${randomFive.round}`; if (online.playerIndex === 0 && online.specialAdvanceKey !== key) { online.specialAdvanceKey = key; setTimeout(nextRandomFiveRound, 2000); }
 }
-function serializeOnlineRandomFive() { return { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: randomFive.scores, round: randomFive.round, guesses: randomFive.guesses.map((player) => player.id), setIds: randomFive.sets.map((set) => set.map((club) => club.id)), choiceIds: randomFive.choiceIds, finished: randomFive.round >= 5 }; }
+function serializeOnlineRandomFive() { return { difficulty: randomFive.difficulty, answerMethod: randomFive.answerMethod, scores: randomFive.scores, round: randomFive.round, guesses: randomFive.guesses.map((player) => player.id), guessIds: randomFive.guessIds || {}, revealUntil: randomFive.revealUntil || null, setIds: randomFive.sets.map((set) => set.map((club) => club.id)), choiceIds: randomFive.choiceIds, finished: randomFive.round >= 5 }; }
 function hydrateOnlineRandomFive(value) {
   const selected = new Set(online.state.settings.leagueIds || []), clubIds = new Set(clubs.filter((club) => !selected.size || selected.has(club.leagueId)).map((club) => club.id));
-  randomFive = { ...value, scores: online.state.players.map((_, index) => value.scores[index] || 0), online: true, mode: "online", names: online.state.players.map((player) => player.name), pool: players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), sets: value.setIds.map((set) => set.map((id) => clubMap.get(+id))), guesses: value.guesses.map((id) => indexes.playerById.get(+id)).filter(Boolean), used: online.state.players.map(() => new Set()) };
+  const guessIds = value.guessIds || {}, orderedGuesses = online.state.players.map((_, index) => indexes.playerById.get(+guessIds[index])).filter(Boolean);
+  randomFive = { ...value, guessIds, scores: online.state.players.map((_, index) => value.scores[index] || 0), online: true, mode: "online", names: online.state.players.map((player) => player.name), pool: players.filter((player) => player.clubIds.some((id) => clubIds.has(id))), sets: value.setIds.map((set) => set.map((id) => clubMap.get(+id))), guesses: orderedGuesses, used: online.state.players.map(() => new Set()) };
 }
 $("#randomFiveInput").oninput = (event) => {
   const q = norm(event.target.value), ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [];

@@ -71,7 +71,7 @@ end $$;
 
 create or replace function public.apply_game_room_action(p_room_code text, p_player_token text, p_expected_version bigint, p_action jsonb)
 returns jsonb language plpgsql security definer set search_path = '' as $$
-declare room public.game_rooms; slot integer; next_state jsonb; action_type text := p_action->>'type'; correct boolean; score integer; new_answer_keys jsonb; answers jsonb; player_count integer; answer_count integer; i integer;
+declare room public.game_rooms; slot integer; next_state jsonb; action_type text := p_action->>'type'; correct boolean; score integer; new_answer_keys jsonb; answers jsonb; guess_ids jsonb; choice_ids jsonb; player_count integer; answer_count integer; i integer; special_step integer;
 begin
   select * into room from public.game_rooms where room_code = p_room_code for update;
   if not found then raise exception 'ROOM_NOT_FOUND'; end if;
@@ -149,6 +149,18 @@ begin
     if room.state->>'status' <> 'playing' or (room.state->'revealUntil' = 'null'::jsonb and not coalesce((room.state#>>'{modeState,value,finished}')::boolean, false) and coalesce(room.state#>>'{modeState,value,status}', '') <> 'finished') then raise exception 'FINISH_NOT_ALLOWED'; end if;
     next_state := jsonb_set(next_state, '{status}', '"finished"'); next_state := jsonb_set(next_state, '{finishedAt}', to_jsonb(floor(extract(epoch from now()) * 1000)));
     next_state := jsonb_set(next_state, '{players}', (select jsonb_agg(jsonb_set(p, '{ready}', 'false')) from jsonb_array_elements(room.state->'players') p));
+  elsif action_type = 'special_guess' then
+    if room.state->>'status' <> 'playing' or room.state#>>'{modeState,kind}' <> p_action->>'kind' then raise exception 'SPECIAL_GAME_NOT_ACTIVE'; end if;
+    special_step := coalesce((room.state#>>'{modeState,value,round}')::integer, -1);
+    if special_step <> (p_action->>'step')::integer then raise exception 'STALE_SPECIAL_STEP'; end if;
+    guess_ids := coalesce(room.state#>'{modeState,value,guessIds}', '{}'::jsonb);
+    if guess_ids ? slot::text then raise exception 'SPECIAL_GUESS_ALREADY_SUBMITTED'; end if;
+    choice_ids := room.state#>array['modeState','value','choiceIds',special_step::text];
+    if room.state#>>'{modeState,value,answerMethod}' = 'multiple' and (choice_ids is null or not choice_ids @> jsonb_build_array((p_action->>'selectedPlayerId')::bigint)) then raise exception 'INVALID_OPTION'; end if;
+    guess_ids := guess_ids || jsonb_build_object(slot::text, (p_action->>'selectedPlayerId')::bigint);
+    next_state := jsonb_set(next_state, '{modeState,value,guessIds}', guess_ids);
+    player_count := jsonb_array_length(room.state->'players'); answer_count := (select count(*) from jsonb_object_keys(guess_ids));
+    if answer_count = player_count then next_state := jsonb_set(next_state, '{modeState,value,revealUntil}', to_jsonb(floor(extract(epoch from now() + interval '2 seconds') * 1000))); end if;
   elsif action_type = 'mode_state' then
     if room.state->>'status' <> 'playing' then raise exception 'GAME_NOT_STARTED'; end if;
     if coalesce(room.state->'modeState', 'null'::jsonb) <> 'null'::jsonb and (room.state->>'currentTurn')::integer <> slot then raise exception 'NOT_YOUR_TURN'; end if;
