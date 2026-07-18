@@ -66,7 +66,7 @@ test("iki forma çoktan seçmeli sorusu tek doğru ve üç kontrollü yanlış �
 test("ülke forma çoktan seçmeli sorusu ilgisiz oyuncuyu kabul etmez", () => {
   const countryData = { ...data, players: [...data.players, { id: 16, name: "Kulüp Alman", clubIds: [1], nationalityCode: "DE" }, { id: 17, name: "Kulüp İtalyan", clubIds: [1], nationalityCode: "IT" }] };
   const indexes = buildIndexes(countryData);
-  const question = generateCountryClubMultipleChoiceQuestion({ countryCode: "TR", clubId: 1, indexes, rng: () => 0 });
+  const question = generateCountryClubMultipleChoiceQuestion({ countryCode: "TR", clubId: 1, indexes, optionCount: 2, rng: () => 0 });
   assert.deepEqual(validateQuestionOptions(question, indexes), { valid: true });
   assert.ok(!question.optionPlayerIds.includes(12));
 });
@@ -164,4 +164,31 @@ test("bilgisayar deterministik RNG ile kontrollü doğru ve yanlış seçebilir"
 });
 test("Türkçe ve Latin aksanları toleranslı normalize edilir", () => {
   assert.equal(normalizeText("Uğur Šøren"), "ugur soren");
+});
+
+test("ülke-kulüp seçeneklerinin tamamı hedef ülke vatandaşıdır", () => {
+  const core = require("../web/game-core"), indexes = buildIndexes({ ...data, players: [...data.players,
+    { id: 16, name: "Türk 3", clubIds: [3], nationalityCode: "TR" },
+    { id: 17, name: "Türk 4", clubIds: [3], nationalityCode: "TR" },
+  ] });
+  const question = core.generateCountryClubMultipleChoiceQuestion({ countryCode: "TR", clubId: 1, indexes, rng: () => 0 });
+  assert.ok(question);
+  assert.ok(question.optionPlayerIds.every((id) => core.playerNationalityCode(indexes.playerById.get(id)) === "TR"));
+});
+
+test("zorluk havuzu zor-normal-kolay sırasıyla tekrarsız tamamlanır", () => {
+  const { fillQuestionPoolByDifficulty } = require("../web/game-core");
+  const pools = { hard: [{ key: "h" }], normal: [{ key: "h" }, { key: "n" }], easy: [{ key: "e" }] };
+  assert.deepEqual(fillQuestionPoolByDifficulty(pools, "hard", 3).map((x) => x.key), ["h", "n", "e"]);
+  assert.deepEqual(fillQuestionPoolByDifficulty(pools, "normal", 2).map((x) => x.key), ["h", "n"]);
+});
+
+test("ızgara kulüp, lig, ülke ve karışık kriter kesişimlerini doğrular", () => {
+  const core = require("../web/game-core"), indexes = buildIndexes(data);
+  indexes.leagueClubIds.set("GB1", new Set([1]));
+  const club1 = { type: "club", id: 1 }, club2 = { type: "club", id: 2 }, league = { type: "league", id: "GB1" }, country = { type: "country", code: "TR" };
+  assert.deepEqual(core.getPlayersForCriteria(club1, club2, indexes).map((p) => p.id), [10]);
+  assert.deepEqual(core.getPlayersForCriteria(league, club2, indexes).map((p) => p.id), [10]);
+  assert.deepEqual(new Set(core.getPlayersForCriteria(country, club1, indexes).map((p) => p.id)), new Set([10, 11]));
+  assert.ok(core.generateCriteriaMultipleChoiceQuestion({ first: club1, second: club2, indexes, rng: () => 0 }));
 });

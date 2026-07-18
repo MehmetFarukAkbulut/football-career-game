@@ -48,6 +48,7 @@ function buildIndexes(data) {
   const playerById = new Map(data.players.map((p) => [+p.id, p]));
   const clubPlayerIds = new Map(data.clubs.map((c) => [+c.id, new Set()]));
   const playerClubIds = new Map();
+  const nationalityPlayerIds = new Map();
   const leagueClubIds = new Map();
   const countryLeagueIds = new Map();
   for (const c of data.clubs) {
@@ -63,6 +64,9 @@ function buildIndexes(data) {
     const ids = new Set(p.clubIds.map(Number));
     playerClubIds.set(+p.id, ids);
     for (const id of ids) clubPlayerIds.get(id)?.add(+p.id);
+    const nationality = playerNationalityCode(p);
+    if (!nationalityPlayerIds.has(nationality)) nationalityPlayerIds.set(nationality, new Set());
+    nationalityPlayerIds.get(nationality).add(+p.id);
   }
   const cellPlayers = new Map();
   const commonPlayerIds = (a, b) => {
@@ -79,6 +83,7 @@ function buildIndexes(data) {
     playerById,
     clubPlayerIds,
     playerClubIds,
+    nationalityPlayerIds,
     leagueClubIds,
     countryLeagueIds,
     cellPlayers,
@@ -235,8 +240,8 @@ function generateTwoClubMultipleChoiceQuestion({ clubAId, clubBId, indexes, used
 function generateCountryClubMultipleChoiceQuestion({ countryCode, clubId, indexes, used = new Set(), difficulty = "normal", optionCount = 4, rng = Math.random }) {
   const valid = getValidPlayersForCountryClub(countryCode, clubId, indexes, used);
   const countryOnly = getCountryOnlyDistractors(countryCode, clubId, indexes, used);
-  const clubOnly = getClubOnlyDistractors(countryCode, clubId, indexes, used);
-  const wrong = shuffled([...countryOnly, ...clubOnly], rng);
+  // Milliyet secenek kartinda cevabi ele vermesin: tum secenekler hedef ulkeden.
+  const wrong = shuffled(countryOnly, rng);
   if (!valid.length || wrong.length < optionCount - 1) return null;
   const correct = selectPlayerByDifficulty(valid, difficulty, rng);
   const question = {
@@ -245,6 +250,73 @@ function generateCountryClubMultipleChoiceQuestion({ countryCode, clubId, indexe
     optionPlayerIds: shuffled([correct, ...wrong.slice(0, optionCount - 1)], rng).map((player) => +player.id),
   };
   return validateQuestionOptions(question, indexes, used).valid ? question : null;
+}
+
+const GRID_LEAGUE_IDS = Object.freeze(["GB1", "ES1", "IT1", "L1", "FR1", "TR1"]);
+
+function playerMatchesCriterion(player, criterion, indexes) {
+  if (!player || !criterion) return false;
+  const career = indexes.playerClubIds.get(+player.id) || new Set();
+  if (criterion.type === "club") return career.has(+criterion.id);
+  if (criterion.type === "country")
+    return playerNationalityCode(player) === String(criterion.code || criterion.id).toUpperCase();
+  if (criterion.type === "league") {
+    const leagueClubs = indexes.leagueClubIds.get(criterion.id) || new Set();
+    return [...career].some((clubId) => leagueClubs.has(clubId));
+  }
+  return false;
+}
+
+function getPlayersForCriteria(first, second, indexes, used = new Set()) {
+  const idsFor = (criterion) => {
+    if (criterion.type === "club") return indexes.clubPlayerIds.get(+criterion.id) || new Set();
+    if (criterion.type === "country") return indexes.nationalityPlayerIds.get(String(criterion.code || criterion.id).toUpperCase()) || new Set();
+    const ids = new Set();
+    for (const clubId of indexes.leagueClubIds.get(criterion.id) || [])
+      for (const playerId of indexes.clubPlayerIds.get(clubId) || []) ids.add(playerId);
+    return ids;
+  };
+  const left = idsFor(first), right = idsFor(second);
+  return [...(left.size <= right.size ? left : right)]
+    .filter((id) => !used.has(+id) && left.has(id) && right.has(id))
+    .map((id) => indexes.playerById.get(+id)).filter(Boolean);
+}
+
+function getOneCriterionOnlyPlayers(first, second, indexes, used = new Set()) {
+  return [...indexes.playerById.values()].filter((player) => {
+    if (used.has(+player.id)) return false;
+    return playerMatchesCriterion(player, first, indexes) !== playerMatchesCriterion(player, second, indexes);
+  });
+}
+
+function generateCriteriaMultipleChoiceQuestion({ first, second, indexes, used = new Set(), difficulty = "normal", optionCount = 4, rng = Math.random }) {
+  const correctPool = getPlayersForCriteria(first, second, indexes, used);
+  let wrongPool;
+  const country = first.type === "country" ? first : second.type === "country" ? second : null;
+  const club = first.type === "club" ? first : second.type === "club" ? second : null;
+  if (country && club)
+    wrongPool = getCountryOnlyDistractors(country.code || country.id, club.id, indexes, used);
+  else wrongPool = getOneCriterionOnlyPlayers(first, second, indexes, used);
+  if (!correctPool.length || wrongPool.length < optionCount - 1) return null;
+  const correct = selectPlayerByDifficulty(correctPool, difficulty, rng);
+  const options = shuffled([correct, ...shuffled(wrongPool, rng).slice(0, optionCount - 1)], rng);
+  const correctCount = options.filter((player) => playerMatchesCriterion(player, first, indexes) && playerMatchesCriterion(player, second, indexes)).length;
+  if (correctCount !== 1 || new Set(options.map((player) => +player.id)).size !== options.length) return null;
+  return { questionId: makeQuestionId(rng), mode: "criteria", first, second, correctPlayerId: +correct.id, optionPlayerIds: options.map((player) => +player.id) };
+}
+
+function fillQuestionPoolByDifficulty(pools, requestedDifficulty, count) {
+  const order = requestedDifficulty === "hard" ? ["hard", "normal", "easy"] : requestedDifficulty === "normal" ? ["normal", "easy"] : ["easy"];
+  const result = [], seen = new Set();
+  for (const difficulty of order) {
+    for (const item of pools[difficulty] || []) {
+      const key = item.key || item.questionId || JSON.stringify(item);
+      if (seen.has(key)) continue;
+      seen.add(key); result.push({ ...item, sourceDifficulty: difficulty });
+      if (result.length >= count) return result;
+    }
+  }
+  return result;
 }
 
 function createGridState({
@@ -396,6 +468,57 @@ function randomFiveRanking(pool, clubIds, excluded = new Set()) {
     .sort((a, b) => b.score - a.score || (Number(b.player.appearances) || 0) - (Number(a.player.appearances) || 0));
 }
 
+function generateRandomFiveOptions({ pool, clubIds, difficulty = "normal", excluded = new Set(), rng = Math.random }) {
+  const entries = pool.filter((p) => !excluded.has(+p.id)).map((player) => ({ player, score: randomFiveScore(player, clubIds) }));
+  const best = Math.max(...entries.map((entry) => entry.score));
+  if (!Number.isFinite(best) || best < 1) return null;
+  const take = (predicate, used) => shuffled(entries.filter((entry) => predicate(entry) && !used.has(+entry.player.id)), rng)[0];
+  const used = new Set(), chosen = [];
+  const add = (entry) => { if (entry) { used.add(+entry.player.id); chosen.push(entry); } };
+  add(take((entry) => entry.score === best, used));
+  if (difficulty === "normal") {
+    add(take((entry) => entry.score === 1, used));
+    add(take((entry) => entry.score === 0, used));
+    add(take((entry) => entry.score === 0, used));
+  } else if (difficulty === "easy") {
+    add(take((entry) => entry.score >= 2 && entry.score < best, used));
+    add(take((entry) => entry.score <= 1, used));
+    add(take((entry) => entry.score <= 1, used));
+  } else {
+    for (let gap = 1; chosen.length < 4 && gap <= best; gap++)
+      while (chosen.length < 4) { const entry = take((item) => item.score === best - gap, used); if (!entry) break; add(entry); }
+  }
+  for (const entry of shuffled(entries, rng)) { if (chosen.length >= 4) break; if (!used.has(+entry.player.id) && entry.score < best) add(entry); }
+  if (chosen.length !== 4 || chosen.slice(1).some((entry) => entry.score === best)) return null;
+  return shuffled(chosen, rng);
+}
+
+function generateTwinOptions({ target, pool, metric, excluded = new Set(), rng = Math.random }) {
+  const ranking = careerTwinRanking(target, pool, metric, excluded).filter((entry) => entry.distance > 0);
+  if (ranking.length < 4) return null;
+  const ranges = [[0, .12], [.2, .45], [.5, .75], [.8, 1]], chosen = [], usedDistances = new Set();
+  for (const [start, end] of ranges) {
+    const from = Math.min(ranking.length - 1, Math.floor(ranking.length * start));
+    const to = Math.max(from + 1, Math.ceil(ranking.length * end));
+    let candidates = ranking.slice(from, to).filter((entry) => !chosen.some((x) => x.player.id === entry.player.id) && !usedDistances.has(entry.distance));
+    if (!candidates.length) candidates = ranking.slice(from, to).filter((entry) => !chosen.some((x) => x.player.id === entry.player.id));
+    const entry = candidates[Math.floor(rng() * candidates.length)];
+    if (!entry) return null;
+    chosen.push(entry); usedDistances.add(entry.distance);
+  }
+  return shuffled(chosen, rng);
+}
+
+function chooseTwinComputerOption({ options, difficulty = "normal", rng = Math.random }) {
+  if (!options?.length) return null;
+  const sorted = [...options].sort((a, b) => a.distance - b.distance);
+  const weights = difficulty === "hard" ? [7, 2, 1, .5] : difficulty === "easy" ? [1, 2, 3, 4] : [4, 3, 2, 1];
+  const total = weights.slice(0, sorted.length).reduce((sum, value) => sum + value, 0);
+  let roll = rng() * total;
+  for (let i = 0; i < sorted.length; i++) { roll -= weights[i]; if (roll <= 0) return sorted[i]; }
+  return sorted.at(-1);
+}
+
 function chooseRandomFiveComputer({ pool, clubIds, difficulty = "normal", excluded = new Set(), rng = Math.random }) {
   const ranking = randomFiveRanking(pool, clubIds, excluded);
   if (!ranking.length) return null;
@@ -426,6 +549,12 @@ const api = {
   selectPlayerByDifficulty,
   generateTwoClubMultipleChoiceQuestion,
   generateCountryClubMultipleChoiceQuestion,
+  GRID_LEAGUE_IDS,
+  playerMatchesCriterion,
+  getPlayersForCriteria,
+  getOneCriterionOnlyPlayers,
+  generateCriteriaMultipleChoiceQuestion,
+  fillQuestionPoolByDifficulty,
   createGridState,
   applyAttempt,
   chooseComputerMove,
@@ -435,6 +564,9 @@ const api = {
   scoreTwinGuesses,
   randomFiveScore,
   randomFiveRanking,
+  generateRandomFiveOptions,
+  generateTwinOptions,
+  chooseTwinComputerOption,
   chooseRandomFiveComputer,
 };
 if (typeof module !== "undefined") module.exports = api;
