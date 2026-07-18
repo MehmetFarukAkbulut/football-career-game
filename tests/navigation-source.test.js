@@ -81,3 +81,8 @@ test("online oyuncu maçı bırakıp puanlarıyla odaya dönebilir", () => {
   assert.match(source, /online-room-return/);
   assert.match(source, /online\.specialAdvanceKey = null/);
 });
+
+test("online oda puanları oyunlar arasında birikmeye devam eder", () => {
+  assert.match(source, /state\.totalScores \|\| state\.scores/);
+  assert.match(source, /activeScores = \[\.\.\.online\.state\.scores\]/);
+});

@@ -471,7 +471,9 @@ function renderOnlineLobby() {
   const matchPlayers = onlineGamePlayers(state), readyCount = state.players.filter((player) => player.ready).length;
   $("#onlinePlayers").innerHTML = state.players.map((player, index) => `<article class="online-player ${player.connected ? "is-connected" : ""}"><b>${esc(player.name)} ${player.host ? "👑" : ""}</b><small>Oyuncu ${index + 1} · ${player.connected ? "Bağlı" : "Yeniden bağlanıyor"}</small><span>${state.status === "playing" ? (matchPlayers.some((active) => +(active.roomSlot ?? index) === index) ? "● Oyunda" : "○ Bu maçı izliyor") : player.ready ? "✓ Hazır" : "Bekleniyor"}</span></article>`).join("");
   $("#onlineTurn").textContent = state.status === "playing" ? `${Object.keys(state.roundAnswers || {}).length}/${matchPlayers.length} cevap` : `${readyCount} oyuncu hazır`;
-  $("#onlineScore").textContent = matchPlayers.map((player, index) => `${player.name}: ${state.scores[index] || 0}`).join(" · ");
+  $("#onlineScore").textContent = state.status === "playing"
+    ? matchPlayers.map((player, index) => `${player.name}: ${state.scores[index] || 0}`).join(" · ")
+    : state.players.map((player, index) => `${player.name}: ${(state.totalScores || state.scores)[index] || 0}`).join(" · ");
   const me = state.players[online.playerIndex];
   $("#onlineReady").textContent = me?.ready ? "Hazır değilim" : "Hazırım";
   $("#onlineReady").hidden = !["waiting", "finished"].includes(state.status);
@@ -482,8 +484,8 @@ function renderOnlineLobby() {
     $("#onlineGameType").value = state.settings.gameType || "clubs"; $("#onlineRounds").value = state.settings.rounds || 5;
     $("#onlineSeconds").value = state.settings.seconds || 30; $("#onlineDifficulty").value = state.settings.difficulty || "normal"; $("#onlineAnswerMethod").value = state.settings.answerMethod || "multiple";
   }
-  const ranking = state.status === "finished" && state.matchResults
-    ? state.players.map((player, index) => ({ name: player.name, score: +(state.matchResults[index] || 0) }))
+  const ranking = state.status === "finished"
+    ? state.players.map((player, index) => ({ name: player.name, score: +((state.totalScores || state.scores)[index] || 0) }))
     : matchPlayers.map((player, index) => ({ name: player.name, score: state.scores[index] || 0 }));
   ranking.sort((a, b) => b.score - a.score);
   $("#onlineRanking").hidden = state.status !== "finished";
@@ -550,14 +552,14 @@ function startOnlineMatch() {
 async function startOnlineSpecialMatch() {
   const settings = online.state.settings;
   if (online.playerIndex === 0 && !online.state.modeState) {
-    const active = onlineGamePlayers(), value = structuredClone(settings.initialState);
-    value.scores = active.map(() => 0);
-    if (settings.gameType === "grid") { value.players = active.map((player, index) => ({ ...(value.players?.[index] || {}), name: player.name, computer: false })); for (const key of ["scores", "correct", "wrong"]) value[key] = active.map(() => 0); }
+    const active = onlineGamePlayers(), activeScores = [...online.state.scores], value = structuredClone(settings.initialState);
+    value.scores = [...activeScores];
+    if (settings.gameType === "grid") { value.players = active.map((player, index) => ({ ...(value.players?.[index] || {}), name: player.name, computer: false })); value.scores = [...activeScores]; for (const key of ["correct", "wrong"]) value[key] = active.map(() => 0); }
     let modeState;
     if (settings.gameType === "grid") modeState = { kind: "grid", value };
     if (settings.gameType === "twin") modeState = { kind: "twin", value };
     if (settings.gameType === "randomFive") modeState = { kind: "randomFive", value };
-    await mutateOnline({ type: "mode_state", modeState, currentTurn: 0, scores: active.map(() => 0) });
+    await mutateOnline({ type: "mode_state", modeState, currentTurn: 0, scores: activeScores });
   }
   handleOnlineSpecialState();
 }
