@@ -23,3 +23,13 @@ test("rastgele beşler adayları skorlarına göre sıralanır", () => {
 test("zor bilgisayar en yüksek skorlu futbolcuyu seçer", () => {
   assert.equal(chooseRandomFiveComputer({ pool, clubIds: clubs, difficulty: "hard", rng: () => 0 }).player.id, 1);
 });
+
+test("rastgele beşler normal ve zor seçenek dağılımını korur", () => {
+  const { generateRandomFiveOptions } = require("../web/game-core");
+  const extended = [...pool, { id: 5, name: "Yok 2", clubIds: [98] }, { id: 6, name: "İkili 2", clubIds: [10, 40] }, { id: 7, name: "İkili 3", clubIds: [30, 50] }];
+  const normal = generateRandomFiveOptions({ pool: extended, clubIds: clubs, difficulty: "normal", rng: () => 0 });
+  assert.deepEqual(normal.map((x) => x.score).sort((a,b) => b-a), [3, 1, 0, 0]);
+  const hard = generateRandomFiveOptions({ pool: extended, clubIds: clubs, difficulty: "hard", rng: () => 0 });
+  assert.equal(hard.filter((x) => x.score === 3).length, 1);
+  assert.equal(hard.filter((x) => x.score < 3).length, 3);
+});

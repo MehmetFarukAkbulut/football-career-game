@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=12">',
+  '<link rel="stylesheet" href="web/grid.css?v=13">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -53,7 +53,8 @@ function toast(message) {
   $("#toast").classList.add("show");
   setTimeout(() => $("#toast").classList.remove("show"), 2500);
 }
-function show(id) {
+let handlingPopState = false;
+function show(id, options = {}) {
   clearInterval(timer);
   if (id !== "grid") clearTimeout(computerTimer);
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === id));
@@ -66,7 +67,14 @@ function show(id) {
   if (id === "catalog") renderCatalog(true);
   if (id === "travelers") renderTravelers();
   if (id === "grid") openGrid();
+  if (!handlingPopState && options.history !== false && history.state?.view !== id)
+    history.pushState({ view: id }, "", `#${id}`);
 }
+window.addEventListener("popstate", (event) => {
+  handlingPopState = true;
+  show(event.state?.view || "home", { history: false });
+  handlingPopState = false;
+});
 document.addEventListener(
   "error",
   (event) => {
@@ -225,7 +233,7 @@ function countryFlag(code) {
     ? `web/assets/flags/${code.toLowerCase()}.svg`
     : "web/assets/flags/gb.svg";
 }
-function buildPairs(mode, difficulty, selectedLeagues) {
+function buildPairsForDifficulty(mode, difficulty, selectedLeagues) {
   const pairs = [],
     allowed = (c) =>
       !selectedLeagues.size ||
@@ -273,6 +281,22 @@ function buildPairs(mode, difficulty, selectedLeagues) {
   }
   return pairs.sort(() => Math.random() - 0.5);
 }
+function organizeHomeMenu() {
+  const root = $("#home .mode-grid");
+  if (!root) return;
+  const cards = new Map([...root.querySelectorAll("[data-view]")].map((card) => [card.dataset.view, card]));
+  const addGroup = (title, views) => {
+    const heading = document.createElement("h2"); heading.className = "mode-group-title"; heading.textContent = title; root.append(heading);
+    views.forEach((view) => cards.get(view) && root.append(cards.get(view)));
+  };
+  addGroup("Oyunlar", ["classicSetup", "countrySetup", "grid", "twinSetup", "randomFiveSetup"]);
+  addGroup("Keşfet", ["compare", "catalog", "travelers"]);
+}
+function buildPairs(mode, difficulty, selectedLeagues, count = Infinity) {
+  const levels = difficulty === "hard" ? ["hard", "normal", "easy"] : difficulty === "normal" ? ["normal", "easy"] : ["easy"];
+  const pools = Object.fromEntries(levels.map((level) => [level, buildPairsForDifficulty(mode, level, selectedLeagues)]));
+  return IkiFormaCore.fillQuestionPoolByDifficulty(pools, difficulty, count);
+}
 function startGame(mode, screen) {
   const difficulty = screen.querySelector(".difficulty").value,
     selectedLeagues = new Set(
@@ -294,11 +318,13 @@ function startGame(mode, screen) {
     scores: [0, 0],
     currentTurn: 0,
     playerNames: ["Oyuncu 1", format === "computer" ? "Bilgisayar" : "Oyuncu 2"],
-    pairs: buildPairs(mode, difficulty, selectedLeagues),
+    pairs: buildPairs(mode, difficulty, selectedLeagues, +screen.querySelector(".rounds").value),
     history: [],
   };
   if (!game.pairs.length)
     return toast("Seçilen ligler ve zorluk için uygun eşleşme bulunamadı.");
+  if (game.pairs.length < game.total)
+    toast(`Yalnızca ${game.pairs.length} geçerli ve tekrarsız soru üretilebildi.`);
   $("#score").textContent = 0;
   show("game");
   nextRound();
@@ -596,7 +622,8 @@ function renderMultipleChoice() {
   const root = $("#multipleChoiceOptions");
   root.innerHTML = game.question.optionPlayerIds.map((id, index) => {
     const player = indexes.playerById.get(id), flag = countryFlag(player.nationalityCode);
-    return `<button class="choice-option" data-player-id="${id}" aria-label="${index + 1}. ${esc(player.name)}"><span class="choice-key">${index + 1}</span>${person(player)}<span><b>${esc(player.name)}</b><small><img src="${flag}" alt="" width="22" height="15"> ${esc(player.nationality || "Milliyet bilinmiyor")}</small></span><i aria-hidden="true"></i></button>`;
+    const meta = game.mode === "country" ? (player.birthDate ? `Doğum: ${esc(player.birthDate.slice(0, 4))}` : "Kariyer oyuncusu") : `<img src="${flag}" alt="" width="22" height="15"> ${esc(player.nationality || "Milliyet bilinmiyor")}`;
+    return `<button class="choice-option" data-player-id="${id}" aria-label="${index + 1}. ${esc(player.name)}"><span class="choice-key">${index + 1}</span>${person(player)}<span><b>${esc(player.name)}</b><small>${meta}</small></span><i aria-hidden="true"></i></button>`;
   }).join("");
   root.querySelectorAll("button").forEach((button) => button.onclick = () => answerMultipleChoice(+button.dataset.playerId));
   root.onkeydown = (event) => {
@@ -874,8 +901,8 @@ function openGrid() {
       valid =
         saved?.dataVersion === DATA.version &&
         state?.status === "playing" &&
-        state.grid?.rows?.every((c) => clubMap.has(c.id)) &&
-        state.grid?.cols?.every((c) => clubMap.has(c.id));
+        state.grid?.rows?.every((c) => c.type ? ["club", "league", "country"].includes(c.type) : clubMap.has(c.id)) &&
+        state.grid?.cols?.every((c) => c.type ? ["club", "league", "country"].includes(c.type) : clubMap.has(c.id));
     if (valid) {
       grid = { ...state, thinking: false };
       $("#gridSetup").hidden = true;
@@ -903,40 +930,37 @@ function setGridPlaying(active) {
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
   } else view.classList.remove("grid-playing");
 }
-function generateGrid(selectedLeagues = new Set()) {
-  const active = clubs.filter(
-      (c) =>
-        c.active && (!selectedLeagues.size || selectedLeagues.has(c.leagueId)),
-    ),
-    ids = new Set(active.map((c) => c.id)),
-    near = new Map(active.map((c) => [c.id, new Set()]));
-  for (const p of players) {
-    const list = p.clubIds.filter((id) => ids.has(id));
-    for (let i = 0; i < list.length; i++)
-      for (let j = i + 1; j < list.length; j++) {
-        near.get(list[i]).add(list[j]);
-        near.get(list[j]).add(list[i]);
-      }
-  }
-  const pool = active.filter((c) => near.get(c.id).size >= 6);
-  for (let n = 0; n < 1500; n++) {
-    const rows = [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
-    if (rows.length < 3) break;
-    const common = [...near.get(rows[0].id)].filter(
-      (id) =>
-        !rows.some((r) => r.id === id) &&
-        near.get(rows[1].id).has(id) &&
-        near.get(rows[2].id).has(id),
-    );
-    if (common.length >= 3)
-      return {
-        rows,
-        cols: common
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 3)
-          .map((id) => clubMap.get(id)),
-        marks: Array(9).fill(null),
-      };
+function criterionClub(club) { return { type: "club", id: club.id, name: club.name, country: club.country, logoAsset: club.logoAsset, logo: club.logo }; }
+function gridCriterionPools(selectedLeagues) {
+  const active = clubs.filter((club) => club.active && (!selectedLeagues.size || selectedLeagues.has(club.leagueId)));
+  const clubCriteria = active
+    .filter((club) => (clubPlayers.get(+club.id) || []).length >= 4)
+    .sort((a, b) => (b.popularityScore || 0) - (a.popularityScore || 0))
+    .slice(0, 350).map(criterionClub);
+  const leagueCriteria = (DATA.leagues || []).filter((league) => IkiFormaCore.GRID_LEAGUE_IDS.includes(league.id)).map((league) => ({ type: "league", id: league.id, name: league.name, country: league.countryName }));
+  const countries = new Map();
+  for (const player of players) if (player.nationalityCode && !countries.has(player.nationalityCode)) countries.set(player.nationalityCode, { type: "country", id: player.nationalityCode, code: player.nationalityCode, name: player.nationality, country: "Ülke" });
+  const countryCriteria = [...countries.values()]
+    .filter((criterion) => (indexes.nationalityPlayerIds.get(criterion.code) || new Set()).size >= 30)
+    .sort((a, b) => (indexes.nationalityPlayerIds.get(b.code)?.size || 0) - (indexes.nationalityPlayerIds.get(a.code)?.size || 0))
+    .slice(0, 45);
+  return { clubCriteria, leagueCriteria, countryCriteria };
+}
+function generateGrid(selectedLeagues = new Set(), type = "club") {
+  const pools = gridCriterionPools(selectedLeagues), shuffled = (list) => [...list].sort(() => Math.random() - .5);
+  for (let attempt = 0; attempt < 250; attempt++) {
+    let rowPool, colPool;
+    if (type === "leagueClub") [rowPool, colPool] = [pools.leagueCriteria, pools.clubCriteria];
+    else if (type === "countryClub") [rowPool, colPool] = [pools.countryCriteria, pools.clubCriteria];
+    else if (type === "mixed") [rowPool, colPool] = [[...pools.clubCriteria, ...pools.leagueCriteria, ...pools.countryCriteria], [...pools.clubCriteria, ...pools.leagueCriteria, ...pools.countryCriteria]];
+    else [rowPool, colPool] = [pools.clubCriteria, pools.clubCriteria];
+    const rows = shuffled(rowPool).slice(0, 3);
+    if (rows.length < 3) continue;
+    const eligible = colPool.filter((criterion) =>
+      !rows.some((row) => row.type === criterion.type && row.id === criterion.id) &&
+      rows.every((row) => IkiFormaCore.getPlayersForCriteria(row, criterion, indexes).length));
+    const cols = shuffled(eligible).slice(0, 3);
+    if (cols.length === 3) return { rows, cols, marks: Array(9).fill(null), type };
   }
   return null;
 }
@@ -946,7 +970,7 @@ function startGridGame() {
       ...$("#gridSetup").querySelectorAll(".grid-league-options input:checked"),
     ].map((input) => input.value),
   );
-  const board = generateGrid(selectedLeagues);
+  const board = generateGrid(selectedLeagues, $("#gridType").value);
   if (!board)
     return toast("Geçerli bir ızgara üretilemedi. Lig seçimini genişletin.");
   grid = IkiFormaCore.createGridState({
@@ -955,6 +979,7 @@ function startGridGame() {
     names: [$("#gridNameOne").value, $("#gridNameTwo").value],
   });
   grid.grid = board;
+  grid.answerMethod = $("#gridAnswerMethod").value;
   if (grid.mode === "online") {
     grid.mode = "duo"; grid.players[1].computer = false;
     return openSpecialOnlineLobby({ gameType: "grid", difficulty: grid.difficulty, leagueIds: [...selectedLeagues], initialState: grid });
@@ -967,16 +992,20 @@ function startGridGame() {
   announceTurn();
 }
 function renderGrid() {
+  const criterionHead = (criterion) => criterion.type === "country"
+    ? `<img class="flag" src="${countryFlag(criterion.code)}" alt=""><small>${esc(criterion.name)}</small><span>Ülke</span>`
+    : criterion.type === "league" ? `<span class="criterion-icon">🏆</span><small>${esc(criterion.name)}</small><span>Lig</span>`
+    : `${logo(criterion)}<small>${esc(criterion.name)}</small><span>${esc(criterion.country || "")}</span>`;
   let html =
     '<div class="grid-head"></div>' +
     grid.grid.cols
       .map(
         (c) =>
-          `<div class="grid-head" title="${esc(c.name)}">${logo(c)}<small>${esc(c.name)}</small><span>${esc(c.country || "")}</span></div>`,
+          `<div class="grid-head" title="${esc(c.name)}">${criterionHead(c)}</div>`,
       )
       .join("");
   grid.grid.rows.forEach((r, ri) => {
-    html += `<div class="grid-head" title="${esc(r.name)}">${logo(r)}<small>${esc(r.name)}</small><span>${esc(r.country || "")}</span></div>`;
+    html += `<div class="grid-head" title="${esc(r.name)}">${criterionHead(r)}</div>`;
     grid.grid.cols.forEach((c, ci) => {
       const i = ri * 3 + ci,
         m = grid.grid.marks[i],
@@ -1014,16 +1043,23 @@ function openGridEntry(i) {
   $("#gridPrompt").textContent = `${r.name} × ${c.name}`;
   $("#gridInput").value = "";
   $("#gridSuggestions").innerHTML = "";
+  $("#gridInput").hidden = grid.answerMethod === "multiple";
+  $("#gridChoices").hidden = grid.answerMethod !== "multiple";
+  $("#gridChoices").innerHTML = "";
   $("#gridEntry").hidden = false;
   renderGrid();
-  $("#gridInput").focus();
+  if (grid.answerMethod === "multiple") {
+    grid.question = IkiFormaCore.generateCriteriaMultipleChoiceQuestion({ first: r, second: c, indexes, difficulty: grid.difficulty });
+    if (!grid.question) { $("#gridEntry").hidden = true; return toast("Bu hücre için dört geçerli seçenek üretilemedi."); }
+    renderPlayerChoices($("#gridChoices"), grid.question.optionPlayerIds.map((id) => indexes.playerById.get(id)), submitGridPlayer);
+  } else $("#gridInput").focus();
 }
 async function submitGridPlayer(player) {
   if (!player || grid.selectedCell == null) return;
   const i = grid.selectedCell,
     r = grid.grid.rows[Math.floor(i / 3)],
     c = grid.grid.cols[i % 3],
-    valid = indexes.commonPlayerIds(r.id, c.id).has(player.id);
+    valid = IkiFormaCore.playerMatchesCriterion(player, r, indexes) && IkiFormaCore.playerMatchesCriterion(player, c, indexes);
   try {
     grid = IkiFormaCore.applyAttempt(grid, {
       cellIndex: i,
@@ -1056,9 +1092,7 @@ function hasGridMoves() {
     if (mark) return false;
     const row = grid.grid.rows[Math.floor(i / 3)],
       col = grid.grid.cols[i % 3];
-    return [...indexes.commonPlayerIds(row.id, col.id)].some(
-      (id) => !grid.usedPlayerIds.includes(id),
-    );
+    return IkiFormaCore.getPlayersForCriteria(row, col, indexes).length > 0;
   });
 }
 function announceTurn() {
@@ -1075,13 +1109,13 @@ function computerMove() {
   const i = open[Math.floor(Math.random() * open.length)],
     r = grid.grid.rows[Math.floor(i / 3)],
     c = grid.grid.cols[i % 3],
-    choice = IkiFormaCore.chooseComputerMove({
-      rowId: r.id,
-      colId: c.id,
-      difficulty: grid.difficulty,
-      indexes,
-      used: new Set(grid.usedPlayerIds),
-    });
+    validPlayers = IkiFormaCore.getPlayersForCriteria(r, c, indexes),
+    wrongPlayers = IkiFormaCore.getOneCriterionOnlyPlayers(r, c, indexes),
+    accuracy = IkiFormaCore.DIFFICULTIES[grid.difficulty].accuracy,
+    correct = validPlayers.length && (!wrongPlayers.length || Math.random() < accuracy),
+    choicePool = correct ? validPlayers : wrongPlayers,
+    picked = choicePool[Math.floor(Math.random() * choicePool.length)],
+    choice = picked ? { playerId: picked.id, valid: correct, delay: 650 } : null;
   if (!choice) return finishGrid();
   computerTimer = setTimeout(() => {
     if (grid.status !== "playing") return;
@@ -1246,8 +1280,9 @@ function renderRandomFiveRound() {
   $("#randomFiveSuggestions").innerHTML = "";
   $("#randomFiveSuggestions").classList.toggle("inline-choices", randomFive.answerMethod === "multiple");
   if (randomFive.answerMethod === "multiple") {
-    const choices = IkiFormaCore.randomFiveRanking(randomFive.pool, set.map((club) => club.id)).slice(0, 4).map((entry) => entry.player);
-    renderPlayerChoices($("#randomFiveSuggestions"), choices, submitRandomFiveGuess);
+    randomFive.choiceEntries = IkiFormaCore.generateRandomFiveOptions({ pool: randomFive.pool, clubIds: set.map((club) => club.id), difficulty: randomFive.difficulty });
+    if (!randomFive.choiceEntries) return toast("Bu set için dört kaliteli seçenek üretilemedi.");
+    renderPlayerChoices($("#randomFiveSuggestions"), randomFive.choiceEntries.map((entry) => entry.player), submitRandomFiveGuess);
   }
   $("#randomFiveReveal").hidden = true;
   $("#randomFiveNext").hidden = true;
@@ -1263,6 +1298,8 @@ async function submitRandomFiveGuess(player) {
   $("#randomFiveSuggestions").innerHTML = "";
   if (randomFive.mode === "duo" && randomFive.guesses.length === 1) {
     $("#randomFiveTurn").textContent = `${randomFive.names[1]} tahminini girsin. İlk tahmin gizlendi.`;
+    if (randomFive.answerMethod === "multiple")
+      renderPlayerChoices($("#randomFiveSuggestions"), randomFive.choiceEntries.map((entry) => entry.player), submitRandomFiveGuess);
     return $("#randomFiveInput").focus();
   }
   if (randomFive.online && randomFive.guesses.length === 1) {
@@ -1270,7 +1307,12 @@ async function submitRandomFiveGuess(player) {
     return handleOnlineSpecialState();
   }
   if (randomFive.mode === "computer" && randomFive.guesses.length === 1) {
-    const guess = IkiFormaCore.chooseRandomFiveComputer({ pool: randomFive.pool, clubIds: ids, difficulty: randomFive.difficulty });
+    let guess;
+    if (randomFive.answerMethod === "multiple") {
+      const ranked = [...randomFive.choiceEntries].sort((a, b) => b.score - a.score);
+      const pick = randomFive.difficulty === "hard" ? 0 : randomFive.difficulty === "easy" ? Math.min(ranked.length - 1, 2 + Math.floor(Math.random() * 2)) : Math.floor(Math.random() * Math.min(2, ranked.length));
+      guess = ranked[pick];
+    } else guess = IkiFormaCore.chooseRandomFiveComputer({ pool: randomFive.pool, clubIds: ids, difficulty: randomFive.difficulty });
     if (guess) randomFive.guesses.push(guess.player);
   }
   revealRandomFiveRound();
@@ -1316,7 +1358,7 @@ $("#randomFiveInput").oninput = (event) => {
   const q = norm(event.target.value), ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [];
   if (q.length < 2) return ($("#randomFiveSuggestions").innerHTML = "");
   const hits = (randomFive.pool || []).filter((player) => IkiFormaCore.randomFiveScore(player, ids) > 0 && norm(player.name).includes(q)).slice(0, 10);
-  $("#randomFiveSuggestions").innerHTML = hits.map((player) => `<button class="player-suggestion" data-random-five-player="${player.id}">${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")} • ${IkiFormaCore.randomFiveScore(player, ids)} kulüp</small></span></button>`).join("") || "<button disabled>Eşleşen geçerli futbolcu yok</button>";
+  $("#randomFiveSuggestions").innerHTML = hits.map((player) => `<button class="player-suggestion" data-random-five-player="${player.id}">${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")}</small></span></button>`).join("") || "<button disabled>Eşleşen geçerli futbolcu yok</button>";
   $$('[data-random-five-player]').forEach((button) => button.onclick = () => submitRandomFiveGuess(indexes.playerById.get(+button.dataset.randomFivePlayer)));
 };
 $("#randomFiveInput").onkeydown = (event) => { if (event.key === "Enter") { const ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [], player = (randomFive.pool || []).find((item) => norm(item.name) === norm(event.target.value) && IkiFormaCore.randomFiveScore(item, ids) > 0); if (player) submitRandomFiveGuess(player); else toast("Gösterilen kulüplerden en az birinde oynamış bir futbolcu seç."); } };
@@ -1372,9 +1414,9 @@ function renderTwinTurn() {
   $("#twinSuggestions").innerHTML = "";
   $("#twinSuggestions").classList.toggle("inline-choices", twin.answerMethod === "multiple");
   if (twin.answerMethod === "multiple") {
-    const ranked = IkiFormaCore.careerTwinRanking(target, twin.pool, metric.key);
-    const choices = [ranked[0], ranked[3], ranked[7], ranked[12]].filter(Boolean).map((entry) => entry.player);
-    renderPlayerChoices($("#twinSuggestions"), choices, submitTwinGuess);
+    twin.choiceEntries = IkiFormaCore.generateTwinOptions({ target, pool: twin.pool, metric: metric.key });
+    if (!twin.choiceEntries) return toast("Bu metrik için dengeli seçenek üretilemedi.");
+    renderPlayerChoices($("#twinSuggestions"), twin.choiceEntries.map((entry) => entry.player), submitTwinGuess);
   }
   $("#twinMessage").textContent = "";
   $("#twinReveal").hidden = true;
@@ -1388,6 +1430,8 @@ async function submitTwinGuess(player) {
   $("#twinSuggestions").innerHTML = "";
   if (twin.mode === "duo" && twin.guesses.length === 1) {
     $("#twinTurn").textContent = `${twin.names[1]} tahminini girsin. İlk tahmin gizlendi.`;
+    if (twin.answerMethod === "multiple")
+      renderPlayerChoices($("#twinSuggestions"), twin.choiceEntries.map((entry) => entry.player), submitTwinGuess);
     $("#twinInput").focus();
     return;
   }
@@ -1396,7 +1440,9 @@ async function submitTwinGuess(player) {
     return handleOnlineSpecialState();
   }
   if (twin.mode === "computer" && twin.guesses.length === 1) {
-    const guess = IkiFormaCore.chooseTwinComputerGuess({ target: twin.targets[twin.round], pool: twin.pool, metric: IkiFormaCore.TWIN_METRICS[twin.metric].key, difficulty: twin.difficulty });
+    const guess = twin.answerMethod === "multiple"
+      ? IkiFormaCore.chooseTwinComputerOption({ options: twin.choiceEntries, difficulty: twin.difficulty })
+      : IkiFormaCore.chooseTwinComputerGuess({ target: twin.targets[twin.round], pool: twin.pool, metric: IkiFormaCore.TWIN_METRICS[twin.metric].key, difficulty: twin.difficulty });
     if (guess) twin.guesses.push(guess.player);
   }
   revealTwinMetric();
@@ -1513,8 +1559,10 @@ async function init() {
     enhanceLeagueSelector($("#gridSetup"));
     enhanceLeagueSelector($("#twinSetup"));
     enhanceLeagueSelector($("#randomFiveSetup"));
+    organizeHomeMenu();
     if (await restoreOnlineSession()) return;
     const requested = location.hash.slice(1);
+    history.replaceState({ view: "home" }, "", "#home");
     show(
       document.getElementById(requested)?.classList.contains("view")
         ? requested

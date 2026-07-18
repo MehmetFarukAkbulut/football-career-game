@@ -22,3 +22,14 @@ test("kariyer ikizinde hedefe daha yakın tahmin puanı kazanır", () => {
   assert.equal(result.winner, 0);
   assert.deepEqual(result.distances, [2, 7]);
 });
+
+test("ikiz seçenekleri uzaklık dilimlerine yayılır ve bilgisayar aynı havuzu kullanır", () => {
+  const { generateTwinOptions, chooseTwinComputerOption } = require("../web/game-core");
+  const target = { id: 1, goals: 100 }, pool = [target, ...Array.from({ length: 40 }, (_, i) => ({ id: i + 2, name: `P${i}`, goals: i + 1, appearances: 50 }))];
+  const options = generateTwinOptions({ target, pool, metric: "goals", rng: () => 0 });
+  assert.equal(options.length, 4);
+  assert.ok(new Set(options.map((x) => x.distance)).size >= 3);
+  const hard = chooseTwinComputerOption({ options, difficulty: "hard", rng: () => 0 });
+  assert.equal(hard.distance, Math.min(...options.map((x) => x.distance)));
+  assert.ok(options.some((x) => x.player.id === hard.player.id));
+});

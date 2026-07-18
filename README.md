@@ -1,5 +1,9 @@
 # İki Forma
 
+> Veri denetimi: `npm run data:audit` üretilmiş paketteki bütün oyuncuları Transfermarkt/player ID eşitliği, benzersiz kimlik, isim, milliyet kodu, doğum tarihi, fotoğraf URL'si, A takım kariyeri, kulüp referansları ve istatistik alanları açısından tarar. Rapor `data/player-data-audit.json` dosyasına yazılır. İsim benzerliğiyle kayıt birleştirilmez; kalıcı düzeltmeler generated JSON yerine override/export katmanına eklenir.
+
+Zor soru havuzu yetmezse normal, ardından kolay havuz tekrarsız biçimde kullanılır. Ülke × Kulüp çoktan seçmelide tüm seçenekler hedef vatandaşlıktandır. Izgara; Kulüp × Kulüp, Lig × Kulüp, Ülke × Kulüp ve Karışık kriterlerini serbest metin veya çoktan seçmeli destekler; lig kriterleri Premier League, LaLiga, Serie A, Bundesliga, Ligue 1 ve Süper Lig ile sınırlıdır.
+
 GitHub Pages üzerinde çalışan, 28 binden fazla doğrulanmış oyuncu kariyerini kullanan futbol bilgi oyunu. İki Forma ve Ülke × Forma oyunları serbest metin veya dört seçenekli oynanabilir; tek oyuncu, aynı cihazda iki oyuncu, bilgisayara karşı ve Supabase destekli online iki oyuncu biçimleri bulunur.
 
 Kulüp Izgarası, Kariyer İkizi ve Rastgele Beşler de aynı oda kodlu online altyapıyı kullanır. Kariyer İkizi ve Rastgele Beşler serbest metin veya dört seçenekli oynanabilir. Futbolcular farklı sorularda ve hücrelerde tekrar kullanılabilir; bunun için ayrıca bir ayar gösterilmez.
