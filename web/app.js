@@ -5,7 +5,7 @@ document.head.insertAdjacentHTML(
 );
 document.head.insertAdjacentHTML(
   "beforeend",
-  '<link rel="stylesheet" href="web/grid.css?v=18">',
+  '<link rel="stylesheet" href="web/grid.css?v=19">',
 );
 const $ = (s) => document.querySelector(s),
   $$ = (s) => [...document.querySelectorAll(s)],
@@ -307,7 +307,7 @@ function renderRatingRound() {
   $("#ratingScore").textContent = `Skor ${ratingGame.score}`;
   $("#ratingMessage").textContent = "Bir futbolcu seç.";
   $("#ratingNext").hidden = true;
-  $("#ratingChoices").innerHTML = pair.map((player) => `<button class="rating-player" data-rating-player="${player.eaId}" aria-label="${esc(player.name)} futbolcusunu seç"><span class="rating-card-image">${player.cardUrl ? `<img src="${esc(player.cardUrl)}" alt="${esc(player.name)} FC 26 kartı">` : `<span class="avatar">${esc(initials(player.name))}</span>`}</span><strong>${esc(player.name)}</strong><span>${esc(player.team || "Kulüp bilgisi yok")}</span><small>${esc(player.nation)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small><b class="rating-value" hidden>${player.overall}</b></button>`).join("");
+  $("#ratingChoices").innerHTML = pair.map((player) => `<button class="rating-player" data-rating-player="${player.eaId}" aria-label="${esc(player.name)} futbolcusunu seç"><span class="rating-card-image">${player.cardUrl ? `<img src="${esc(player.cardUrl)}" alt="${esc(player.name)} oyuncu fotoğrafı">` : `<span class="avatar">${esc(initials(player.name))}</span>`}</span><strong>${esc(player.name)}</strong><span>${esc(player.team || "Kulüp bilgisi yok")}</span><small>${esc(player.nation)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small><b class="rating-value" hidden>${player.overall}</b></button>`).join("");
   $$("[data-rating-player]").forEach((button) => button.onclick = () => answerRating(+button.dataset.ratingPlayer));
 }
 
