@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 const DIFFICULTIES = {
   easy: { accuracy: 0.52, delay: [1800, 3500] },
@@ -673,44 +673,44 @@ function simulateTournamentMatch(teamRating, opponentRating, rng = Math.random, 
 }
 
 function simulateXiTournament({ averageRating, difficulty = "normal", tournament = "ucl", rng = Math.random }) {
-  const modifier = difficulty === "hard" ? 1.5 : difficulty === "easy" ? -4 : -1;
+  const difficultyOffset = difficulty === "hard" ? 2 : difficulty === "easy" ? -3 : 0;
   const stages = [];
+  const opponent = (base, spread) => base + difficultyOffset + rng() * spread;
+  const play = (rating, base, spread, draw = false) => simulateTournamentMatch(rating, opponent(base, spread), rng, draw);
+
   if (tournament === "worldCup") {
     let points = 0;
     for (let match = 1; match <= 3; match++) {
-      const result = simulateTournamentMatch(averageRating, 77 + modifier + rng() * 6, rng, true);
+      const result = play(averageRating, 76.5, 5.5, true);
       points += result === "win" ? 3 : result === "draw" ? 1 : 0;
       stages.push({ stage: `Grup maçı ${match}`, result });
     }
-    const position = points >= 7 ? 1 : points >= 5 ? 2 : points >= 4 ? 3 : 4;
+    const position = points >= 7 ? 1 : points >= 5 ? 2 : points >= 3 ? 3 : 4;
     stages.push({ stage: "Grup", result: `${points} puan · ${position}. sıra` });
-    if (position === 4 || (position === 3 && points < 4)) return { stages, outcome: "Grup aşamasında elendin", matches: 3 };
-    for (const stage of ["Son 32", "Son 16", "Çeyrek final", "Yarı final", "Final"]) {
-      const result = simulateTournamentMatch(averageRating, 79 + modifier + rng() * 6, rng);
-      stages.push({ stage, result });
-      if (result === "loss") return { stages, outcome: `${stage} aşamasında elendin`, matches: stages.filter((item) => ["win", "draw", "loss"].includes(item.result)).length };
+    if (position === 4) return { stages, outcome: "Grup aşamasında elendin", matches: 3 };
+    for (const [stage, base, spread] of [["Son 32",78,5],["Son 16",79,5],["Çeyrek final",80,5],["Yarı final",81,5],["Final",82,5]]) {
+      const result = play(averageRating, base, spread); stages.push({ stage, result });
+      if (result === "loss") return { stages, outcome: `${stage} aşamasında elendin`, matches: stages.filter((item) => ["win","draw","loss"].includes(item.result)).length };
     }
     return { stages, outcome: "Dünya Kupası şampiyonu oldun!", matches: 8 };
   }
+
   let points = 0;
   for (let match = 1; match <= 8; match++) {
-    const result = simulateTournamentMatch(averageRating, 76 + modifier + rng() * 8, rng, true);
+    const result = play(averageRating, 75.5, 7, true);
     points += result === "win" ? 3 : result === "draw" ? 1 : 0;
     stages.push({ stage: `Lig maçı ${match}`, result });
   }
-  const rank = points >= 19 ? 3 : points >= 16 ? 7 : points >= 13 ? 12 : points >= 10 ? 20 : 29;
+  const rank = points >= 18 ? 3 : points >= 15 ? 7 : points >= 12 ? 14 : points >= 9 ? 22 : 29;
   stages.push({ stage: "Lig etabı", result: `${points} puan · ${rank}. sıra` });
   if (rank > 24) return { stages, outcome: `Lig etabını ${rank}. bitirdin ve elendin`, matches: 8 };
   if (rank > 8) {
-    const playoff = simulateTournamentMatch(averageRating, 80 + modifier + rng() * 5, rng);
-    stages.push({ stage: "Son 16 play-off (2 maç)", result: playoff });
+    const playoff = play(averageRating, 79.5, 4.5); stages.push({ stage: "Son 16 play-off (2 maç)", result: playoff });
     if (playoff === "loss") return { stages, outcome: "Son 16 play-off aşamasında elendin", matches: 10 };
   }
   let matches = rank > 8 ? 10 : 8;
-  for (const [stage, legs] of [["Son 16", 2], ["Çeyrek final", 2], ["Yarı final", 2], ["Final", 1]]) {
-    const result = simulateTournamentMatch(averageRating, 81 + modifier + rng() * 5, rng);
-    stages.push({ stage: `${stage}${legs === 2 ? " (2 maç)" : ""}`, result });
-    matches += legs;
+  for (const [stage, legs, base] of [["Son 16",2,80],["Çeyrek final",2,81],["Yarı final",2,82],["Final",1,83]]) {
+    const result = play(averageRating, base, 4.5); stages.push({ stage: `${stage}${legs === 2 ? " (2 maç)" : ""}`, result }); matches += legs;
     if (result === "loss") return { stages, outcome: `${stage} aşamasında elendin`, matches };
   }
   return { stages, outcome: "Şampiyonlar Ligi şampiyonu oldun!", matches };
