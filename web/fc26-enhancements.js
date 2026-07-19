@@ -699,3 +699,231 @@
 
 
 
+
+// ============================================================
+// FC26 KATALOG ANA MENU GIRISI
+// ============================================================
+
+function ensureFc26CatalogMenuCard() {
+
+  // Katalog zaten ana menude varsa ikinci kez ekleme.
+  if (document.querySelector("[data-fc26-catalog-menu]")) {
+    return;
+  }
+
+  // Ana sayfadaki oyun/menu kartlarini bul.
+  const cards = Array.from(
+    document.querySelectorAll(
+      ".game-card, .mode-card, [data-game], .home-card"
+    )
+  );
+
+  if (!cards.length) {
+    return;
+  }
+
+  // MÃ¼mkÃ¼nse Futbolcu KataloÄŸu kartÄ±nÄ± referans al.
+  const reference =
+    cards.find((card) =>
+      /Futbolcu KataloÄŸu/i.test(card.textContent || "")
+    ) ||
+    cards[cards.length - 1];
+
+  const card = reference.cloneNode(true);
+
+  card.setAttribute(
+    "data-fc26-catalog-menu",
+    "true"
+  );
+
+  // Eski oyun/menu attribute'larini temizle.
+  [
+    "data-game",
+    "data-mode",
+    "data-view",
+    "data-action"
+  ].forEach((attr) => {
+    card.removeAttribute(attr);
+  });
+
+  // Kart icerigini degistir.
+  const title =
+    card.querySelector(
+      "h2, h3, h4, strong, .title, .card-title"
+    );
+
+  const description =
+    card.querySelector(
+      "p, .description, .card-description"
+    );
+
+  if (title) {
+    title.textContent =
+      "FC 26 Futbolcu KartlarÄ±";
+  }
+
+  if (description) {
+    description.textContent =
+      "GerÃ§ek FC 26 kartlarÄ±nÄ± gÃ¶rÃ¼ntÃ¼le, filtrele ve incele.";
+  }
+
+  // Emoji/icon varsa deÄŸiÅŸtir.
+  const icon =
+    card.querySelector(
+      ".icon, .emoji, .game-icon, .mode-icon"
+    );
+
+  if (icon) {
+    icon.textContent = "â­";
+  }
+
+  // Clone edilen eski click davranisini engellemek icin
+  // yeni node ile tekrar klonla.
+  const cleanCard =
+    card.cloneNode(true);
+
+  cleanCard.setAttribute(
+    "data-fc26-catalog-menu",
+    "true"
+  );
+
+  cleanCard.style.cursor =
+    "pointer";
+
+  cleanCard.addEventListener(
+    "click",
+    (event) => {
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (
+        typeof window.openFc26Catalog ===
+        "function"
+      ) {
+
+        window.openFc26Catalog();
+
+        return;
+      }
+
+      // Mevcut katalog butonu varsa onu tetikle.
+      const existingButton =
+        document.querySelector(
+          '[data-open-fc26-catalog]'
+        );
+
+      if (existingButton) {
+
+        existingButton.click();
+
+        return;
+      }
+
+      // fc26Catalog view mevcutsa doÄŸrudan aÃ§.
+      const catalog =
+        document.getElementById(
+          "fc26Catalog"
+        );
+
+      if (catalog) {
+
+        document
+          .querySelectorAll(
+            ".game-screen, .screen, .view"
+          )
+          .forEach((screen) => {
+
+            if (screen !== catalog) {
+              screen.hidden = true;
+            }
+
+          });
+
+        catalog.hidden = false;
+
+        catalog.style.display =
+          "";
+
+        window.scrollTo(
+          0,
+          0
+        );
+
+      }
+
+    }
+  );
+
+  reference.parentElement.appendChild(
+    cleanCard
+  );
+
+}
+
+
+// DOM hazir oldugunda ekle.
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+      setTimeout(
+        ensureFc26CatalogMenuCard,
+        500
+      );
+
+    }
+  );
+
+}
+else {
+
+  setTimeout(
+    ensureFc26CatalogMenuCard,
+    500
+  );
+
+}
+
+
+// Ana menu yeniden render edilirse tekrar kontrol et.
+
+const fc26CatalogMenuObserver =
+  new MutationObserver(() => {
+
+    const isHomeVisible =
+      document.querySelector(
+        ".game-card, .mode-card, [data-game], .home-card"
+      );
+
+    if (isHomeVisible) {
+
+      ensureFc26CatalogMenuCard();
+
+    }
+
+  });
+
+
+setTimeout(() => {
+
+  if (document.body) {
+
+    fc26CatalogMenuObserver.observe(
+      document.body,
+      {
+        childList: true,
+        subtree: true
+      }
+    );
+
+  }
+
+}, 1000);
+

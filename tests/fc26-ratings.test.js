@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -12,7 +12,7 @@ test("FC 26 paketi güncel update 2 oyuncularını ve mevkileri içerir", () => 
   assert.ok(data.players.every((player) => player.name && player.position && player.league && Number.isInteger(player.age) && Number.isInteger(player.overall)));
   assert.ok(data.players.every((player) => Array.isArray(player.alternativePositions)));
   assert.equal(data.players.filter((player) => player.photoUrl).length, data.players.length);
-  assert.equal(data.players.filter((player) => player.cardUrl).length, 0);
+  assert.ok(data.players.filter((player) => player.cardUrl).length > 17000);
   assert.equal(data.photoCoverage.careerDataMatches + data.photoCoverage.eaIdPortraits, data.players.length);
 });
 
@@ -102,3 +102,4 @@ test("Gizli Futbolcu sekiz tahmin ve lig filtresiyle ana menüde bulunur", async
   assert.match(source, /lig seçili • seçim yoksa tümü/);
   assert.match(source, /evaluateMysteryGuess/);
 });
+
