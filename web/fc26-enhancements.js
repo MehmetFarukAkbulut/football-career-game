@@ -505,77 +505,169 @@
     const position = document.getElementById("fc26Position")?.value || "";
     const gender = document.getElementById("fc26Gender")?.value || "";
 
-    return fcPlayers.filter((player) => {
-      const stats = playerStats(player);
-      if (query && !norm(`${player.name} ${player.team} ${player.nation} ${player.league}`).includes(query)) return false;
-      if (league && player.league !== league) return false;
-      if (team && player.team !== team) return false;
-      if (nation && player.nation !== nation) return false;
-      if (position && player.position !== position && !(player.alternativePositions || []).includes(position)) return false;
-      if (gender && player.gender !== gender) return false;
-      return true;
-    });
-  }
+    return fcPlayers
+      .filter((player) => {
+        if (
+          query &&
+          !norm(
+            `${player.name} ${player.team} ${player.nation} ${player.league}`
+          ).includes(query)
+        ) {
+          return false;
+        }
 
-  function fcCardImage(player) {
-    return player.cardUrl || player.cardImageUrl || player.itemImageUrl || player.fcCardUrl || player.photoUrl || "";
-  }
+        if (league && player.league !== league) return false;
+        if (team && player.team !== team) return false;
+        if (nation && player.nation !== nation) return false;
 
+        if (
+          position &&
+          player.position !== position &&
+          !(player.alternativePositions || []).includes(position)
+        ) {
+          return false;
+        }
+
+        if (gender && player.gender !== gender) return false;
+
+        return true;
+      })
+      .sort(
+        (a, b) =>
+          Number(b.overall || 0) - Number(a.overall || 0) ||
+          String(a.name).localeCompare(String(b.name), "tr")
+      );
+  }
   function renderFcCatalog() {
     const grid = document.getElementById("fc26CatalogGrid");
     if (!grid) return;
-    const filtered = filteredFcPlayers().sort((a, b) =>
-      playerStats(b).overall - playerStats(a).overall ||
-      String(a.name).localeCompare(String(b.name), "tr")
+
+    const filtered = filteredFcPlayers();
+
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filtered.length / PAGE_SIZE)
     );
 
-    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-    fcCatalogPage = Math.min(fcCatalogPage, totalPages);
-    const start = (fcCatalogPage - 1) * PAGE_SIZE;
-    const page = filtered.slice(start, start + PAGE_SIZE);
+    fcCatalogPage = Math.min(
+      fcCatalogPage,
+      totalPages
+    );
 
-    document.getElementById("fc26CatalogCount").textContent =
-      `${filtered.length.toLocaleString("tr-TR")} futbolcu`;
-    document.getElementById("fc26Page").textContent =
-      `${fcCatalogPage} / ${totalPages}`;
-    document.getElementById("fc26Prev").disabled = fcCatalogPage <= 1;
-    document.getElementById("fc26Next").disabled = fcCatalogPage >= totalPages;
+    const start =
+      (fcCatalogPage - 1) * PAGE_SIZE;
+
+    const page =
+      filtered.slice(
+        start,
+        start + PAGE_SIZE
+      );
+
+    const count =
+      document.getElementById("fc26CatalogCount");
+
+    const pageLabel =
+      document.getElementById("fc26Page");
+
+    const previous =
+      document.getElementById("fc26Prev");
+
+    const next =
+      document.getElementById("fc26Next");
+
+    if (count) {
+      count.textContent =
+        `${filtered.length.toLocaleString("tr-TR")} futbolcu`;
+    }
+
+    if (pageLabel) {
+      pageLabel.textContent =
+        `${fcCatalogPage} / ${totalPages}`;
+    }
+
+    if (previous) {
+      previous.disabled =
+        fcCatalogPage <= 1;
+    }
+
+    if (next) {
+      next.disabled =
+        fcCatalogPage >= totalPages;
+    }
 
     if (!page.length) {
-      grid.innerHTML =
-        '<div class="surface fc26-catalog-empty"><h3>Sonuç bulunamadı</h3><p>Filtreleri gevşeterek tekrar deneyin.</p></div>';
+
+      grid.innerHTML = `
+        <div class="surface fc26-catalog-empty">
+          <h3>SonuÃ§ bulunamadÄ±</h3>
+          <p>Filtreleri deÄŸiÅŸtirerek tekrar deneyin.</p>
+        </div>
+      `;
+
       return;
     }
 
-    grid.innerHTML = page.map((player) => {
-      const stats = playerStats(player);
-      const positions = [player.position, ...(player.alternativePositions || [])].filter(Boolean).join(" / ");
-      return `
-        <article class="fc26-player-card">
-          <div class="fc26-game-card" aria-label="${esc(player.name)} FC 26 kartı">
-            <div class="fc26-game-card-head">
-              <div class="fc26-game-rating"><strong>${stats.overall || "—"}</strong><span>${esc(player.position || "")}</span></div>
-              <div class="fc26-game-player-photo">
-                ${player.photoUrl ? `<img src="${esc(player.photoUrl)}" alt="${esc(player.name)}" loading="lazy">` : `<span class="avatar">${esc(initials(player.name))}</span>`}
-              </div>
-            </div>
-            <div class="fc26-game-name">${esc(player.name)}</div>
-            <div class="fc26-game-team">${esc(player.team || "Takım bilinmiyor")}</div>
-            <div class="fc26-game-stats">
-              <span><b>${stats.pace || "—"}</b><small>PAC</small></span>
-              <span><b>${stats.shooting || "—"}</b><small>SHO</small></span>
-              <span><b>${stats.passing || "—"}</b><small>PAS</small></span>
-              <span><b>${stats.dribbling || "—"}</b><small>DRI</small></span>
-              <span><b>${stats.defending || "—"}</b><small>DEF</small></span>
-              <span><b>${stats.physical || "—"}</b><small>PHY</small></span>
-            </div>
-          </div>
-          <div class="fc26-card-meta">${esc(player.nation || "Milliyet bilinmiyor")} · ${esc(positions || "Mevki bilinmiyor")}<br>${esc(player.league || "Lig bilinmiyor")}</div>
-        </article>
-      `;
-    }).join("");
-  }
+    grid.innerHTML =
+      page
+        .map((player) => {
 
+          const positions =
+            [
+              player.position,
+              ...(player.alternativePositions || [])
+            ]
+              .filter(Boolean)
+              .join(" / ");
+
+          const card =
+            player.cardUrl
+              ? `
+                <img
+                  src="${esc(player.cardUrl)}"
+                  alt="${esc(player.name)} FC 26 kartÄ±"
+                  loading="lazy"
+                >
+              `
+              : `
+                <div class="fc26-card-missing">
+                  <strong>${esc(player.name)}</strong>
+                  <span>FC 26 kart gÃ¶rseli bulunamadÄ±</span>
+                </div>
+              `;
+
+          return `
+            <article class="fc26-player-card">
+
+              <div class="fc26-real-card">
+                ${card}
+              </div>
+
+              <div class="fc26-card-info">
+
+                <h3>
+                  ${esc(player.name)}
+                </h3>
+
+                <p>
+                  ${esc(player.nation || "Ãœlke bilinmiyor")}
+                  Â·
+                  ${esc(positions || "Mevki bilinmiyor")}
+                </p>
+
+                <small>
+                  ${esc(player.team || "TakÄ±m bilinmiyor")}
+                  Â·
+                  ${esc(player.league || "Lig bilinmiyor")}
+                </small>
+
+              </div>
+
+            </article>
+          `;
+
+        })
+        .join("");
+  }
   function patchDynamicNavigation() {
     document.addEventListener("click", (event) => {
       if (event.target.closest('[data-view="fcCatalog"]')) {
@@ -602,6 +694,8 @@
     console.error("[FC26 enhancements]", error);
   });
 })();
+
+
 
 
 

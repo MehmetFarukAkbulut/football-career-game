@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 const fs = require("node:fs/promises");
 const path = require("node:path");
@@ -47,6 +47,7 @@ async function main() {
         nation: row.nation || "",
         league: row.league || "",
         team: row.team || "",
+        cardUrl: row.card || "",
         photoUrl: careerPlayer?.photo || sofifaPortrait(row.id),
         photoSource: careerPlayer?.photo ? "career-data-transfermarkt" : "sofifa-ea-id",
         careerPlayerId: careerPlayer?.id || null,
@@ -78,3 +79,4 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
