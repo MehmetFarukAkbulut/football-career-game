@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 document.head.insertAdjacentHTML(
   "beforeend",
   '<link rel="icon" type="image/svg+xml" href="favicon.svg">',
@@ -659,31 +659,43 @@ function renderXiSlots() {
   $("#xiDraftAverage").textContent = xiDraft.selected.length ? `Ort. ${xiAverage().toFixed(1)}` : "Ort. —";
 }
 
+function xiTargetRating() {
+  // Kolay modda daha güçlü, zor modda daha zayıf ama hâlâ rekabetçi adaylar gelir.
+  return xiDraft.difficulty === "easy" ? 86 : xiDraft.difficulty === "hard" ? 82 : 84;
+}
+
 function xiCandidateChoices(slot) {
   const used = new Set(xiDraft.selected.map((player) => player.eaId));
   const eligible = xiDraft.pool
     .filter((player) => !used.has(player.eaId) && IkiFormaCore.playerFitsXiSlot(player, slot))
-    .sort((a, b) => b.overall - a.overall || a.eaId - b.eaId);
+    .sort((a, b) => b.overall - a.overall);
 
-  if (xiDraft.selectionMode === "luck") return IkiFormaCore.generateXiLuckChoices(eligible, xiDraft.difficulty);
+  if (xiDraft.selectionMode === "luck") {
+    return IkiFormaCore.generateXiLuckChoices(eligible, xiDraft.difficulty);
+  }
   if (eligible.length < 3) return [];
 
-  const threshold = xiDraft.difficulty === "easy" ? 80 : xiDraft.difficulty === "hard" ? 85 : 83;
-  const strongPool = eligible.filter((player) => +player.overall >= threshold);
-  const strong = strongPool.length ? strongPool[Math.floor(Math.random() * strongPool.length)] : eligible[0];
-  const rest = eligible.filter((player) => player.eaId !== strong.eaId);
-  const middleStart = Math.min(Math.max(0, rest.length - 1), Math.floor(rest.length * .18));
-  const middleEnd = Math.max(middleStart + 1, Math.floor(rest.length * .62));
-  const middlePool = rest.slice(middleStart, middleEnd);
-  const lowPool = rest.slice(middleEnd);
-  const pick = (pool, excluded = new Set()) => {
-    const available = pool.filter((player) => !excluded.has(player.eaId));
-    return available.length ? available[Math.floor(Math.random() * available.length)] : null;
-  };
-  const second = pick(middlePool.length ? middlePool : rest);
-  const excluded = new Set([strong.eaId, second?.eaId].filter(Boolean));
-  const third = pick(lowPool.length ? lowPool : rest, excluded) || pick(rest, excluded);
-  return [strong, second, third].filter(Boolean).sort(() => Math.random() - .5);
+  const target = xiTargetRating();
+  const strongPool = eligible.filter((player) => Number(player.overall) >= target);
+  // Her turda en az bir güçlü aday garanti edilir. Eşik karşılanamıyorsa mevkinin en iyisi kullanılır.
+  const strongCandidates = strongPool.length ? strongPool.slice(0, Math.min(12, strongPool.length)) : eligible.slice(0, Math.min(8, eligible.length));
+  const elite = strongCandidates[Math.floor(Math.random() * strongCandidates.length)];
+  const remaining = eligible.filter((player) => player.eaId !== elite.eaId);
+
+  // Diğer iki aday zorluğa göre elit adaya yakın/uzak seçilir.
+  const gap = xiDraft.difficulty === "easy" ? [5, 14] : xiDraft.difficulty === "hard" ? [1, 7] : [3, 10];
+  const midPool = remaining.filter((player) => elite.overall - player.overall >= gap[0] && elite.overall - player.overall <= gap[1]);
+  const fallbackMid = remaining.slice(0, Math.max(1, Math.min(40, remaining.length)));
+  const secondPool = midPool.length ? midPool : fallbackMid;
+  const second = secondPool[Math.floor(Math.random() * secondPool.length)];
+
+  const thirdCandidates = remaining.filter((player) => player.eaId !== second?.eaId);
+  const lowStart = xiDraft.difficulty === "easy" ? Math.floor(thirdCandidates.length * 0.55) : xiDraft.difficulty === "hard" ? Math.floor(thirdCandidates.length * 0.2) : Math.floor(thirdCandidates.length * 0.4);
+  const lowPool = thirdCandidates.slice(Math.min(lowStart, Math.max(0, thirdCandidates.length - 1)));
+  const thirdSource = lowPool.length ? lowPool : thirdCandidates;
+  const third = thirdSource[Math.floor(Math.random() * thirdSource.length)];
+
+  return [elite, second, third].filter(Boolean).sort(() => Math.random() - 0.5);
 }
 
 function renderXiCandidates(revealed = false, selectedIndex = -1) {
@@ -691,25 +703,45 @@ function renderXiCandidates(revealed = false, selectedIndex = -1) {
   $("#xiCandidates").classList.toggle("luck-mode", luck);
   $("#xiCandidates").classList.toggle("revealed", revealed);
   $("#xiCandidates").innerHTML = xiDraft.currentChoices.map((player, index) => {
-    if (luck && !revealed) return `<button type="button" class="xi-luck-box" data-xi-choice="${index}" aria-label="${index + 1}. şans kutusunu aç"><span class="box-lid">?</span><b>${index + 1}. Kutu</b><small>Açmak için seç</small></button>`;
-    const selected = index === selectedIndex, best = revealed && player.overall === Math.max(...xiDraft.currentChoices.map((item) => item.overall));
+    if (luck && !revealed) {
+      return `<button type="button" class="xi-luck-box" data-xi-choice="${index}" aria-label="${index + 1}. şans kutusunu aç"><span class="box-lid">?</span><b>${index + 1}. Kutu</b><small>Açmak için seç</small></button>`;
+    }
+    const selected = index === selectedIndex;
+    const best = revealed && player.overall === Math.max(...xiDraft.currentChoices.map((item) => item.overall));
     return `<button type="button" data-xi-choice="${index}" class="${selected ? "selected" : ""} ${best ? "best" : ""}" ${revealed ? "disabled" : ""}><img src="${esc(player.photoUrl)}" alt="${esc(player.name)}"><span><b>${esc(player.name)}</b><small>${esc(player.team)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small></span><strong class="xi-rating" ${revealed ? "" : "hidden"}>${player.overall}</strong>${selected && revealed ? `<em>Seçtin</em>` : best ? `<em>En yüksek</em>` : ""}</button>`;
   }).join("");
   if (!revealed) $$('[data-xi-choice]').forEach((button) => button.onclick = () => revealXiChoice(+button.dataset.xiChoice));
 }
 
-function renderXiLuckDecision(choiceIndex) {
+function renderXiLuckFirstReveal(choiceIndex) {
   const player = xiDraft.currentChoices[choiceIndex];
-  $("#xiCandidates").innerHTML = `<article class="xi-luck-opened"><img src="${esc(player.photoUrl)}" alt="${esc(player.name)}"><div><span class="kicker">KUTUDAN ÇIKAN FUTBOLCU</span><h3>${esc(player.name)}</h3><p>${esc(player.team)} · ${esc([player.position, ...(player.alternativePositions || [])].filter(Boolean).join(" / "))}</p><small>Overall reytingi kararından sonra açıklanacak.</small></div></article><div class="xi-luck-actions"><button type="button" class="cta" id="xiLuckKeep">Kadromda kalsın</button><button type="button" class="secondary" id="xiLuckSwap">Değiştir · kalan 4 kutu</button></div>`;
-  $("#xiPickHelp").textContent = "İlk kutuyu açtın. Bu futbolcuyu tutabilir veya kalan dört kutudan yalnızca bir kez yeni seçim yapabilirsin.";
+  if (!player) return;
+  xiDraft.luckFirstChoice = choiceIndex;
+  $("#xiCandidates").classList.add("luck-mode", "revealed");
+  $("#xiCandidates").innerHTML = `
+    <div class="xi-luck-decision">
+      <div class="xi-luck-player-preview">
+        <img src="${esc(player.photoUrl)}" alt="${esc(player.name)}">
+        <div><b>${esc(player.name)}</b><small>${esc(player.team)} · ${esc([player.position, ...(player.alternativePositions || [])].join(" / "))}</small></div>
+      </div>
+      <p>Bu oyuncuyu kadroda tutmak ister misin? Reyting, kararından sonra gösterilecek.</p>
+      <div class="xi-luck-actions">
+        <button type="button" class="cta" id="xiLuckKeep">Kadromda kalsın</button>
+        <button type="button" class="secondary" id="xiLuckSwap">Değiştir · kalan 4 kutu</button>
+      </div>
+    </div>`;
+  $("#xiPickHelp").textContent = "İlk kutuyu açtın. Oyuncuyu tutabilir veya kalan dört kutudan birini seçebilirsin.";
   $("#xiLuckKeep").onclick = () => confirmXiChoice(choiceIndex);
-  $("#xiLuckSwap").onclick = () => renderXiRemainingBoxes(choiceIndex);
+  $("#xiLuckSwap").onclick = () => renderXiRemainingLuckBoxes(choiceIndex);
 }
 
-function renderXiRemainingBoxes(firstChoiceIndex) {
-  xiDraft.luckFirstChoice = firstChoiceIndex;
-  $("#xiCandidates").innerHTML = xiDraft.currentChoices.map((player, index) => index === firstChoiceIndex ? "" : `<button type="button" class="xi-luck-box" data-xi-final-choice="${index}" aria-label="${index + 1}. kutuyu son seçim olarak aç"><span class="box-lid">?</span><b>${index + 1}. Kutu</b><small>Son seçim</small></button>`).join("");
-  $("#xiPickHelp").textContent = "Kalan dört kutudan birini seç. İkinci seçim kesin olacak ve oyuncu kadrona eklenecek.";
+function renderXiRemainingLuckBoxes(firstChoiceIndex) {
+  $("#xiCandidates").classList.remove("revealed");
+  $("#xiCandidates").innerHTML = xiDraft.currentChoices.map((player, index) => {
+    if (index === firstChoiceIndex) return "";
+    return `<button type="button" class="xi-luck-box" data-xi-final-choice="${index}" aria-label="${index + 1}. kutuyu seç"><span class="box-lid">?</span><b>${index + 1}. Kutu</b><small>Son seçim</small></button>`;
+  }).join("");
+  $("#xiPickHelp").textContent = "Kalan dört kutudan birini seç. Bu ikinci seçim kesin olacak.";
   $$('[data-xi-final-choice]').forEach((button) => button.onclick = () => confirmXiChoice(+button.dataset.xiFinalChoice));
 }
 
@@ -722,16 +754,19 @@ function confirmXiChoice(choiceIndex) {
   renderXiSlots();
   renderXiCandidates(true, choiceIndex);
   const best = Math.max(...xiDraft.currentChoices.map((item) => item.overall));
-  $("#xiPickHelp").textContent = player.overall === best ? `${player.name} seçildi · ${player.overall} overall · bu turun en yüksek reytingi.` : `${player.name} seçildi · ${player.overall} overall. Bu turdaki en yüksek seçenek ${best} overall idi.`;
+  $("#xiPickHelp").textContent = player.overall === best
+    ? `${player.name} seçildi · ${player.overall} overall · bu turun en yüksek reytingi.`
+    : `${player.name} seçildi · ${player.overall} overall. Bu turun en yüksek seçeneği ${best} idi.`;
   $("#xiNextPick").textContent = xiDraft.index + 1 >= IkiFormaCore.XI_SLOTS.length ? "Turnuva sonucunu gör →" : "Sonraki mevki →";
   $("#xiNextPick").hidden = false;
 }
 
 function revealXiChoice(choiceIndex) {
   if (xiDraft.resolving) return;
-  const player = xiDraft.currentChoices[choiceIndex];
-  if (!player) return;
-  if (xiDraft.selectionMode === "luck" && xiDraft.currentChoices.length === 5 && xiDraft.luckFirstChoice === undefined) return renderXiLuckDecision(choiceIndex);
+  if (xiDraft.selectionMode === "luck" && xiDraft.currentChoices.length === 5 && xiDraft.luckFirstChoice === undefined) {
+    renderXiLuckFirstReveal(choiceIndex);
+    return;
+  }
   confirmXiChoice(choiceIndex);
 }
 
@@ -749,11 +784,13 @@ function renderXiPick() {
   renderXiSlots();
   if (xiDraft.index >= IkiFormaCore.XI_SLOTS.length) return finishXiDraft();
   const slot = IkiFormaCore.XI_SLOTS[xiDraft.index], choices = xiCandidateChoices(slot), needed = xiDraft.selectionMode === "luck" ? 5 : 3;
-  if (choices.length < needed) { toast(`${slot} mevkii için yeterli güncel oyuncu bulunamadı.`); return show("xiDraftSetup"); }
+  if (choices.length < needed) {
+    toast(`${slot} mevkii için yeterli güncel oyuncu bulunamadı.`);
+    return show("xiDraftSetup");
+  }
   xiDraft.currentChoices = choices;
-  xiDraft.luckFirstChoice = undefined;
   $("#xiPickTitle").textContent = xiDraft.selectionMode === "luck" ? `${slot} için bir kutu aç` : `${slot} için futbolcu seç`;
-  $("#xiPickHelp").textContent = xiDraft.selectionMode === "luck" ? "Beş kapalı kutudan birini aç. İlk oyuncunun reytingini görmeden tutabilir veya kalan dört kutudan tek değişim hakkını kullanabilirsin." : "Her turda zorluğa uygun en az bir güçlü aday bulunur. Reytingler seçimin ardından açılır.";
+  $("#xiPickHelp").textContent = xiDraft.selectionMode === "luck" ? "Bir kutu aç. İlk oyuncuyu reytingsiz gör; istersen tut, istersen kalan dört kutudan birini son kez seç." : "Futbolcuları kariyer bilgisine göre seç; reytingler seçimin ardından açılır.";
   renderXiCandidates();
 }
 

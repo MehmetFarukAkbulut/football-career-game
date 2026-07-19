@@ -1,5 +1,589 @@
-/* FC26 / portre / Turnuva 11 */
-.rating-card-image,.mystery-photo{aspect-ratio:1/1!important;overflow:hidden!important;display:grid!important;place-items:center!important;background:linear-gradient(145deg,#173a58,#071525 74%)!important}.rating-card-image img,.mystery-photo img,.player-list img,.suggestions img,.multiple-choice-options img,.trump-player>img,.xi-slot img,#xiCandidates img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important}.rating-card-image{width:min(240px,100%)!important;height:auto!important}.mystery-photo img{transform:none!important}#mysteryLeague{display:none!important}.mystery-head.mystery-head-with-league,.mystery-row.mystery-row-with-league{grid-template-columns:minmax(120px,1.4fr) repeat(6,minmax(70px,1fr))!important}
-#xiDraftSetup{padding-inline:18px}#xiDraftSetup .xi-draft-setup{width:min(1120px,100%);margin:0 auto;display:grid!important;grid-template-columns:minmax(320px,390px) minmax(0,1fr);gap:28px;align-items:start}#xiDraftSetup .xi-setup-left{min-width:0}#xiDraftSetup .xi-settings-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important;margin-top:18px}#xiDraftSetup .xi-settings-grid>label{min-width:0}#xiDraftSetup .xi-settings-grid>label:first-child{grid-column:1/-1}#xiDraftSetup .xi-settings-grid select{width:100%;min-width:0;height:52px}#xiDraftSetup #startXiDraft{width:100%;margin-top:16px}#xiDraftSetup .xi-league-panel{margin:0!important;min-width:0;max-height:690px}.xi-luck-opened{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;padding:18px;border:1px solid #315775;border-radius:18px;background:#0e2942}.xi-luck-opened img{width:150px!important;height:150px!important;object-fit:contain!important;border-radius:14px;background:#071525}.xi-luck-opened h3{margin:6px 0;font-size:24px}.xi-luck-opened p,.xi-luck-opened small{color:#94b5ce}.xi-luck-actions{display:flex;gap:10px;margin-top:14px}.xi-luck-actions>*{flex:1}
-#fcCatalog{width:min(1220px,calc(100% - 40px));margin:0 auto;padding:48px 0 60px}.fc26-catalog-toolbar{display:grid;grid-template-columns:minmax(220px,1.5fr) repeat(6,minmax(125px,1fr));gap:10px;margin-bottom:24px}.fc26-catalog-toolbar input,.fc26-catalog-toolbar select{width:100%;min-width:0;min-height:52px}.fc26-catalog-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.fc26-player-card{min-width:0;padding:12px;border:1px solid #294b67;border-radius:20px;background:linear-gradient(155deg,#173a58,#0b2136 56%,#071525);box-shadow:0 14px 34px rgba(0,0,0,.18)}.fc26-card-visual{width:100%;min-height:310px;display:grid;place-items:center}.fc26-real-card{display:block;width:100%;height:340px;object-fit:contain}.fc26-generated-card{width:min(100%,245px);aspect-ratio:.72/1;position:relative;display:grid;grid-template-columns:58px 1fr;grid-template-rows:auto 1fr auto auto;gap:6px;padding:16px 14px 14px;border-radius:22px 22px 28px 28px;color:#071525;background:linear-gradient(145deg,#d7c386,#f5e6ad 48%,#ae9254);box-shadow:inset 0 0 0 3px rgba(255,255,255,.2),0 12px 24px rgba(0,0,0,.25)}.fc26-generated-rating{grid-column:1;grid-row:1;text-align:center}.fc26-generated-rating strong{display:block;font-size:34px;line-height:1}.fc26-generated-photo{grid-column:2;grid-row:1/3;min-height:150px;display:grid;place-items:end center;overflow:hidden}.fc26-generated-photo img{width:100%;height:100%;object-fit:contain;object-position:center bottom}.fc26-generated-card>b{grid-column:1/-1;text-align:center;text-transform:uppercase;font-size:15px}.fc26-generated-card>small{grid-column:1/-1;text-align:center}.fc26-generated-stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:3px 8px;font-size:11px}.fc26-generated-stats span{display:flex;justify-content:space-between}.fc26-card-caption{text-align:center;padding:8px 4px 2px}.fc26-card-caption h3{margin:0 0 4px;font-size:17px}.fc26-card-caption p{margin:0;color:#94b5ce;font-size:11px}.fc26-catalog-empty{grid-column:1/-1;padding:36px;text-align:center}.fc26-pager{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:24px}
-@media(max-width:1100px){.fc26-catalog-toolbar{grid-template-columns:repeat(4,minmax(0,1fr))}.fc26-catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:850px){#xiDraftSetup .xi-draft-setup{grid-template-columns:1fr!important}#xiDraftSetup .xi-league-panel{max-height:560px}.fc26-catalog-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.fc26-catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){#fcCatalog{width:calc(100% - 18px);padding-top:24px}.fc26-catalog-toolbar{gap:7px}#fc26Search{grid-column:1/-1}.fc26-catalog-grid{gap:8px}.fc26-player-card{padding:7px;border-radius:14px}.fc26-card-visual{min-height:220px}.fc26-real-card{height:240px}.fc26-generated-card{width:100%;padding:10px 8px}.fc26-generated-rating strong{font-size:24px}.fc26-generated-card>b{font-size:11px}.fc26-generated-stats{font-size:9px;gap:2px 4px}#xiDraftSetup .xi-settings-grid{grid-template-columns:1fr 1fr!important}.xi-luck-opened{grid-template-columns:100px 1fr;padding:12px}.xi-luck-opened img{width:100px!important;height:100px!important}.xi-luck-actions{flex-direction:column}.mystery-head.mystery-head-with-league,.mystery-row.mystery-row-with-league{grid-template-columns:minmax(105px,1.4fr) repeat(6,minmax(62px,1fr))!important}}
+﻿/* ==========================================================
+   FC26 Enhancements
+   Harici CSS olarak yuklenir.
+   CSP nedeniyle inline style kullanilmaz.
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   OYUNCU FOTOGRAFLARI
+   Kare kutu, fotografi kesmeden icine sigdir.
+   ---------------------------------------------------------- */
+
+.rating-card-image,
+.mystery-photo,
+.fc26-card-photo {
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(145deg, #173a58, #071525 74%) !important;
+}
+
+/*
+  Kaynak resim zaten cok yakin kirpilmis olabilir.
+  Bu nedenle resmi kutunun %90'i kadar tutuyoruz.
+  Boylece kafa/omuz kenarlari kutuya yapismaz.
+*/
+.rating-card-image img,
+.mystery-photo img,
+.fc26-card-photo img {
+    width: 90% !important;
+    height: 90% !important;
+    max-width: 90% !important;
+    max-height: 90% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+}
+
+/* Reyting oyununda kare fotograf */
+.rating-card-image {
+    width: 240px !important;
+    height: 240px !important;
+    border-radius: 16px !important;
+}
+
+/* Gizli futbolcu fotografi */
+.mystery-photo {
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 18px !important;
+}
+
+/*
+  Bulaniklik resmin kendisine uygulanir.
+  Cerceveyi buyutup fotografi kesmemesi icin.
+*/
+.mystery-photo img {
+    transform: none !important;
+}
+
+/* ----------------------------------------------------------
+   DIGER FOTOGRAF KULLANILAN ALANLAR
+   ---------------------------------------------------------- */
+
+.player-list img,
+.suggestions img,
+.multiple-choice-options img,
+.trump-player > img,
+.xi-slot img,
+#xiCandidates img {
+    aspect-ratio: 1 / 1 !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+}
+
+/* ----------------------------------------------------------
+   GIZLI FUTBOLCU
+   Hedef lig oyuncunun ustunde gorunmez.
+   Lig artik tahmin edilmesi gereken kriterdir.
+   ---------------------------------------------------------- */
+
+#mysteryLeague {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Tahmin tablosu: Oyuncu + Ulke + Takim + Lig + Mevki + Yas + OVR */
+.mystery-head.mystery-head-with-league,
+.mystery-row.mystery-row-with-league {
+    grid-template-columns:
+        minmax(130px, 1.5fr)
+        repeat(6, minmax(70px, 1fr)) !important;
+}
+
+/* ----------------------------------------------------------
+   FC26 KATALOG ANA YERLESIM
+   ---------------------------------------------------------- */
+
+#fcCatalog {
+    width: min(1200px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 52px 0 60px;
+}
+
+#fcCatalog .section-head {
+    margin-bottom: 28px;
+}
+
+.fc26-catalog-toolbar {
+    display: grid !important;
+    grid-template-columns:
+        minmax(240px, 1.5fr)
+        repeat(4, minmax(150px, 1fr)) !important;
+    gap: 10px !important;
+    margin-bottom: 12px !important;
+}
+
+.fc26-catalog-toolbar input,
+.fc26-catalog-toolbar select,
+.fc26-stat-filters input,
+.fc26-stat-filters select {
+    width: 100% !important;
+    min-height: 52px !important;
+    box-sizing: border-box !important;
+}
+
+/* Istatistik filtreleri tek satirlik dev liste olmasin */
+.fc26-stat-filters {
+    display: grid !important;
+    grid-template-columns:
+        minmax(180px, 1.3fr)
+        repeat(4, minmax(110px, 1fr)) !important;
+    gap: 10px !important;
+    margin: 0 0 26px !important;
+}
+
+/*
+  Son uc filtre ikinci satira dogal olarak gecer.
+  Ekrani gereksiz yere asagi uzatmaz.
+*/
+
+/* ----------------------------------------------------------
+   FC26 FUTBOLCU KARTLARI
+   ---------------------------------------------------------- */
+
+.fc26-catalog-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+.fc26-player-card {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    padding: 14px !important;
+    border: 1px solid #294b67 !important;
+    border-radius: 18px !important;
+
+    background:
+        radial-gradient(
+            circle at 50% 10%,
+            rgba(73, 229, 165, 0.13),
+            transparent 34%
+        ),
+        linear-gradient(
+            155deg,
+            #173a58,
+            #0b2136 55%,
+            #071525
+        ) !important;
+
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2) !important;
+}
+
+.fc26-card-top {
+    display: grid !important;
+    grid-template-columns: 62px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: start !important;
+}
+
+.fc26-overall {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 64px !important;
+    border-radius: 13px !important;
+
+    background: rgba(73, 229, 165, 0.12) !important;
+    border: 1px solid rgba(73, 229, 165, 0.35) !important;
+}
+
+.fc26-overall strong {
+    font-size: 28px !important;
+    line-height: 1 !important;
+}
+
+.fc26-overall small {
+    margin-top: 3px !important;
+    font-size: 10px !important;
+}
+
+.fc26-card-photo {
+    width: 100% !important;
+    min-width: 0 !important;
+    border: 1px solid #315775 !important;
+    border-radius: 13px !important;
+}
+
+.fc26-player-card h3 {
+    margin: 12px 0 4px !important;
+    font-size: 17px !important;
+    line-height: 1.2 !important;
+}
+
+.fc26-meta {
+    min-height: 38px !important;
+    color: #94b5ce !important;
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+}
+
+.fc26-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+    margin-top: auto !important;
+    padding-top: 12px !important;
+}
+
+.fc26-stats span {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 5px !important;
+    padding: 7px !important;
+    border-radius: 9px !important;
+    background: rgba(4, 20, 35, 0.6) !important;
+    border: 1px solid #294b67 !important;
+    font-size: 11px !important;
+}
+
+.fc26-stats b {
+    font-size: 12px !important;
+}
+
+/* ----------------------------------------------------------
+   SAYFALAMA
+   ---------------------------------------------------------- */
+
+.fc26-pager {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 14px !important;
+    margin-top: 25px !important;
+}
+
+/* ----------------------------------------------------------
+   TABLET
+   ---------------------------------------------------------- */
+
+@media (max-width: 1050px) {
+
+    .fc26-catalog-toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .fc26-stat-filters {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+
+    .fc26-catalog-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+/* ----------------------------------------------------------
+   MOBIL
+   ---------------------------------------------------------- */
+
+@media (max-width: 720px) {
+
+    #fcCatalog {
+        width: calc(100% - 20px);
+        padding-top: 24px;
+    }
+
+    .fc26-catalog-toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 7px !important;
+    }
+
+    .fc26-catalog-toolbar #fc26Search {
+        grid-column: 1 / -1;
+    }
+
+    .fc26-stat-filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 7px !important;
+    }
+
+    .fc26-catalog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .fc26-player-card {
+        padding: 8px !important;
+        border-radius: 13px !important;
+    }
+
+    .fc26-card-top {
+        grid-template-columns: 45px minmax(0, 1fr) !important;
+        gap: 6px !important;
+    }
+
+    .fc26-overall {
+        min-height: 48px !important;
+    }
+
+    .fc26-overall strong {
+        font-size: 21px !important;
+    }
+
+    .fc26-player-card h3 {
+        font-size: 14px !important;
+    }
+
+    .fc26-meta {
+        min-height: 32px !important;
+        font-size: 9px !important;
+    }
+
+    .fc26-stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 4px !important;
+        padding-top: 7px !important;
+    }
+
+    .fc26-stats span {
+        padding: 5px !important;
+        font-size: 9px !important;
+    }
+
+    .rating-card-image {
+        width: min(180px, 46vw) !important;
+        height: min(180px, 46vw) !important;
+    }
+
+    .mystery-head.mystery-head-with-league,
+    .mystery-row.mystery-row-with-league {
+        grid-template-columns:
+            minmax(105px, 1.4fr)
+            repeat(6, minmax(62px, 1fr)) !important;
+    }
+}
+
+/* ==========================================================
+   TURNUVA 11 MASAUSTU DUZENI
+   ========================================================== */
+
+#xiDraftSetup .surface {
+    width: min(1120px, calc(100% - 32px));
+    margin-inline: auto;
+}
+
+#xiDraftSetup .setup-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+#xiDraftSetup .setup-grid > label {
+    min-width: 0;
+}
+
+#xiDraftSetup .setup-grid select {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+}
+
+#xiDraftSetup .league-options {
+    margin-top: 20px;
+}
+
+.xi-luck-reveal {
+    width: min(520px, 100%);
+    margin: 0 auto;
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid #315775;
+    background: #102d47;
+    text-align: center;
+}
+
+.xi-luck-player {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+}
+
+.xi-luck-player img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    border-radius: 14px;
+    background: #071525;
+}
+
+.xi-luck-player b {
+    display: block;
+    font-size: 21px;
+}
+
+.xi-luck-player small {
+    color: #94b5ce;
+}
+
+.xi-luck-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+
+/* ==========================================================
+   FC26 KATALOG YENI TASARIM
+   ========================================================== */
+
+.fc26-catalog-toolbar {
+    grid-template-columns:
+        minmax(220px, 1.5fr)
+        repeat(5, minmax(130px, 1fr)) !important;
+}
+
+.fc26-stat-filters {
+    display: flex !important;
+    max-width: 280px;
+    margin-bottom: 24px !important;
+}
+
+.fc26-card-photo {
+    width: 100% !important;
+    aspect-ratio: 0.72 / 1 !important;
+    min-height: 270px;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.fc26-card-photo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+.fc26-card-top {
+    grid-template-columns: 1fr !important;
+}
+
+.fc26-overall {
+    display: none !important;
+}
+
+.fc26-player-card h3 {
+    text-align: center;
+    margin-top: 8px !important;
+}
+
+.fc26-meta {
+    text-align: center;
+}
+
+.fc26-stats {
+    display: none !important;
+}
+
+
+@media (max-width: 900px) {
+
+    #xiDraftSetup .setup-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .fc26-catalog-toolbar {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    #xiDraftSetup .setup-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    #xiDraftSetup .setup-grid select {
+        height: 46px;
+        font-size: 12px;
+    }
+
+    .xi-luck-player img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .fc26-card-photo {
+        min-height: 190px;
+    }
+
+}
+
+
+/* ===== FINAL OVERRIDES: Turnuva 11 setup ===== */
+#xiDraftSetup .xi-draft-setup {
+  width: min(1120px, calc(100% - 32px)) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(340px, 420px) minmax(520px, 1fr) !important;
+  grid-template-rows: auto auto auto auto 1fr !important;
+  column-gap: 28px !important;
+  row-gap: 10px !important;
+  align-items: start !important;
+}
+#xiDraftSetup .xi-draft-setup > .kicker { grid-column: 1 !important; grid-row: 1 !important; }
+#xiDraftSetup .xi-draft-setup > h2 { grid-column: 1 !important; grid-row: 2 !important; margin: 0 !important; }
+#xiDraftSetup .xi-draft-setup > p { grid-column: 1 !important; grid-row: 3 !important; margin: 0 0 8px !important; }
+#xiDraftSetup .xi-draft-setup > .setup-grid {
+  grid-column: 1 !important; grid-row: 4 !important;
+  display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important; align-items: start !important; width: 100% !important;
+}
+#xiDraftSetup .xi-draft-setup > .setup-grid label { min-width: 0 !important; position: static !important; }
+#xiDraftSetup .xi-draft-setup > .setup-grid select { width: 100% !important; min-width: 0 !important; height: 52px !important; }
+#xiDraftSetup #xiNationWrap { grid-column: 1 / -1 !important; }
+#xiDraftSetup #xiLeagueOptions {
+  grid-column: 2 !important; grid-row: 1 / 6 !important;
+  margin: 0 !important; min-width: 0 !important; align-self: stretch !important;
+}
+#xiDraftSetup #startXiDraft { grid-column: 1 !important; grid-row: 5 !important; width: 100% !important; margin-top: 2px !important; }
+
+/* ===== FINAL OVERRIDES: FC 26 catalog ===== */
+#fcCatalog .fc26-catalog-toolbar {
+  display: grid !important;
+  grid-template-columns: minmax(220px, 1.5fr) repeat(5, minmax(130px, 1fr)) !important;
+  gap: 10px !important;
+  margin-bottom: 14px !important;
+}
+#fcCatalog .fc26-stat-filters { display: block !important; width: min(280px, 100%) !important; margin: 0 0 24px !important; }
+#fcCatalog .fc26-stat-filters select { width: 100% !important; }
+#fcCatalog .fc26-catalog-grid { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 18px !important; }
+#fcCatalog .fc26-player-card { display: flex !important; flex-direction: column !important; min-height: 410px !important; }
+#fcCatalog .fc26-card-top { display: block !important; }
+#fcCatalog .fc26-overall { display: none !important; }
+#fcCatalog .fc26-card-photo { width: 100% !important; height: 310px !important; aspect-ratio: auto !important; background: transparent !important; border: 0 !important; }
+#fcCatalog .fc26-card-photo img { width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: center !important; }
+#fcCatalog .fc26-player-card h3 { text-align: center !important; margin-top: 10px !important; }
+#fcCatalog .fc26-meta { text-align: center !important; }
+#fcCatalog .fc26-stats { display: none !important; }
+
+/* ===== FINAL OVERRIDES: Şans kutusu karar ekranı ===== */
+.xi-luck-decision { width: 100% !important; display: grid !important; gap: 16px !important; }
+.xi-luck-player-preview { display: flex !important; align-items: center !important; gap: 14px !important; padding: 14px !important; border: 1px solid #315775 !important; border-radius: 16px !important; background: #0b2136 !important; }
+.xi-luck-player-preview img { width: 110px !important; height: 110px !important; object-fit: contain !important; border-radius: 12px !important; background: #071525 !important; }
+.xi-luck-player-preview b { display: block !important; font-size: 20px !important; }
+.xi-luck-player-preview small { color: #94b5ce !important; }
+.xi-luck-actions { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+
+@media (max-width: 900px) {
+  #xiDraftSetup .xi-draft-setup { grid-template-columns: 1fr !important; }
+  #xiDraftSetup .xi-draft-setup > .kicker,
+  #xiDraftSetup .xi-draft-setup > h2,
+  #xiDraftSetup .xi-draft-setup > p,
+  #xiDraftSetup .xi-draft-setup > .setup-grid,
+  #xiDraftSetup #xiLeagueOptions,
+  #xiDraftSetup #startXiDraft { grid-column: 1 !important; grid-row: auto !important; }
+  #fcCatalog .fc26-catalog-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  #fcCatalog .fc26-catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}

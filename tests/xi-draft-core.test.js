@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -69,6 +69,7 @@ test("Turnuva 11'i menü, lig filtresi, güncel rating ve kariyer eşleşmesini 
   assert.match(updateScript, /careerPlayerId/);
   assert.match(updateScript, /careerClubIds/);
   assert.match(app, /selectionMode === "luck"/);
-  assert.match(app, /Kaçırdığın en yüksek seçenek/);
+  assert.match(app, /Kadromda kalsın|Kutuyu değiştir|kalan dört kutu/i);
   assert.match(app, /class="xi-rating" \$\{revealed \? "" : "hidden"\}/);
 });
+
