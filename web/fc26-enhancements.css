@@ -1607,3 +1607,222 @@
 
 }
 
+
+/* ==========================================================
+   FINAL XI DRAFT MOBILE LEAGUE SCROLL
+   ========================================================== */
+
+/*
+  Correct screen id is xiDraftSetup.
+*/
+
+#xiDraftSetup .league-options {
+    min-height: 0 !important;
+}
+
+#xiDraftSetup .league-list {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+
+    touch-action: pan-y !important;
+
+    scrollbar-width: thin;
+}
+
+
+/*
+  Desktop keeps a controlled league panel.
+*/
+
+@media (min-width: 761px) {
+
+    #xiDraftSetup .league-list {
+        max-height: 600px !important;
+    }
+
+}
+
+
+/*
+  Mobile:
+  The league list itself scrolls.
+*/
+
+@media (max-width: 760px) {
+
+    #xiDraftSetup {
+        overflow: visible !important;
+        touch-action: pan-y !important;
+    }
+
+    #xiDraftSetup .surface {
+        overflow: visible !important;
+        touch-action: pan-y !important;
+    }
+
+    #xiDraftSetup .league-options {
+        display: block !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        touch-action: pan-y !important;
+    }
+
+    #xiDraftSetup .league-list {
+        display: grid !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+        max-height: 46vh !important;
+        min-height: 250px !important;
+
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
+
+        overscroll-behavior-y: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+
+        touch-action: pan-y !important;
+
+        position: relative !important;
+
+        padding-right: 5px !important;
+    }
+
+    #xiDraftSetup .league-list > label {
+        flex-shrink: 0 !important;
+        touch-action: manipulation !important;
+    }
+
+    /*
+      Search and select buttons stay outside the scrolling list.
+    */
+
+    #xiDraftSetup .league-tools {
+        position: relative !important;
+        z-index: 2 !important;
+
+        background: inherit !important;
+    }
+
+    /*
+      Prevent parent containers from capturing vertical swipes.
+    */
+
+    #xiDraftSetup .classic-setup,
+    #xiDraftSetup .xi-draft-setup {
+        overflow: visible !important;
+    }
+
+}
+
+
+/* ==========================================================
+   FC26 LOADING EXPERIENCE
+   ========================================================== */
+
+#fcCatalog.fc26-waiting .fc26-catalog-grid::before {
+    content: "FC 26 futbolcu kartlari hazirlaniyor...";
+    grid-column: 1 / -1;
+
+    display: block;
+
+    padding: 32px;
+
+    text-align: center;
+
+    color: #8fb1ca;
+
+    border: 1px solid #294b67;
+    border-radius: 16px;
+
+    background: rgba(7, 21, 37, .72);
+}
+
+
+/* ==========================================================
+   ABSOLUTE FINAL XI DRAFT MOBILE SCROLL OVERRIDE
+   Keep this block at the END of the stylesheet.
+   ========================================================== */
+
+#xiDraftSetup #xiLeagueOptions {
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+#xiDraftSetup #xiLeagueOptions .league-list,
+#xiDraftSetup .league-options .league-list {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+}
+
+@media (max-width: 760px) {
+
+    #xiDraftSetup {
+        height: auto !important;
+        min-height: 100% !important;
+        overflow: visible !important;
+    }
+
+    #xiDraftSetup .xi-draft-setup,
+    #xiDraftSetup .surface {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #xiDraftSetup #xiLeagueOptions {
+        display: block !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #xiDraftSetup #xiLeagueOptions .league-list,
+    #xiDraftSetup .league-options .league-list {
+        display: block !important;
+
+        height: 360px !important;
+        max-height: 45vh !important;
+        min-height: 280px !important;
+
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
+
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+
+        position: relative !important;
+        z-index: 5 !important;
+    }
+
+    #xiDraftSetup #xiLeagueOptions .league-list label,
+    #xiDraftSetup .league-options .league-list label {
+        display: flex !important;
+        width: 100% !important;
+        min-height: 66px !important;
+        box-sizing: border-box !important;
+    }
+
+    #xiDraftSetup .league-tools {
+        position: relative !important;
+        z-index: 6 !important;
+    }
+
+}
+
