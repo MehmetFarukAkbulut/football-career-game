@@ -1112,3 +1112,127 @@
     }
 
 }
+
+/* ==========================================================
+   ENHANCED CATALOG PAGINATION
+   ========================================================== */
+
+.enhanced-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+
+    width: 100%;
+    margin-top: 16px;
+}
+
+.enhanced-page-numbers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.page-number {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+
+    border: 1px solid #315775;
+    border-radius: 9px;
+
+    background: #0a2033;
+    color: #dfeef8;
+
+    cursor: pointer;
+}
+
+.page-number:hover {
+    border-color: #4ce2ad;
+}
+
+.page-number.active {
+    background: #4ce2ad;
+    border-color: #4ce2ad;
+    color: #04131e;
+    font-weight: 800;
+}
+
+.page-ellipsis {
+    padding: 0 4px;
+    color: #8fb1ca;
+}
+
+.page-jump {
+    display: flex;
+    align-items: end;
+    gap: 8px;
+}
+
+.page-jump label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    color: #8fb1ca;
+    font-size: 11px;
+}
+
+.page-jump input {
+    width: 90px;
+    min-height: 38px;
+
+    padding: 7px 9px;
+
+    border: 1px solid #315775;
+    border-radius: 9px;
+
+    background: #071a2b;
+    color: #fff;
+}
+
+.page-jump button {
+    min-height: 38px;
+    padding: 7px 14px;
+
+    border: 1px solid #315775;
+    border-radius: 9px;
+
+    background: #102d47;
+    color: #fff;
+
+    cursor: pointer;
+}
+
+
+/*
+  Gezgin futbolcular kullanici arayuzunden tamamen kaldirilir.
+*/
+
+#travelers {
+    display: none !important;
+}
+
+
+@media (max-width: 650px) {
+
+    .enhanced-pagination {
+        gap: 10px;
+    }
+
+    .page-number {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 7px;
+    }
+
+    .page-jump {
+        width: 100%;
+        justify-content: center;
+    }
+
+}
+

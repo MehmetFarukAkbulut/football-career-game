@@ -1043,3 +1043,1110 @@ setTimeout(() => {
 
 }, 1000);
 
+
+// ============================================================
+// CATALOG PAGINATION AND LEAGUE PRIORITY PATCH
+// ============================================================
+
+(() => {
+
+  const PATCH_MARKER =
+    "CATALOG PAGINATION AND LEAGUE PRIORITY PATCH";
+
+
+  // ----------------------------------------------------------
+  // GEZGIN FUTBOLCULARI ANA MENUDEN KALDIR
+  // ----------------------------------------------------------
+
+  function removeTravelersFeature() {
+
+    /*
+      Ana menudeki orijinal veya onceki yamalarla olusmus
+      tum Gezgin Futbolcular kartlarini kaldir.
+    */
+
+    document
+      .querySelectorAll(
+        '#home [data-view="travelers"], ' +
+        '#home [data-fc26-catalog-menu], ' +
+        '#home .mode-card, ' +
+        '#home button'
+      )
+      .forEach((card) => {
+
+        const text =
+          (card.textContent || "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        if (
+          /Gezgin Futbolcu/i.test(text)
+        ) {
+
+          card.remove();
+
+        }
+
+      });
+
+
+    /*
+      Gezgin Futbolcular sayfasini DOM'da tutuyoruz.
+      app.js eski event referanslari nedeniyle elementin tamamen
+      silinmesi hata uretebilir. Kullanici tarafindan erisilemez.
+    */
+
+    const travelers =
+      document.getElementById(
+        "travelers"
+      );
+
+    if (travelers) {
+
+      travelers.hidden = true;
+
+      travelers.classList.remove(
+        "active"
+      );
+
+      travelers.style.display =
+        "none";
+
+    }
+
+  }
+
+
+  // ----------------------------------------------------------
+  // LIG ONCELIGI
+  // ----------------------------------------------------------
+
+  const LEAGUE_PRIORITY = [
+
+    // 5 buyuk + Turkiye
+    "Premier League",
+    "LALIGA EA SPORTS",
+    "LaLiga",
+    "Serie A Enilive",
+    "Serie A",
+    "Bundesliga",
+    "Ligue 1 McDonald's",
+    "Ligue 1",
+    "Trendyol SÃ¼per Lig",
+    "SÃ¼per Lig",
+
+    // Diger bilinen ligler
+    "EFL Championship",
+    "Eredivisie",
+    "Liga Portugal",
+    "Primeira Liga",
+    "MLS",
+    "Major League Soccer",
+    "BrasileirÃ£o",
+    "SÃ©rie A",
+    "Liga Profesional",
+    "Profesyonel Lig",
+    "Belgian Pro League",
+    "Pro League",
+    "Scottish Premiership",
+    "Superliga",
+    "Allsvenskan",
+    "Eliteserien",
+    "A-League",
+    "J1 League",
+    "J1 Ligi",
+    "K League 1",
+    "K Ligi 1"
+
+  ];
+
+
+  function normalizeLeagueName(value) {
+
+    return String(value || "")
+      .normalize("NFD")
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      )
+      .toLocaleLowerCase("tr")
+      .trim();
+
+  }
+
+
+  const PRIORITY_MAP =
+    new Map(
+      LEAGUE_PRIORITY.map(
+        (name, index) => [
+          normalizeLeagueName(name),
+          index
+        ]
+      )
+    );
+
+
+  function leagueFlag(name) {
+
+    const n =
+      normalizeLeagueName(name);
+
+
+    if (
+      n.includes("premier league") ||
+      n.includes("championship") ||
+      n.includes("league one") ||
+      n.includes("league two")
+    ) {
+      return "ğŸ‡¬ğŸ‡§";
+    }
+
+
+    if (
+      n.includes("laliga") ||
+      n === "la liga" ||
+      n.includes("segunda")
+    ) {
+      return "ğŸ‡ªğŸ‡¸";
+    }
+
+
+    if (
+      n.includes("serie a") ||
+      n.includes("serie b") ||
+      n.includes("calcio")
+    ) {
+      return "ğŸ‡®ğŸ‡¹";
+    }
+
+
+    if (
+      n === "bundesliga" ||
+      n.includes("bundesliga 2") ||
+      n.includes("2. bundesliga") ||
+      n.includes("3. liga")
+    ) {
+      return "ğŸ‡©ğŸ‡ª";
+    }
+
+
+    if (
+      n.includes("ligue 1") ||
+      n.includes("ligue 2")
+    ) {
+      return "ğŸ‡«ğŸ‡·";
+    }
+
+
+    if (
+      n.includes("super lig") ||
+      n.includes("sÃ¼per lig") ||
+      n.includes("1. lig")
+    ) {
+      return "ğŸ‡¹ğŸ‡·";
+    }
+
+
+    if (
+      n.includes("eredivisie")
+    ) {
+      return "ğŸ‡³ğŸ‡±";
+    }
+
+
+    if (
+      n.includes("liga portugal") ||
+      n.includes("primeira liga")
+    ) {
+      return "ğŸ‡µğŸ‡¹";
+    }
+
+
+    if (
+      n === "mls" ||
+      n.includes("major league soccer")
+    ) {
+      return "ğŸ‡ºğŸ‡¸";
+    }
+
+
+    if (
+      n.includes("brasile") ||
+      n.includes("sÃ©rie a")
+    ) {
+      return "ğŸ‡§ğŸ‡·";
+    }
+
+
+    if (
+      n.includes("profesyonel lig") ||
+      n.includes("liga profesional")
+    ) {
+      return "ğŸ‡¦ğŸ‡·";
+    }
+
+
+    if (
+      n.includes("pro league") &&
+      !n.includes("saudi")
+    ) {
+      return "ğŸ‡§ğŸ‡ª";
+    }
+
+
+    if (
+      n.includes("saudi")
+    ) {
+      return "ğŸ‡¸ğŸ‡¦";
+    }
+
+
+    if (
+      n.includes("superliga") ||
+      n.includes("superligaen")
+    ) {
+      return "ğŸ‡©ğŸ‡°";
+    }
+
+
+    if (
+      n.includes("allsvenskan")
+    ) {
+      return "ğŸ‡¸ğŸ‡ª";
+    }
+
+
+    if (
+      n.includes("eliteserien")
+    ) {
+      return "ğŸ‡³ğŸ‡´";
+    }
+
+
+    if (
+      n.includes("a-league")
+    ) {
+      return "ğŸ‡¦ğŸ‡º";
+    }
+
+
+    if (
+      n.includes("j1")
+    ) {
+      return "ğŸ‡¯ğŸ‡µ";
+    }
+
+
+    if (
+      n.includes("k league") ||
+      n.includes("k ligi")
+    ) {
+      return "ğŸ‡°ğŸ‡·";
+    }
+
+
+    if (
+      n.includes("Äesk") ||
+      n.includes("ceska")
+    ) {
+      return "ğŸ‡¨ğŸ‡¿";
+    }
+
+
+    return "âš½";
+
+  }
+
+
+  function priorityIndex(name) {
+
+    const normalized =
+      normalizeLeagueName(name);
+
+
+    if (
+      PRIORITY_MAP.has(normalized)
+    ) {
+
+      return PRIORITY_MAP.get(
+        normalized
+      );
+
+    }
+
+
+    /*
+      Isim tam eslesmese bile
+      ana ligleri yukarida tut.
+    */
+
+    for (
+      let i = 0;
+      i < LEAGUE_PRIORITY.length;
+      i++
+    ) {
+
+      const candidate =
+        normalizeLeagueName(
+          LEAGUE_PRIORITY[i]
+        );
+
+      if (
+        normalized.includes(candidate) ||
+        candidate.includes(normalized)
+      ) {
+
+        return i;
+
+      }
+
+    }
+
+
+    return 9999;
+
+  }
+
+
+  function reorderLeagueSelect(
+    select
+  ) {
+
+    if (
+      !select ||
+      !select.options ||
+      select.options.length <= 1
+    ) {
+      return;
+    }
+
+
+    /*
+      Orijinal option degerlerini koru.
+      Sadece gorunen text ve siralama degisir.
+    */
+
+    const first =
+      select.options[0];
+
+
+    const currentValue =
+      select.value;
+
+
+    const options =
+      [...select.options]
+        .slice(1)
+        .map((option) => ({
+
+          value:
+            option.value,
+
+          originalText:
+            option.dataset.originalLeagueText ||
+            option.textContent
+              .replace(
+                /^[^\p{L}\p{N}]+/u,
+                ""
+              )
+              .trim()
+
+        }));
+
+
+    options.sort(
+      (a, b) => {
+
+        const pa =
+          priorityIndex(
+            a.originalText
+          );
+
+        const pb =
+          priorityIndex(
+            b.originalText
+          );
+
+
+        if (pa !== pb) {
+
+          return pa - pb;
+
+        }
+
+
+        return a.originalText
+          .localeCompare(
+            b.originalText,
+            "tr"
+          );
+
+      }
+    );
+
+
+    select.innerHTML = "";
+
+
+    if (first) {
+
+      const all =
+        document.createElement(
+          "option"
+        );
+
+      all.value =
+        first.value || "";
+
+      all.textContent =
+        first.textContent ||
+        "TÃ¼m ligler";
+
+      select.appendChild(
+        all
+      );
+
+    }
+
+
+    options.forEach(
+      (item) => {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          item.value;
+
+        option.dataset.originalLeagueText =
+          item.originalText;
+
+        option.textContent =
+          `${leagueFlag(item.originalText)} ${item.originalText}`;
+
+        select.appendChild(
+          option
+        );
+
+      }
+    );
+
+
+    if (
+      [...select.options]
+        .some(
+          (option) =>
+            option.value ===
+            currentValue
+        )
+    ) {
+
+      select.value =
+        currentValue;
+
+    }
+
+  }
+
+
+  function reorderAllRelevantLeagues() {
+
+    /*
+      Kullanici tarafindan belirtilen iki alan.
+    */
+
+    reorderLeagueSelect(
+      document.getElementById(
+        "fc26League"
+      )
+    );
+
+    reorderLeagueSelect(
+      document.getElementById(
+        "compareLeague"
+      )
+    );
+
+  }
+
+
+  // ----------------------------------------------------------
+  // SAYFA NUMARALI PAGINATION
+  // ----------------------------------------------------------
+
+  function parsePageInfo(
+    text
+  ) {
+
+    const match =
+      String(text || "")
+        .match(
+          /(\d+)\s*\/\s*(\d+)/
+        );
+
+
+    if (!match) {
+
+      return null;
+
+    }
+
+
+    return {
+
+      current:
+        Number(match[1]),
+
+      total:
+        Number(match[2])
+
+    };
+
+  }
+
+
+  function pageWindow(
+    current,
+    total
+  ) {
+
+    const values =
+      new Set([
+        1,
+        total
+      ]);
+
+
+    for (
+      let page =
+        Math.max(
+          1,
+          current - 2
+        );
+      page <=
+        Math.min(
+          total,
+          current + 2
+        );
+      page++
+    ) {
+
+      values.add(
+        page
+      );
+
+    }
+
+
+    if (
+      current <= 4
+    ) {
+
+      for (
+        let page = 1;
+        page <=
+          Math.min(
+            5,
+            total
+          );
+        page++
+      ) {
+
+        values.add(
+          page
+        );
+
+      }
+
+    }
+
+
+    if (
+      current >= total - 3
+    ) {
+
+      for (
+        let page =
+          Math.max(
+            1,
+            total - 4
+          );
+        page <= total;
+        page++
+      ) {
+
+        values.add(
+          page
+        );
+
+      }
+
+    }
+
+
+    return [
+      ...values
+    ].sort(
+      (a, b) =>
+        a - b
+    );
+
+  }
+
+
+  function clickToPage(
+    current,
+    target,
+    prevButton,
+    nextButton
+  ) {
+
+    if (
+      target === current
+    ) {
+
+      return;
+
+    }
+
+
+    const button =
+      target > current
+        ? nextButton
+        : prevButton;
+
+
+    const count =
+      Math.abs(
+        target - current
+      );
+
+
+    if (!button) {
+
+      return;
+
+    }
+
+
+    /*
+      Mevcut katalog kodlarina dokunmadan
+      var olan onceki/sonraki aksiyonlarini kullan.
+    */
+
+    for (
+      let i = 0;
+      i < count;
+      i++
+    ) {
+
+      if (
+        button.disabled
+      ) {
+        break;
+      }
+
+      button.click();
+
+    }
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  function enhancePager({
+    root,
+    pageLabel,
+    prevButton,
+    nextButton,
+    key
+  }) {
+
+    if (
+      !root ||
+      !pageLabel ||
+      !prevButton ||
+      !nextButton
+    ) {
+
+      return;
+
+    }
+
+
+    const info =
+      parsePageInfo(
+        pageLabel.textContent
+      );
+
+
+    if (!info) {
+
+      return;
+
+    }
+
+
+    let enhanced =
+      root.querySelector(
+        `[data-enhanced-pager="${key}"]`
+      );
+
+
+    if (!enhanced) {
+
+      enhanced =
+        document.createElement(
+          "div"
+        );
+
+      enhanced.className =
+        "enhanced-pagination";
+
+      enhanced.dataset.enhancedPager =
+        key;
+
+
+      /*
+        Mevcut pager altina ekle.
+      */
+
+      root.appendChild(
+        enhanced
+      );
+
+    }
+
+
+    const pages =
+      pageWindow(
+        info.current,
+        info.total
+      );
+
+
+    let html =
+      '<div class="enhanced-page-numbers">';
+
+
+    let previousPage =
+      null;
+
+
+    pages.forEach(
+      (page) => {
+
+        if (
+          previousPage !== null &&
+          page - previousPage > 1
+        ) {
+
+          html +=
+            '<span class="page-ellipsis">â€¦</span>';
+
+        }
+
+
+        html += `
+          <button
+            type="button"
+            class="page-number ${
+              page === info.current
+                ? "active"
+                : ""
+            }"
+            data-page-target="${page}">
+            ${page}
+          </button>
+        `;
+
+
+        previousPage =
+          page;
+
+      }
+    );
+
+
+    html +=
+      `</div>
+
+       <form class="page-jump">
+         <label>
+           Sayfaya git
+           <input
+             type="number"
+             min="1"
+             max="${info.total}"
+             value="${info.current}"
+             inputmode="numeric"
+           >
+         </label>
+
+         <button
+           type="submit">
+           Git â†’
+         </button>
+       </form>`;
+
+
+    enhanced.innerHTML =
+      html;
+
+
+    enhanced
+      .querySelectorAll(
+        "[data-page-target]"
+      )
+      .forEach(
+        (button) => {
+
+          button.onclick =
+            () => {
+
+              clickToPage(
+                info.current,
+                Number(
+                  button.dataset.pageTarget
+                ),
+                prevButton,
+                nextButton
+              );
+
+            };
+
+        }
+      );
+
+
+    const form =
+      enhanced.querySelector(
+        ".page-jump"
+      );
+
+
+    form.onsubmit =
+      (event) => {
+
+        event.preventDefault();
+
+
+        const input =
+          form.querySelector(
+            "input"
+          );
+
+
+        const target =
+          Math.min(
+            info.total,
+            Math.max(
+              1,
+              Number(
+                input.value
+              ) || 1
+            )
+          );
+
+
+        clickToPage(
+          info.current,
+          target,
+          prevButton,
+          nextButton
+        );
+
+      };
+
+  }
+
+
+  function enhanceAllPagers() {
+
+    /*
+      Normal futbolcu katalogu
+    */
+
+    const catalogPager =
+      document.getElementById(
+        "catalogPrev"
+      )?.parentElement;
+
+
+    enhancePager({
+
+      root:
+        catalogPager,
+
+      pageLabel:
+        document.getElementById(
+          "catalogPage"
+        ),
+
+      prevButton:
+        document.getElementById(
+          "catalogPrev"
+        ),
+
+      nextButton:
+        document.getElementById(
+          "catalogNext"
+        ),
+
+      key:
+        "career-catalog"
+
+    });
+
+
+    /*
+      FC26 katalog
+    */
+
+    const fcPager =
+      document.getElementById(
+        "fc26Prev"
+      )?.parentElement;
+
+
+    enhancePager({
+
+      root:
+        fcPager,
+
+      pageLabel:
+        document.getElementById(
+          "fc26Page"
+        ),
+
+      prevButton:
+        document.getElementById(
+          "fc26Prev"
+        ),
+
+      nextButton:
+        document.getElementById(
+          "fc26Next"
+        ),
+
+      key:
+        "fc26-catalog"
+
+    });
+
+  }
+
+
+  // ----------------------------------------------------------
+  // BASLAT
+  // ----------------------------------------------------------
+
+  function applyCatalogUiFixes() {
+
+    removeTravelersFeature();
+
+    reorderAllRelevantLeagues();
+
+    enhanceAllPagers();
+
+  }
+
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        setTimeout(
+          applyCatalogUiFixes,
+          400
+        );
+
+      }
+    );
+
+  }
+  else {
+
+    setTimeout(
+      applyCatalogUiFixes,
+      400
+    );
+
+  }
+
+
+  /*
+    app.js bazi ekranlari sonradan render ediyor.
+    Bu nedenle degisiklikleri observer ile koru.
+  */
+
+  let scheduled =
+    false;
+
+
+  const observer =
+    new MutationObserver(
+      () => {
+
+        if (scheduled) {
+
+          return;
+
+        }
+
+
+        scheduled =
+          true;
+
+
+        setTimeout(
+          () => {
+
+            scheduled =
+              false;
+
+            applyCatalogUiFixes();
+
+          },
+          150
+        );
+
+      }
+    );
+
+
+  setTimeout(
+    () => {
+
+      if (
+        document.body
+      ) {
+
+        observer.observe(
+          document.body,
+          {
+            childList: true,
+            subtree: true
+          }
+        );
+
+      }
+
+    },
+    800
+  );
+
+})();
+
