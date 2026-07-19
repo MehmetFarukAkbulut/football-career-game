@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 (() => {
   const STYLE_ID = "fc26-enhancements-style";
@@ -314,6 +314,11 @@
 
   function patchMysteryUI() {
     const leagueLabel = document.getElementById("mysteryLeague");
+    if (leagueLabel) {
+      leagueLabel.hidden = true;
+      leagueLabel.style.display = "none";
+      leagueLabel.setAttribute("aria-hidden", "true");
+    }
     const history = document.getElementById("mysteryHistory");
     const head = document.querySelector(".mystery-head");
     if (!leagueLabel || !history || !head) return;
@@ -605,7 +610,7 @@
   }
 
   async function init() {
-    injectStyles();
+    // CSS harici dosyadan yukleniyor; CSP nedeniyle injectStyles kullanilmiyor.
     fcPlayers = await waitForData();
     if (!fcPlayers.length) {
       console.warn("[FC26 enhancements] FC26_DATA yüklenemedi; FC kataloğu devre dışı.");
@@ -622,3 +627,4 @@
     console.error("[FC26 enhancements]", error);
   });
 })();
+
