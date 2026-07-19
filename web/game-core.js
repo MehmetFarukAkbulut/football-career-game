@@ -673,23 +673,37 @@ function simulateTournamentMatch(teamRating, opponentRating, rng = Math.random, 
 }
 
 function simulateXiTournament({ averageRating, difficulty = "normal", tournament = "ucl", rng = Math.random }) {
-  const difficultyOffset = difficulty === "hard" ? 2 : difficulty === "easy" ? -3 : 0;
+  const rating = Number(averageRating) || 0;
+  const difficultyOffset = difficulty === "hard" ? 2.5 : difficulty === "easy" ? -5 : 0;
+  const effectiveRating = rating + (difficulty === "easy" ? 4 : difficulty === "normal" ? 1 : 0);
   const stages = [];
   const opponent = (base, spread) => base + difficultyOffset + rng() * spread;
-  const play = (rating, base, spread, draw = false) => simulateTournamentMatch(rating, opponent(base, spread), rng, draw);
+  const play = (base, spread, draw = false) => simulateTournamentMatch(effectiveRating, opponent(base, spread), rng, draw);
+
+  // Kolay seviyede gerçekten güçlü kadrolar ilk eleme turunda rastgele şekilde erken elenmesin.
+  const protectedWin = (stageIndex, result) => {
+    if (difficulty !== "easy") return result;
+    if (rating >= 90 && stageIndex <= 3) return "win";
+    if (rating >= 88 && stageIndex <= 2) return "win";
+    if (rating >= 86 && stageIndex <= 1) return "win";
+    return result;
+  };
 
   if (tournament === "worldCup") {
     let points = 0;
     for (let match = 1; match <= 3; match++) {
-      const result = play(averageRating, 76.5, 5.5, true);
+      const result = play(74, 5, true);
       points += result === "win" ? 3 : result === "draw" ? 1 : 0;
       stages.push({ stage: `Grup maçı ${match}`, result });
     }
     const position = points >= 7 ? 1 : points >= 5 ? 2 : points >= 3 ? 3 : 4;
     stages.push({ stage: "Grup", result: `${points} puan · ${position}. sıra` });
     if (position === 4) return { stages, outcome: "Grup aşamasında elendin", matches: 3 };
-    for (const [stage, base, spread] of [["Son 32",78,5],["Son 16",79,5],["Çeyrek final",80,5],["Yarı final",81,5],["Final",82,5]]) {
-      const result = play(averageRating, base, spread); stages.push({ stage, result });
+    const rounds = [["Son 32",75,4.5],["Son 16",76,4.5],["Çeyrek final",77.5,4.5],["Yarı final",79,4.5],["Final",80.5,4.5]];
+    for (let i = 0; i < rounds.length; i++) {
+      const [stage, base, spread] = rounds[i];
+      const result = protectedWin(i, play(base, spread));
+      stages.push({ stage, result });
       if (result === "loss") return { stages, outcome: `${stage} aşamasında elendin`, matches: stages.filter((item) => ["win","draw","loss"].includes(item.result)).length };
     }
     return { stages, outcome: "Dünya Kupası şampiyonu oldun!", matches: 8 };
@@ -697,20 +711,25 @@ function simulateXiTournament({ averageRating, difficulty = "normal", tournament
 
   let points = 0;
   for (let match = 1; match <= 8; match++) {
-    const result = play(averageRating, 75.5, 7, true);
+    const result = play(73.5, 6.5, true);
     points += result === "win" ? 3 : result === "draw" ? 1 : 0;
     stages.push({ stage: `Lig maçı ${match}`, result });
   }
   const rank = points >= 18 ? 3 : points >= 15 ? 7 : points >= 12 ? 14 : points >= 9 ? 22 : 29;
   stages.push({ stage: "Lig etabı", result: `${points} puan · ${rank}. sıra` });
   if (rank > 24) return { stages, outcome: `Lig etabını ${rank}. bitirdin ve elendin`, matches: 8 };
+
+  let knockoutIndex = 0;
   if (rank > 8) {
-    const playoff = play(averageRating, 79.5, 4.5); stages.push({ stage: "Son 16 play-off (2 maç)", result: playoff });
+    const playoff = protectedWin(knockoutIndex++, play(77, 4));
+    stages.push({ stage: "Son 16 play-off (2 maç)", result: playoff });
     if (playoff === "loss") return { stages, outcome: "Son 16 play-off aşamasında elendin", matches: 10 };
   }
   let matches = rank > 8 ? 10 : 8;
-  for (const [stage, legs, base] of [["Son 16",2,80],["Çeyrek final",2,81],["Yarı final",2,82],["Final",1,83]]) {
-    const result = play(averageRating, base, 4.5); stages.push({ stage: `${stage}${legs === 2 ? " (2 maç)" : ""}`, result }); matches += legs;
+  for (const [stage, legs, base] of [["Son 16",2,77.5],["Çeyrek final",2,79],["Yarı final",2,80.5],["Final",1,82]]) {
+    const result = protectedWin(knockoutIndex++, play(base, 4));
+    stages.push({ stage: `${stage}${legs === 2 ? " (2 maç)" : ""}`, result });
+    matches += legs;
     if (result === "loss") return { stages, outcome: `${stage} aşamasında elendin`, matches };
   }
   return { stages, outcome: "Şampiyonlar Ligi şampiyonu oldun!", matches };

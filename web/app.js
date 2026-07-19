@@ -660,42 +660,38 @@ function renderXiSlots() {
 }
 
 function xiTargetRating() {
-  // Kolay modda daha güçlü, zor modda daha zayıf ama hâlâ rekabetçi adaylar gelir.
-  return xiDraft.difficulty === "easy" ? 86 : xiDraft.difficulty === "hard" ? 82 : 84;
+  return xiDraft.difficulty === "easy" ? 86 : xiDraft.difficulty === "hard" ? 80 : 83;
 }
 
 function xiCandidateChoices(slot) {
   const used = new Set(xiDraft.selected.map((player) => player.eaId));
   const eligible = xiDraft.pool
     .filter((player) => !used.has(player.eaId) && IkiFormaCore.playerFitsXiSlot(player, slot))
-    .sort((a, b) => b.overall - a.overall);
+    .sort((a, b) => Number(b.overall) - Number(a.overall));
 
   if (xiDraft.selectionMode === "luck") {
     return IkiFormaCore.generateXiLuckChoices(eligible, xiDraft.difficulty);
   }
   if (eligible.length < 3) return [];
 
-  const target = xiTargetRating();
-  const strongPool = eligible.filter((player) => Number(player.overall) >= target);
-  // Her turda en az bir güçlü aday garanti edilir. Eşik karşılanamıyorsa mevkinin en iyisi kullanılır.
-  const strongCandidates = strongPool.length ? strongPool.slice(0, Math.min(12, strongPool.length)) : eligible.slice(0, Math.min(8, eligible.length));
-  const elite = strongCandidates[Math.floor(Math.random() * strongCandidates.length)];
+  // Klasik seçimde her tur en az bir gerçekten güçlü aday garanti edilir.
+  // Kolay: mevkinin en iyi oyuncusu doğrudan adaydır.
+  // Normal: ilk 5'ten biri. Zor: ilk 12'den biri.
+  const eliteWindow = xiDraft.difficulty === "easy" ? 1 : xiDraft.difficulty === "hard" ? 12 : 5;
+  const elitePool = eligible.slice(0, Math.min(eliteWindow, eligible.length));
+  const elite = elitePool[Math.floor(Math.random() * elitePool.length)] || eligible[0];
   const remaining = eligible.filter((player) => player.eaId !== elite.eaId);
 
-  // Diğer iki aday zorluğa göre elit adaya yakın/uzak seçilir.
-  const gap = xiDraft.difficulty === "easy" ? [5, 14] : xiDraft.difficulty === "hard" ? [1, 7] : [3, 10];
-  const midPool = remaining.filter((player) => elite.overall - player.overall >= gap[0] && elite.overall - player.overall <= gap[1]);
-  const fallbackMid = remaining.slice(0, Math.max(1, Math.min(40, remaining.length)));
-  const secondPool = midPool.length ? midPool : fallbackMid;
-  const second = secondPool[Math.floor(Math.random() * secondPool.length)];
+  const target = xiTargetRating();
+  const qualityPool = remaining.filter((player) => Number(player.overall) >= target - (xiDraft.difficulty === "easy" ? 5 : 8));
+  const middleSource = qualityPool.length ? qualityPool : remaining.slice(0, Math.min(30, remaining.length));
+  const second = middleSource[Math.floor(Math.random() * middleSource.length)];
+  const thirdSource = remaining.filter((player) => player.eaId !== second?.eaId);
+  const thirdStart = xiDraft.difficulty === "easy" ? 0 : xiDraft.difficulty === "normal" ? Math.floor(thirdSource.length * .2) : Math.floor(thirdSource.length * .35);
+  const thirdPool = thirdSource.slice(Math.min(thirdStart, Math.max(0, thirdSource.length - 1)));
+  const third = (thirdPool.length ? thirdPool : thirdSource)[Math.floor(Math.random() * Math.max(1, (thirdPool.length ? thirdPool : thirdSource).length))];
 
-  const thirdCandidates = remaining.filter((player) => player.eaId !== second?.eaId);
-  const lowStart = xiDraft.difficulty === "easy" ? Math.floor(thirdCandidates.length * 0.55) : xiDraft.difficulty === "hard" ? Math.floor(thirdCandidates.length * 0.2) : Math.floor(thirdCandidates.length * 0.4);
-  const lowPool = thirdCandidates.slice(Math.min(lowStart, Math.max(0, thirdCandidates.length - 1)));
-  const thirdSource = lowPool.length ? lowPool : thirdCandidates;
-  const third = thirdSource[Math.floor(Math.random() * thirdSource.length)];
-
-  return [elite, second, third].filter(Boolean).sort(() => Math.random() - 0.5);
+  return [elite, second, third].filter(Boolean).sort(() => Math.random() - .5);
 }
 
 function renderXiCandidates(revealed = false, selectedIndex = -1) {

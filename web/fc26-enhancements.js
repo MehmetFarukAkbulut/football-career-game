@@ -408,7 +408,7 @@
         <div>
           <span class="kicker">EA SPORTS FC 26 VERİ KATALOĞU</span>
           <h2>FC 26 Futbolcu Kartları</h2>
-          <p>Overall ve ana FC 26 özelliklerini özel kart görünümünde ara, filtrele ve sırala.</p>
+          <p>Overall ve ana FC 26 özelliklerini kart görünümünde ara ve filtrele. En yüksek overall otomatik olarak önce gösterilir.</p>
         </div>
         <b id="fc26CatalogCount" class="counter"></b>
       </div>
@@ -419,18 +419,6 @@
         <select id="fc26Nation"><option value="">Tüm ülkeler</option></select>
         <select id="fc26Position"><option value="">Tüm mevkiler</option></select>
         <select id="fc26Gender"><option value="">Tüm cinsiyetler</option><option value="M">Erkek</option><option value="F">Kadın</option></select>
-      </div>
-      <div class="fc26-stat-filters">
-        <select id="fc26Sort">
-          <option value="overall">OVR yüksekten düşüğe</option>
-          <option value="pace">PAC yüksekten düşüğe</option>
-          <option value="shooting">SHO yüksekten düşüğe</option>
-          <option value="passing">PAS yüksekten düşüğe</option>
-          <option value="dribbling">DRI yüksekten düşüğe</option>
-          <option value="defending">DEF yüksekten düşüğe</option>
-          <option value="physical">PHY yüksekten düşüğe</option>
-          <option value="name">İsme göre</option>
-        </select>
       </div>
       <div id="fc26CatalogGrid" class="fc26-catalog-grid"></div>
       <div class="fc26-pager">
@@ -463,7 +451,7 @@
     );
 
     [
-      "fc26Search", "fc26League", "fc26Team", "fc26Nation", "fc26Position", "fc26Gender", "fc26Sort",
+      "fc26Search", "fc26League", "fc26Team", "fc26Nation", "fc26Position", "fc26Gender",
     ].forEach((id) => {
       const element = document.getElementById(id);
       if (!element) return;
@@ -536,14 +524,10 @@
   function renderFcCatalog() {
     const grid = document.getElementById("fc26CatalogGrid");
     if (!grid) return;
-
-    const sortKey = document.getElementById("fc26Sort")?.value || "overall";
-    const filtered = filteredFcPlayers().sort((a, b) => {
-      if (sortKey === "name") return String(a.name).localeCompare(String(b.name), "tr");
-      return playerStats(b)[sortKey] - playerStats(a)[sortKey] ||
-        playerStats(b).overall - playerStats(a).overall ||
-        String(a.name).localeCompare(String(b.name), "tr");
-    });
+    const filtered = filteredFcPlayers().sort((a, b) =>
+      playerStats(b).overall - playerStats(a).overall ||
+      String(a.name).localeCompare(String(b.name), "tr")
+    );
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     fcCatalogPage = Math.min(fcCatalogPage, totalPages);
@@ -568,15 +552,25 @@
       const positions = [player.position, ...(player.alternativePositions || [])].filter(Boolean).join(" / ");
       return `
         <article class="fc26-player-card">
-          <div class="fc26-card-top">
-            <div class="fc26-overall"><strong>${stats.overall || "—"}</strong><small>OVR</small></div>
-            <div class="fc26-card-photo">
-              ${fcCardImage(player) ? `<img src="${esc(fcCardImage(player))}" alt="${esc(player.name)} FC 26 kartı" loading="lazy">`
-                : `<span class="avatar">${esc(initials(player.name))}</span>`}
+          <div class="fc26-game-card" aria-label="${esc(player.name)} FC 26 kartı">
+            <div class="fc26-game-card-head">
+              <div class="fc26-game-rating"><strong>${stats.overall || "—"}</strong><span>${esc(player.position || "")}</span></div>
+              <div class="fc26-game-player-photo">
+                ${player.photoUrl ? `<img src="${esc(player.photoUrl)}" alt="${esc(player.name)}" loading="lazy">` : `<span class="avatar">${esc(initials(player.name))}</span>`}
+              </div>
+            </div>
+            <div class="fc26-game-name">${esc(player.name)}</div>
+            <div class="fc26-game-team">${esc(player.team || "Takım bilinmiyor")}</div>
+            <div class="fc26-game-stats">
+              <span><b>${stats.pace || "—"}</b><small>PAC</small></span>
+              <span><b>${stats.shooting || "—"}</b><small>SHO</small></span>
+              <span><b>${stats.passing || "—"}</b><small>PAS</small></span>
+              <span><b>${stats.dribbling || "—"}</b><small>DRI</small></span>
+              <span><b>${stats.defending || "—"}</b><small>DEF</small></span>
+              <span><b>${stats.physical || "—"}</b><small>PHY</small></span>
             </div>
           </div>
-          <h3>${esc(player.name)}</h3>
-          <div class="fc26-meta">${esc(player.nation || "Milliyet bilinmiyor")} · ${esc(positions || "Mevki bilinmiyor")}<br>${esc(player.team || "Takım bilinmiyor")} · ${esc(player.league || "Lig bilinmiyor")}</div>
+          <div class="fc26-card-meta">${esc(player.nation || "Milliyet bilinmiyor")} · ${esc(positions || "Mevki bilinmiyor")}<br>${esc(player.league || "Lig bilinmiyor")}</div>
         </article>
       `;
     }).join("");

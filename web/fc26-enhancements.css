@@ -587,3 +587,194 @@
   #fcCatalog .fc26-catalog-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   #fcCatalog .fc26-catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }
+
+
+/* ===== FINAL V2: Turnuva 11 setup, çakışmasız masaüstü yerleşim ===== */
+#xiDraftSetup .xi-draft-setup {
+  width: min(1180px, calc(100% - 40px)) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 390px minmax(0, 1fr) !important;
+  grid-template-areas:
+    "kicker leagues"
+    "title leagues"
+    "desc leagues"
+    "controls leagues"
+    "start leagues" !important;
+  gap: 10px 28px !important;
+  align-items: start !important;
+}
+#xiDraftSetup .xi-draft-setup > .kicker { grid-area: kicker !important; }
+#xiDraftSetup .xi-draft-setup > h2 { grid-area: title !important; margin: 0 !important; }
+#xiDraftSetup .xi-draft-setup > p { grid-area: desc !important; margin: 0 0 10px !important; }
+#xiDraftSetup .xi-draft-setup > .setup-grid {
+  grid-area: controls !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+#xiDraftSetup .xi-draft-setup > .setup-grid > label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+  position: static !important;
+}
+#xiDraftSetup .xi-draft-setup > .setup-grid > label > select {
+  width: 100% !important;
+  height: 52px !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+#xiDraftSetup .xi-draft-setup > .setup-grid > label > small {
+  display: block !important;
+  min-height: 34px !important;
+  line-height: 1.35 !important;
+}
+#xiDraftSetup #xiNationWrap { grid-column: auto !important; }
+#xiDraftSetup #xiLeagueOptions {
+  grid-area: leagues !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  height: 700px !important;
+  overflow: hidden !important;
+}
+#xiDraftSetup #startXiDraft {
+  grid-area: start !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* ===== FINAL V2: FC26 katalog, reyting oyunundaki kart mantığı ===== */
+#fcCatalog .fc26-stat-filters { display: none !important; }
+#fcCatalog .fc26-catalog-toolbar {
+  display: grid !important;
+  grid-template-columns: minmax(220px,1.4fr) repeat(5,minmax(130px,1fr)) !important;
+  gap: 10px !important;
+  margin-bottom: 26px !important;
+}
+#fcCatalog .fc26-catalog-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+}
+#fcCatalog .fc26-player-card {
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#fcCatalog .fc26-game-card {
+  position: relative !important;
+  min-height: 420px !important;
+  padding: 24px 22px 20px !important;
+  border-radius: 28px 28px 34px 34px !important;
+  background: linear-gradient(145deg,#eadcae 0%,#c7b16c 48%,#8d783b 100%) !important;
+  border: 3px solid #f2e7bb !important;
+  box-shadow: inset 0 0 0 2px rgba(84,65,22,.35),0 14px 30px rgba(0,0,0,.24) !important;
+  color: #10223a !important;
+  overflow: hidden !important;
+}
+#fcCatalog .fc26-game-card::before,
+#fcCatalog .fc26-game-card::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 10px !important;
+  border: 1px solid rgba(55,43,15,.28) !important;
+  border-radius: 22px 22px 28px 28px !important;
+  pointer-events: none !important;
+}
+#fcCatalog .fc26-game-card-head {
+  display: grid !important;
+  grid-template-columns: 70px minmax(0,1fr) !important;
+  align-items: start !important;
+  gap: 8px !important;
+  min-height: 220px !important;
+}
+#fcCatalog .fc26-game-rating {
+  padding-top: 16px !important;
+  text-align: center !important;
+  z-index: 2 !important;
+}
+#fcCatalog .fc26-game-rating strong {
+  display: block !important;
+  font-size: 46px !important;
+  line-height: .9 !important;
+  font-weight: 800 !important;
+}
+#fcCatalog .fc26-game-rating span {
+  display: block !important;
+  margin-top: 7px !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+}
+#fcCatalog .fc26-game-player-photo {
+  height: 235px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+#fcCatalog .fc26-game-player-photo img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  filter: drop-shadow(0 6px 7px rgba(0,0,0,.25)) !important;
+}
+#fcCatalog .fc26-game-name {
+  position: relative !important;
+  z-index: 2 !important;
+  margin-top: -2px !important;
+  padding: 8px 4px 6px !important;
+  border-top: 1px solid rgba(55,43,15,.35) !important;
+  border-bottom: 1px solid rgba(55,43,15,.35) !important;
+  text-align: center !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+#fcCatalog .fc26-game-team {
+  margin: 5px 0 10px !important;
+  text-align: center !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+#fcCatalog .fc26-game-stats {
+  display: grid !important;
+  grid-template-columns: repeat(3,1fr) !important;
+  gap: 7px 10px !important;
+  text-align: center !important;
+}
+#fcCatalog .fc26-game-stats span { display: flex !important; justify-content: center !important; gap: 4px !important; align-items: baseline !important; }
+#fcCatalog .fc26-game-stats b { font-size: 18px !important; }
+#fcCatalog .fc26-game-stats small { font-size: 10px !important; font-weight: 900 !important; }
+#fcCatalog .fc26-card-meta {
+  padding: 10px 6px 0 !important;
+  text-align: center !important;
+  color: #94b5ce !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+@media (max-width: 980px) {
+  #xiDraftSetup .xi-draft-setup {
+    grid-template-columns: 1fr !important;
+    grid-template-areas: "kicker" "title" "desc" "controls" "leagues" "start" !important;
+  }
+  #xiDraftSetup #xiLeagueOptions { height: 520px !important; }
+  #fcCatalog .fc26-catalog-toolbar { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+  #fcCatalog .fc26-catalog-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+}
+@media (max-width: 620px) {
+  #xiDraftSetup .xi-draft-setup > .setup-grid { grid-template-columns: 1fr 1fr !important; }
+  #fcCatalog .fc26-catalog-toolbar #fc26Search { grid-column: 1 / -1 !important; }
+  #fcCatalog .fc26-game-card { min-height: 330px !important; padding: 15px 12px !important; }
+  #fcCatalog .fc26-game-card-head { grid-template-columns: 52px 1fr !important; min-height: 165px !important; }
+  #fcCatalog .fc26-game-player-photo { height: 175px !important; }
+  #fcCatalog .fc26-game-rating strong { font-size: 34px !important; }
+  #fcCatalog .fc26-game-name { font-size: 15px !important; }
+  #fcCatalog .fc26-game-stats b { font-size: 14px !important; }
+}
