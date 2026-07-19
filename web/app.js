@@ -144,7 +144,9 @@ function setupScreen(id, title, description, mode) {
   $(id).querySelector(".start").onclick = () => startGame(mode, $(id));
 }
 function enhanceLeagueSelector(root) {
+  if (!root) return;
   const fieldset = root.querySelector(".league-options");
+  if (!fieldset) return;
   const leagues = DATA.leagues || [
     ...new Map(
       clubs.map((c) => [
@@ -364,7 +366,9 @@ function startRatingGame() {
 $("#startRatingGame").onclick = startRatingGame;
 
 function setupFcLeagueSelector(selector) {
-  const root = $(selector), priority = ["Premier League", "LALIGA EA SPORTS", "Serie A Enilive", "Ligue 1 McDonald's", "Bundesliga", "Trendyol Süper Lig"], priorityMeta = {
+  const root = $(selector);
+  if (!root) return;
+  const priority = ["Premier League", "LALIGA EA SPORTS", "Serie A Enilive", "Ligue 1 McDonald's", "Bundesliga", "Trendyol Süper Lig"], priorityMeta = {
     "Premier League": ["GB", "İngiltere"], "LALIGA EA SPORTS": ["ES", "İspanya"], "Serie A Enilive": ["IT", "İtalya"], "Ligue 1 McDonald's": ["FR", "Fransa"], Bundesliga: ["DE", "Almanya"], "Trendyol Süper Lig": ["TR", "Türkiye"],
   };
   const careerLeagues = DATA.leagues || [], metadata = (name) => {
@@ -1290,14 +1294,14 @@ function handleOnlineState() {
     const correct = indexes.playerById.get(+question.correctPlayerId);
     const choices = matchPlayers.map((player, index) => { const answer = state.roundAnswers?.[index], selected = indexes.playerById.get(+answer?.selectedPlayerId); return `${player.name}: ${selected?.name || "—"} ${answer?.result === "correct" ? "✓" : "✕"}`; }).join(" · ");
     $("#gameMessage").textContent = `Doğru cevap: ${correct?.name}. ${choices}`;
-    if (game.answerMethod === "multiple") $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +question.correctPlayerId) button.classList.add("is-correct"); if (+button.dataset.playerId === +myAnswer?.selectedPlayerId && myAnswer?.result !== "correct") button.classList.add("is-wrong"); });
+    if (game.answerMethod === "multiple") $("#multipleChoiceOptions")?.querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +question.correctPlayerId) button.classList.add("is-correct"); if (+button.dataset.playerId === +myAnswer?.selectedPlayerId && myAnswer?.result !== "correct") button.classList.add("is-wrong"); });
     if (online.playerIndex === 0 && online.advanceScheduledSeq !== state.questionSequence) {
       online.advanceScheduledSeq = state.questionSequence;
       setTimeout(() => { refreshOnlineRoom().then(publishNextOnlineQuestion); }, Math.max(0, state.revealUntil - Date.now()));
     }
   } else if (myAnswer) {
     $("#gameMessage").textContent = `✓ Seçiminiz kaydedildi. Diğer oyuncular bekleniyor (${Object.keys(state.roundAnswers || {}).length}/${matchPlayers.length}).`;
-    if (game.answerMethod === "multiple") $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +myAnswer.selectedPlayerId) button.classList.add("is-selected"); });
+    if (game.answerMethod === "multiple") $("#multipleChoiceOptions")?.querySelectorAll("button").forEach((button) => { button.disabled = true; if (+button.dataset.playerId === +myAnswer.selectedPlayerId) button.classList.add("is-selected"); });
   } else {
     $("#gameMessage").textContent = "Seçiminizi yapın; sonuç herkes cevapladıktan sonra gösterilecek.";
   }
@@ -1339,6 +1343,7 @@ async function submitOnlinePlayer(playerId) {
 
 function renderMultipleChoice() {
   const root = $("#multipleChoiceOptions");
+  if (!root) return;
   root.innerHTML = game.question.optionPlayerIds.map((id, index) => {
     const player = indexes.playerById.get(id), flag = countryFlag(player.nationalityCode);
     const meta = game.mode === "country" ? (player.birthDate ? `Doğum: ${esc(player.birthDate.slice(0, 4))}` : "Kariyer oyuncusu") : `<img src="${flag}" alt="" width="22" height="15"> ${esc(player.nationality || "Milliyet bilinmiyor")}`;
@@ -1361,7 +1366,7 @@ function answerMultipleChoice(playerId) {
   game.answerLocked = true;
   clearInterval(timer);
   const correctId = game.question.correctPlayerId, selected = indexes.playerById.get(playerId), correct = indexes.playerById.get(correctId), isCorrect = playerId === correctId;
-  $("#multipleChoiceOptions").querySelectorAll("button").forEach((button) => {
+  $("#multipleChoiceOptions")?.querySelectorAll("button").forEach((button) => {
     button.disabled = true;
     if (+button.dataset.playerId === correctId) { button.classList.add("is-correct"); button.querySelector("i").textContent = "✓ Doğru"; }
     else if (+button.dataset.playerId === playerId) { button.classList.add("is-wrong"); button.querySelector("i").textContent = "✕ Yanlış"; }
@@ -1695,9 +1700,11 @@ function generateGrid(selectedLeagues = new Set(), type = "club") {
   return null;
 }
 function startGridGame() {
+  const gridSetup = $("#gridSetup");
+  if (!gridSetup) return;
   const selectedLeagues = new Set(
     [
-      ...$("#gridSetup").querySelectorAll(".grid-league-options input:checked"),
+      ...gridSetup.querySelectorAll(".grid-league-options input:checked"),
     ].map((input) => input.value),
   );
   const board = generateGrid(selectedLeagues, $("#gridType").value);
@@ -1937,7 +1944,7 @@ $$('input[name="gridMode"]').forEach(
 );
 
 function selectedLeagueContext(root) {
-  const selected = new Set([...root.querySelectorAll(".league-options input:checked")].map((input) => input.value)),
+  const selected = new Set([...(root?.querySelectorAll(".league-options input:checked") || [])].map((input) => input.value)),
     allowedClubs = clubs.filter((club) => !selected.size || selected.has(club.leagueId || `${club.country}:${club.league}`)),
     clubIds = new Set(allowedClubs.map((club) => club.id));
   return { selected, allowedClubs, clubIds };
@@ -1964,6 +1971,7 @@ function shuffle(items) {
   return result;
 }
 function renderPlayerChoices(root, choices, callback, { showBirthYear = false } = {}) {
+  if (!root) return;
   root.classList.add("inline-choices");
   root.innerHTML = choices.map((player, index) => { const meta = showBirthYear ? (player.birthDate ? `Doğum: ${esc(player.birthDate.slice(0, 4))}` : "Doğum yılı bilinmiyor") : esc(player.nationality || ""); return `<button class="player-suggestion" data-choice="${player.id}"><span class="choice-key">${index + 1}</span>${person(player)}<span><b>${esc(player.name)}</b><small>${meta}</small></span></button>`; }).join("");
   root.querySelectorAll("[data-choice]").forEach((button) => button.onclick = () => callback(indexes.playerById.get(+button.dataset.choice)));
@@ -2032,7 +2040,7 @@ function renderRandomFiveRound() {
     randomFive.choiceEntries = sharedIds?.length === 4 ? sharedIds.map((id) => ({ player: indexes.playerById.get(+id), score: IkiFormaCore.randomFiveScore(indexes.playerById.get(+id), set.map((club) => club.id)) })) : IkiFormaCore.generateRandomFiveOptions({ pool: randomFive.pool, clubIds: set.map((club) => club.id), difficulty: randomFive.difficulty });
     if (!randomFive.choiceEntries) return toast("Bu set için dört kaliteli seçenek üretilemedi.");
     renderPlayerChoices($("#randomFiveSuggestions"), randomFive.choiceEntries.map((entry) => entry.player), submitRandomFiveGuess);
-    if (!canPlay) $("#randomFiveSuggestions").querySelectorAll("button").forEach((button) => { button.disabled = true; });
+    if (!canPlay) $("#randomFiveSuggestions")?.querySelectorAll("button").forEach((button) => { button.disabled = true; });
   }
   $("#randomFiveReveal").hidden = true;
   $("#randomFiveNext").hidden = true;
@@ -2194,7 +2202,7 @@ function renderTwinTurn() {
     twin.choiceEntries = sharedIds?.length === 4 ? sharedIds.map((id) => { const player = indexes.playerById.get(+id); return { player, distance: Math.abs(Number(player?.[metric.key]) - Number(target[metric.key])) }; }) : IkiFormaCore.generateTwinOptions({ target, pool: twin.pool, metric: metric.key });
     if (!twin.choiceEntries) return toast("Bu metrik için dengeli seçenek üretilemedi.");
     renderPlayerChoices($("#twinSuggestions"), twin.choiceEntries.map((entry) => entry.player), submitTwinGuess);
-    if (!canPlay) $("#twinSuggestions").querySelectorAll("button").forEach((button) => { button.disabled = true; });
+    if (!canPlay) $("#twinSuggestions")?.querySelectorAll("button").forEach((button) => { button.disabled = true; });
   }
   $("#twinMessage").textContent = "";
   $("#twinReveal").hidden = true;
@@ -2313,15 +2321,17 @@ async function init() {
 
   try {
 
-    const [response, ratingResponse] = await Promise.all([
-      fetch("data/web-data.json"),
-      fetch("data/fc26-ratings.json?v=fc26-update-2"),
-    ]);
-    if (!response.ok || !ratingResponse.ok)
-      throw new Error("Veri paketi bulunamadı");
+    const loader = window.IkiFormaDataLoader;
+
+    if (!loader) {
+      throw new Error("Progressive data loader bulunamadi");
+    }
+
+    const background = loader.startBackground();
+
     [DATA, FC26_DATA] = await Promise.all([
-      response.json(),
-      ratingResponse.json(),
+      background.career,
+      background.fc26,
     ]);
 
     window.IKI_FORMA_DATA_READY = true;
@@ -2413,6 +2423,13 @@ async function init() {
   }
 }
 init();
+
+
+
+
+
+
+
 
 
 
