@@ -356,3 +356,166 @@
             repeat(6, minmax(62px, 1fr)) !important;
     }
 }
+
+/* ==========================================================
+   TURNUVA 11 MASAUSTU DUZENI
+   ========================================================== */
+
+#xiDraftSetup .surface {
+    width: min(1120px, calc(100% - 32px));
+    margin-inline: auto;
+}
+
+#xiDraftSetup .setup-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+#xiDraftSetup .setup-grid > label {
+    min-width: 0;
+}
+
+#xiDraftSetup .setup-grid select {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+}
+
+#xiDraftSetup .league-options {
+    margin-top: 20px;
+}
+
+.xi-luck-reveal {
+    width: min(520px, 100%);
+    margin: 0 auto;
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid #315775;
+    background: #102d47;
+    text-align: center;
+}
+
+.xi-luck-player {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+}
+
+.xi-luck-player img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    border-radius: 14px;
+    background: #071525;
+}
+
+.xi-luck-player b {
+    display: block;
+    font-size: 21px;
+}
+
+.xi-luck-player small {
+    color: #94b5ce;
+}
+
+.xi-luck-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+
+/* ==========================================================
+   FC26 KATALOG YENI TASARIM
+   ========================================================== */
+
+.fc26-catalog-toolbar {
+    grid-template-columns:
+        minmax(220px, 1.5fr)
+        repeat(5, minmax(130px, 1fr)) !important;
+}
+
+.fc26-stat-filters {
+    display: flex !important;
+    max-width: 280px;
+    margin-bottom: 24px !important;
+}
+
+.fc26-card-photo {
+    width: 100% !important;
+    aspect-ratio: 0.72 / 1 !important;
+    min-height: 270px;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.fc26-card-photo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+.fc26-card-top {
+    grid-template-columns: 1fr !important;
+}
+
+.fc26-overall {
+    display: none !important;
+}
+
+.fc26-player-card h3 {
+    text-align: center;
+    margin-top: 8px !important;
+}
+
+.fc26-meta {
+    text-align: center;
+}
+
+.fc26-stats {
+    display: none !important;
+}
+
+
+@media (max-width: 900px) {
+
+    #xiDraftSetup .setup-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .fc26-catalog-toolbar {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    #xiDraftSetup .setup-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    #xiDraftSetup .setup-grid select {
+        height: 46px;
+        font-size: 12px;
+    }
+
+    .xi-luck-player img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .fc26-card-photo {
+        min-height: 190px;
+    }
+
+}

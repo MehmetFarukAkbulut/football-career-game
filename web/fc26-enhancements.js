@@ -421,22 +421,15 @@
       </div>
       <div class="fc26-stat-filters">
         <select id="fc26Sort">
-          <option value="overall">OVR yüksekten düşüğe</option>
-          <option value="pace">PAC yüksekten düşüğe</option>
-          <option value="shooting">SHO yüksekten düşüğe</option>
-          <option value="passing">PAS yüksekten düşüğe</option>
-          <option value="dribbling">DRI yüksekten düşüğe</option>
-          <option value="defending">DEF yüksekten düşüğe</option>
-          <option value="physical">PHY yüksekten düşüğe</option>
-          <option value="name">İsme göre</option>
+          <option value="overall">OVR yÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe</option>
+          <option value="pace">PAC yÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe</option>
+          <option value="shooting">SHO yÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe</option>
+          <option value="passing">PAS yÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe</option>
+          <option value="dribbling">DRI yÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe</option>
+          <option value="defending">DEF yÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe</option>
+          <option value="physical">PHY yÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe</option>
+          <option value="name">Ä°sme gÃ¶re</option>
         </select>
-        <input id="fc26MinOvr" type="number" min="0" max="99" placeholder="Min OVR" aria-label="Minimum overall">
-        <input id="fc26MinPac" type="number" min="0" max="99" placeholder="Min PAC" aria-label="Minimum pace">
-        <input id="fc26MinSho" type="number" min="0" max="99" placeholder="Min SHO" aria-label="Minimum shooting">
-        <input id="fc26MinPas" type="number" min="0" max="99" placeholder="Min PAS" aria-label="Minimum passing">
-        <input id="fc26MinDri" type="number" min="0" max="99" placeholder="Min DRI" aria-label="Minimum dribbling">
-        <input id="fc26MinDef" type="number" min="0" max="99" placeholder="Min DEF" aria-label="Minimum defending">
-        <input id="fc26MinPhy" type="number" min="0" max="99" placeholder="Min PHY" aria-label="Minimum physical">
       </div>
       <div id="fc26CatalogGrid" class="fc26-catalog-grid"></div>
       <div class="fc26-pager">
@@ -469,9 +462,7 @@
     );
 
     [
-      "fc26Search", "fc26League", "fc26Team", "fc26Nation", "fc26Position",
-      "fc26Sort", "fc26MinOvr", "fc26MinPac", "fc26MinSho", "fc26MinPas",
-      "fc26MinDri", "fc26MinDef", "fc26MinPhy",
+      "fc26Search", "fc26League", "fc26Team", "fc26Nation", "fc26Position", "fc26Gender", "fc26Sort",
     ].forEach((id) => {
       const element = document.getElementById(id);
       const eventName = element.tagName === "INPUT" ? "input" : "change";
@@ -522,15 +513,7 @@
     const team = document.getElementById("fc26Team")?.value || "";
     const nation = document.getElementById("fc26Nation")?.value || "";
     const position = document.getElementById("fc26Position")?.value || "";
-    const minimums = {
-      overall: num(document.getElementById("fc26MinOvr")?.value),
-      pace: num(document.getElementById("fc26MinPac")?.value),
-      shooting: num(document.getElementById("fc26MinSho")?.value),
-      passing: num(document.getElementById("fc26MinPas")?.value),
-      dribbling: num(document.getElementById("fc26MinDri")?.value),
-      defending: num(document.getElementById("fc26MinDef")?.value),
-      physical: num(document.getElementById("fc26MinPhy")?.value),
-    };
+    const gender = document.getElementById("fc26Gender")?.value || "";
 
     return fcPlayers.filter((player) => {
       const stats = playerStats(player);
@@ -539,7 +522,8 @@
       if (team && player.team !== team) return false;
       if (nation && player.nation !== nation) return false;
       if (position && player.position !== position && !(player.alternativePositions || []).includes(position)) return false;
-      return Object.entries(minimums).every(([key, min]) => stats[key] >= min);
+      if (gender && player.gender !== gender) return false;
+      return true;
     });
   }
 
@@ -581,21 +565,12 @@
           <div class="fc26-card-top">
             <div class="fc26-overall"><strong>${stats.overall || "—"}</strong><small>OVR</small></div>
             <div class="fc26-card-photo">
-              ${player.photoUrl
-                ? `<img src="${esc(player.photoUrl)}" alt="${esc(player.name)} fotoğrafı" loading="lazy">`
+              ${(player.cardUrl || player.photoUrl) ? `<img src="${esc(player.cardUrl || player.photoUrl)}" alt="${esc(player.name)} fotoğrafı" loading="lazy">`
                 : `<span class="avatar">${esc(initials(player.name))}</span>`}
             </div>
           </div>
           <h3>${esc(player.name)}</h3>
           <div class="fc26-meta">${esc(player.nation || "Milliyet bilinmiyor")} · ${esc(positions || "Mevki bilinmiyor")}<br>${esc(player.team || "Takım bilinmiyor")} · ${esc(player.league || "Lig bilinmiyor")}</div>
-          <div class="fc26-stats">
-            <span>PAC <b>${stats.pace || "—"}</b></span>
-            <span>SHO <b>${stats.shooting || "—"}</b></span>
-            <span>PAS <b>${stats.passing || "—"}</b></span>
-            <span>DRI <b>${stats.dribbling || "—"}</b></span>
-            <span>DEF <b>${stats.defending || "—"}</b></span>
-            <span>PHY <b>${stats.physical || "—"}</b></span>
-          </div>
         </article>
       `;
     }).join("");
@@ -627,4 +602,6 @@
     console.error("[FC26 enhancements]", error);
   });
 })();
+
+
 

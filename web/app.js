@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 document.head.insertAdjacentHTML(
   "beforeend",
   '<link rel="icon" type="image/svg+xml" href="favicon.svg">',
@@ -699,6 +699,7 @@ function advanceXiPick() {
   xiDraft.index++;
   xiDraft.resolving = false;
   xiDraft.currentChoices = null;
+  xiDraft.luckFirstChoice = undefined;
   $("#xiNextPick").hidden = true;
   renderXiPick();
 }
@@ -2304,3 +2305,5 @@ async function init() {
   }
 }
 init();
+
+
