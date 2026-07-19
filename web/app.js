@@ -61,6 +61,903 @@ function toast(message) {
   $("#toast").classList.add("show");
   setTimeout(() => $("#toast").classList.remove("show"), 2500);
 }
+
+// ============================================================
+// PROGRESSIVE-LIVE-VIEW-MANAGER
+// Pages never remain blank while datasets are downloading.
+// ============================================================
+
+const progressiveLiveState = {
+
+  career: {
+    bootstrap: false,
+    complete: false,
+    loadedPlayers: 0,
+    totalPlayers: 0,
+    loadedChunks: 0,
+    totalChunks: 0
+  },
+
+  fc26: {
+    bootstrap: false,
+    complete: false,
+    loadedPlayers: 0,
+    totalPlayers: 0,
+    loadedChunks: 0,
+    totalChunks: 0
+  }
+
+};
+
+
+const progressiveCareerViews =
+  new Set([
+    "classicSetup",
+    "classicGame",
+    "countrySetup",
+    "countryGame",
+    "gridSetup",
+    "grid",
+    "twinSetup",
+    "twinGame",
+    "randomFiveSetup",
+    "randomFiveGame",
+    "hexSetup",
+    "hexGame",
+    "trumpsSetup",
+    "trumpsGame",
+    "compare",
+    "catalog",
+    "travelers",
+    "onlineHostSettings"
+  ]);
+
+
+const progressiveFc26Views =
+  new Set([
+    "ratingSetup",
+    "ratingGame",
+    "mysterySetup",
+    "mysteryGame",
+    "xiDraftSetup",
+    "xiDraft",
+    "fcCatalog"
+  ]);
+
+
+const progressiveSetupViews =
+  new Set([
+    "classicSetup",
+    "countrySetup",
+    "gridSetup",
+    "twinSetup",
+    "randomFiveSetup",
+    "hexSetup",
+    "trumpsSetup",
+    "ratingSetup",
+    "mysterySetup",
+    "xiDraftSetup",
+    "onlineHostSettings"
+  ]);
+
+
+const progressiveFriendlyMessages = [
+
+  "Kramponlar baglaniyor, birazdan sahadayiz âš½",
+
+  "Kulup kariyerlerini hazirliyoruz...",
+
+  "Son oyuncular soyunma odasindan geliyor...",
+
+  "Futbol dunyasi kuruluyor, cok az kaldi...",
+
+  "Scout ekibi son kontrolleri yapiyor...",
+
+  "Veriler geliyor, bu ekrani kapatmana gerek yok.",
+
+  "Baglantina gore son parcalar hazirlaniyor...",
+
+  "Bir kahve yudumu kadar daha, neredeyse hazir â˜•"
+
+];
+
+
+let progressiveMessageIndex =
+  0;
+
+
+let progressiveMessageTimer =
+  null;
+
+
+let progressivePendingStart =
+  null;
+
+
+function progressiveRequirement(
+  viewId
+) {
+
+  if (
+    progressiveFc26Views.has(
+      viewId
+    )
+  ) {
+
+    return "fc26";
+
+  }
+
+
+  if (
+    progressiveCareerViews.has(
+      viewId
+    )
+  ) {
+
+    return "career";
+
+  }
+
+
+  return null;
+
+}
+
+
+function progressiveViewReady(
+  viewId
+) {
+
+  const type =
+    progressiveRequirement(
+      viewId
+    );
+
+
+  if (!type) {
+
+    return true;
+
+  }
+
+
+  const state =
+    progressiveLiveState[type];
+
+
+  /*
+    Setup interfaces may appear as soon as metadata exists.
+  */
+
+  if (
+    progressiveSetupViews.has(
+      viewId
+    )
+  ) {
+
+    if (
+      type === "career"
+    ) {
+
+      return state.bootstrap;
+
+    }
+
+
+    /*
+      FC26 setup HTML already exists in the app.
+      Keep it visible even while player data downloads.
+    */
+
+    return true;
+
+  }
+
+
+  /*
+    FC26 catalog becomes usable after its first chunk.
+  */
+
+  if (
+    viewId === "fcCatalog"
+  ) {
+
+    return (
+      state.loadedPlayers > 0
+    );
+
+  }
+
+
+  /*
+    Lists and actual games wait for the complete relevant
+    dataset, but their page shell remains visible meanwhile.
+  */
+
+  return state.complete;
+
+}
+
+
+function progressivePercent(
+  type
+) {
+
+  const state =
+    progressiveLiveState[type];
+
+
+  if (
+    state.totalChunks > 0
+  ) {
+
+    return Math.min(
+      100,
+      Math.round(
+        state.loadedChunks /
+        state.totalChunks *
+        100
+      )
+    );
+
+  }
+
+
+  return 0;
+
+}
+
+
+function progressiveEnsureMessageTimer() {
+
+  if (
+    progressiveMessageTimer
+  ) {
+
+    return;
+
+  }
+
+
+  progressiveMessageTimer =
+    setInterval(
+      () => {
+
+        progressiveMessageIndex =
+          (
+            progressiveMessageIndex +
+            1
+          ) %
+          progressiveFriendlyMessages.length;
+
+
+        document
+          .querySelectorAll(
+            ".progressive-wait-message"
+          )
+          .forEach(
+            (element) => {
+
+              element.textContent =
+                progressiveFriendlyMessages[
+                  progressiveMessageIndex
+                ];
+
+            }
+          );
+
+      },
+      2400
+    );
+
+}
+
+
+function progressiveRemoveStatus(
+  viewId
+) {
+
+  document
+    .getElementById(
+      viewId
+    )
+    ?.querySelector(
+      ".progressive-view-status"
+    )
+    ?.remove();
+
+}
+
+
+function progressiveShowStatus(
+  viewId,
+  force = false
+) {
+
+  const view =
+    document.getElementById(
+      viewId
+    );
+
+
+  if (!view) {
+
+    return false;
+
+  }
+
+
+  const type =
+    progressiveRequirement(
+      viewId
+    );
+
+
+  if (!type) {
+
+    return false;
+
+  }
+
+
+  if (
+    !force &&
+    progressiveViewReady(
+      viewId
+    )
+  ) {
+
+    progressiveRemoveStatus(
+      viewId
+    );
+
+    return false;
+
+  }
+
+
+  let status =
+    view.querySelector(
+      ".progressive-view-status"
+    );
+
+
+  if (!status) {
+
+    status =
+      document.createElement(
+        "section"
+      );
+
+
+    status.className =
+      "progressive-view-status";
+
+
+    status.innerHTML = `
+      <div class="progressive-wait-card">
+        <div class="progressive-ball" aria-hidden="true">âš½</div>
+
+        <div>
+          <strong>Hazirlaniyor...</strong>
+
+          <p class="progressive-wait-message"></p>
+
+          <div class="progressive-progress">
+            <span></span>
+          </div>
+
+          <small class="progressive-wait-detail"></small>
+        </div>
+      </div>
+    `;
+
+
+    /*
+      Do not replace an existing interface.
+      Add the status panel to it.
+
+      If the view is currently empty, this card itself becomes
+      the visible interface instead of a blank page.
+    */
+
+    view.prepend(
+      status
+    );
+
+  }
+
+
+  const percent =
+    progressivePercent(
+      type
+    );
+
+
+  const state =
+    progressiveLiveState[type];
+
+
+  const message =
+    status.querySelector(
+      ".progressive-wait-message"
+    );
+
+
+  const bar =
+    status.querySelector(
+      ".progressive-progress span"
+    );
+
+
+  const detail =
+    status.querySelector(
+      ".progressive-wait-detail"
+    );
+
+
+  if (message) {
+
+    message.textContent =
+      progressiveFriendlyMessages[
+        progressiveMessageIndex
+      ];
+
+  }
+
+
+  if (bar) {
+
+    bar.style.width =
+      `${percent}%`;
+
+  }
+
+
+  if (detail) {
+
+    if (
+      state.totalPlayers
+    ) {
+
+      detail.textContent =
+        `${state.loadedPlayers.toLocaleString("tr-TR")} / ` +
+        `${state.totalPlayers.toLocaleString("tr-TR")} futbolcu ` +
+        `hazir Â· %${percent}`;
+
+    }
+    else {
+
+      detail.textContent =
+        "Ilk veri paketi bekleniyor...";
+
+    }
+
+  }
+
+
+  progressiveEnsureMessageTimer();
+
+
+  return true;
+
+}
+
+
+function progressiveRefreshCurrentView() {
+
+  const active =
+    document.querySelector(
+      ".view.active"
+    );
+
+
+  if (!active) {
+
+    return;
+
+  }
+
+
+  const viewId =
+    active.id;
+
+
+  if (
+    !progressiveViewReady(
+      viewId
+    )
+  ) {
+
+    progressiveShowStatus(
+      viewId
+    );
+
+    return;
+
+  }
+
+
+  progressiveRemoveStatus(
+    viewId
+  );
+
+
+  /*
+    Render data-dependent screens immediately when data becomes
+    ready. No browser refresh is needed.
+  */
+
+  if (
+    viewId === "catalog"
+  ) {
+
+    renderCatalog(
+      true
+    );
+
+  }
+
+
+  if (
+    viewId === "travelers"
+  ) {
+
+    renderTravelers();
+
+  }
+
+
+  if (
+    viewId === "grid"
+  ) {
+
+    openGrid();
+
+  }
+
+
+  /*
+    Re-run current view navigation without adding history.
+    This also refreshes any view-specific handlers.
+  */
+
+  if (
+    viewId !== "home"
+  ) {
+
+    setTimeout(
+      () => {
+
+        show(
+          viewId,
+          {
+            history: false
+          }
+        );
+
+      },
+      0
+    );
+
+  }
+
+}
+
+
+window.addEventListener(
+  "iki-forma-data-bootstrap",
+  (event) => {
+
+    const type =
+      event.detail?.type;
+
+
+    if (
+      !progressiveLiveState[type]
+    ) {
+
+      return;
+
+    }
+
+
+    progressiveLiveState[type].bootstrap =
+      true;
+
+
+    progressiveLiveState[type].totalPlayers =
+      event.detail?.manifest
+        ?.totalPlayers || 0;
+
+
+    progressiveLiveState[type].totalChunks =
+      event.detail?.manifest
+        ?.chunks
+        ?.length || 0;
+
+
+    setTimeout(
+      progressiveRefreshCurrentView,
+      0
+    );
+
+  }
+);
+
+
+window.addEventListener(
+  "iki-forma-data-progress",
+  (event) => {
+
+    const type =
+      event.detail?.type;
+
+
+    if (
+      !progressiveLiveState[type]
+    ) {
+
+      return;
+
+    }
+
+
+    Object.assign(
+      progressiveLiveState[type],
+      {
+
+        bootstrap: true,
+
+        loadedPlayers:
+          event.detail.loadedPlayers || 0,
+
+        totalPlayers:
+          event.detail.totalPlayers || 0,
+
+        loadedChunks:
+          event.detail.loadedChunks || 0,
+
+        totalChunks:
+          event.detail.totalChunks || 0
+
+      }
+    );
+
+
+    const active =
+      document.querySelector(
+        ".view.active"
+      );
+
+
+    if (active) {
+
+      progressiveShowStatus(
+        active.id
+      );
+
+    }
+
+
+    /*
+      FC26 catalog uses incoming chunks immediately.
+    */
+
+    if (
+      type === "fc26" &&
+      active?.id === "fcCatalog"
+    ) {
+
+      progressiveRefreshCurrentView();
+
+    }
+
+  }
+);
+
+
+window.addEventListener(
+  "iki-forma-data-complete",
+  (event) => {
+
+    const type =
+      event.detail?.type;
+
+
+    if (
+      !progressiveLiveState[type]
+    ) {
+
+      return;
+
+    }
+
+
+    progressiveLiveState[type].complete =
+      true;
+
+
+    progressiveLiveState[type].loadedPlayers =
+      event.detail?.data
+        ?.players
+        ?.length || 0;
+
+
+    progressiveLiveState[type].loadedChunks =
+      progressiveLiveState[type]
+        .totalChunks;
+
+
+    progressiveRefreshCurrentView();
+
+  }
+);
+
+
+window.addEventListener(
+  "iki-forma-setup-shell-ready",
+  () => {
+
+    progressiveRefreshCurrentView();
+
+  }
+);
+
+
+window.addEventListener(
+  "iki-forma-ui-ready",
+  () => {
+
+    /*
+      All original setup/index initialization has finished.
+    */
+
+    document
+      .querySelectorAll(
+        "[data-data-loading]"
+      )
+      .forEach(
+        (button) => {
+
+          button.disabled =
+            false;
+
+          delete button.dataset
+            .dataLoading;
+
+        }
+      );
+
+
+    progressiveRefreshCurrentView();
+
+
+    /*
+      If the user pressed Start while data was downloading,
+      continue that exact action automatically.
+    */
+
+    if (
+      progressivePendingStart
+    ) {
+
+      const button =
+        progressivePendingStart;
+
+
+      progressivePendingStart =
+        null;
+
+
+      setTimeout(
+        () => {
+
+          if (
+            document.body.contains(
+              button
+            )
+          ) {
+
+            button.click();
+
+          }
+
+        },
+        50
+      );
+
+    }
+
+  }
+);
+
+
+/*
+  Capture Start clicks before the original game handlers.
+
+  Instead of doing nothing while data loads:
+  - remember the user's click
+  - show friendly progress
+  - automatically click again when initialization completes
+*/
+
+document.addEventListener(
+  "click",
+  (event) => {
+
+    const button =
+      event.target.closest(
+        [
+          ".view .start",
+          "#startGrid",
+          "#startTwin",
+          "#startRandomFive",
+          "#startRatingGame",
+          "#startMysteryGame",
+          "#startHexGame",
+          "#startTrumpsGame",
+          "#startXiDraft"
+        ].join(",")
+      );
+
+
+    if (!button) {
+
+      return;
+
+    }
+
+
+    const view =
+      button.closest(
+        ".view"
+      );
+
+
+    if (!view) {
+
+      return;
+
+    }
+
+
+    const type =
+      progressiveRequirement(
+        view.id
+      );
+
+
+    if (
+      !type ||
+      progressiveLiveState[type]
+        .complete
+    ) {
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+    event.stopImmediatePropagation();
+
+
+    progressivePendingStart =
+      button;
+
+
+    progressiveShowStatus(
+      view.id,
+      true
+    );
+
+  },
+  true
+);
+
 let handlingPopState = false;
 function show(id, options = {}) {
   clearInterval(timer);
@@ -2313,7 +3210,7 @@ function setDataDependentControls(loading) {
   ].join(",");
 
   document.querySelectorAll(selector).forEach((button) => {
-    button.disabled = Boolean(loading);
+    button.disabled = false;
 
     if (loading) {
       button.dataset.dataLoading = "1";
@@ -2541,6 +3438,9 @@ async function init() {
       "background-data-ready"
     );
 
+    // FINAL-PROGRESSIVE-CONTROLS-READY
+    setDataDependentControls(false);
+
     window.dispatchEvent(
       new CustomEvent("iki-forma-ui-ready")
     );
@@ -2549,6 +3449,7 @@ async function init() {
   }
 }
 init();
+
 
 
 

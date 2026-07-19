@@ -126,9 +126,20 @@
         }
 
 
-        await cache.put(
+        /*
+          Do not block first render while writing to persistent cache.
+          Cache the clone in background.
+        */
+        cache.put(
           url,
           response.clone()
+        ).catch(
+          (error) =>
+            console.warn(
+              "Background cache write failed:",
+              url,
+              error
+            )
         );
 
 
@@ -191,11 +202,6 @@
 
   }) {
 
-    /*
-      Bootstrap contains leagues, clubs, version and
-      other lightweight metadata, but no player array.
-    */
-
     const [
       bootstrap,
       manifest
@@ -216,9 +222,12 @@
     bootstrap.players =
       [];
 
-    // PROGRESSIVE-PARTIAL-STATE
-    // Expose bootstrap immediately. The same players array
-    // grows as new chunks arrive.
+
+    /*
+      Expose the exact bootstrap object immediately.
+      Its players array grows in place as chunks arrive.
+    */
+
     state[type] =
       bootstrap;
 
@@ -234,24 +243,53 @@
     );
 
 
+    const entries =
+      manifest.chunks || [];
+
+
+    let loadedChunks =
+      0;
+
+
+    const connection =
+      navigator.connection ||
+      navigator.mozConnection ||
+      navigator.webkitConnection ||
+      null;
+
+
+    const effectiveType =
+      connection?.effectiveType ||
+      "";
+
+
     /*
-      Download one chunk at a time for this dataset.
+      Adaptive concurrency:
+      save-data / 2G : 1
+      3G             : 2
+      4G / desktop   : 3
 
-      Career and FC26 loaders run together, so maximum
-      normal concurrency is roughly two chunk requests.
-
-      This avoids saturating slow mobile connections with
-      dozens of simultaneous requests.
+      Career and FC26 still run together, so the browser
+      normally sees a maximum of about 2-6 active chunk
+      requests instead of dozens at once.
     */
 
-    for (
-      let index = 0;
-      index < manifest.chunks.length;
-      index++
+    const concurrency =
+      connection?.saveData
+        ? 1
+        : effectiveType.includes("2g")
+          ? 1
+          : effectiveType === "3g"
+            ? 2
+            : 3;
+
+
+    async function loadChunk(
+      index
     ) {
 
       const entry =
-        manifest.chunks[index];
+        entries[index];
 
 
       const chunk =
@@ -260,9 +298,18 @@
         );
 
 
-      bootstrap.players.push(
-        ...chunk
-      );
+      if (
+        Array.isArray(chunk)
+      ) {
+
+        bootstrap.players.push(
+          ...chunk
+        );
+
+      }
+
+
+      loadedChunks++;
 
 
       emit(
@@ -271,17 +318,17 @@
 
           type,
 
-          loadedChunks:
-            index + 1,
+          loadedChunks,
 
           totalChunks:
-            manifest.chunks.length,
+            entries.length,
 
           loadedPlayers:
             bootstrap.players.length,
 
           totalPlayers:
             manifest.totalPlayers,
+
           data:
             bootstrap
 
@@ -290,8 +337,8 @@
 
 
       /*
-        Let the browser paint and process touch input
-        between JSON parsing jobs.
+        Give rendering and touch input a chance between
+        parsing tasks.
       */
 
       await yieldThread();
@@ -299,12 +346,97 @@
     }
 
 
+    /*
+      Always prioritize chunk zero.
+
+      The first FC26 page and the first useful career
+      player pool become available as early as possible.
+    */
+
+    if (
+      entries.length > 0
+    ) {
+
+      await loadChunk(
+        0
+      );
+
+    }
+
+
+    /*
+      Remaining chunks are fetched by a small worker pool.
+    */
+
+    let nextIndex =
+      1;
+
+
+    async function worker() {
+
+      while (true) {
+
+        const index =
+          nextIndex++;
+
+
+        if (
+          index >= entries.length
+        ) {
+
+          return;
+
+        }
+
+
+        await loadChunk(
+          index
+        );
+
+      }
+
+    }
+
+
+    const workerCount =
+      Math.min(
+        concurrency,
+        Math.max(
+          0,
+          entries.length - 1
+        )
+      );
+
+
+    if (
+      workerCount > 0
+    ) {
+
+      await Promise.all(
+
+        Array.from(
+          {
+            length:
+              workerCount
+          },
+          () =>
+            worker()
+        )
+
+      );
+
+    }
+
+
     emit(
       "iki-forma-data-complete",
       {
+
         type,
+
         data:
           bootstrap
+
       }
     );
 
@@ -425,4 +557,5 @@
   };
 
 })();
+
 
