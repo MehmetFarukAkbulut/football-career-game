@@ -1826,3 +1826,91 @@
 
 }
 
+
+/* ==========================================================
+   FINAL-GLOBAL-MOBILE-LEAGUE-SCROLL
+   Every game uses the same compact mobile league selector.
+   ========================================================== */
+
+@media (max-width: 760px) {
+
+    .view .league-options,
+    .view .grid-league-options,
+    .view .random-five-league-options {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        overflow: visible !important;
+    }
+
+    .view .league-tools {
+        display: grid !important;
+        grid-template-columns: 1fr auto auto !important;
+
+        gap: 7px !important;
+
+        margin-bottom: 8px !important;
+
+        position: relative !important;
+        z-index: 5 !important;
+    }
+
+    .view .league-tools input[type="search"] {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .view .league-tools button {
+        min-width: 0 !important;
+        padding: 9px 10px !important;
+    }
+
+    .view .league-list,
+    .view .grid-league-options .league-list,
+    .view .random-five-league-options .league-list {
+
+        display: grid !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        min-height: 210px !important;
+
+        max-height: min(40vh, 340px) !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        overscroll-behavior-y: contain !important;
+
+        -webkit-overflow-scrolling: touch !important;
+
+        touch-action: pan-y !important;
+
+        padding-right: 4px !important;
+    }
+
+    .view .league-list > label {
+        min-height: 58px !important;
+
+        flex-shrink: 0 !important;
+    }
+
+    /*
+      Start button remains directly below the internal
+      scroll area instead of after the entire league list.
+    */
+
+    .view .league-options + .cta,
+    .view .league-options + button,
+    .view .grid-league-options + .cta,
+    .view .random-five-league-options + .cta {
+        margin-top: 10px !important;
+    }
+
+}
+

@@ -40,20 +40,64 @@
 
   function waitForData() {
     return new Promise((resolve) => {
-      const started = Date.now();
-      const timer = setInterval(() => {
-        try {
-          if (typeof FC26_DATA !== "undefined" && Array.isArray(FC26_DATA?.players) && FC26_DATA.players.length) {
+
+      const current =
+        window.IkiFormaDataLoader
+          ?.state
+          ?.fc26
+          ?.players;
+
+      if (
+        Array.isArray(current) &&
+        current.length
+      ) {
+        resolve(current);
+        return;
+      }
+
+      const started =
+        Date.now();
+
+      const timer =
+        setInterval(() => {
+
+          const partial =
+            window.IkiFormaDataLoader
+              ?.state
+              ?.fc26
+              ?.players;
+
+          if (
+            Array.isArray(partial) &&
+            partial.length
+          ) {
             clearInterval(timer);
-            resolve(FC26_DATA.players);
+            resolve(partial);
             return;
           }
-        } catch {}
-        if (Date.now() - started > 20000) {
-          clearInterval(timer);
-          resolve([]);
-        }
-      }, 100);
+
+          try {
+            if (
+              typeof FC26_DATA !== "undefined" &&
+              Array.isArray(FC26_DATA?.players) &&
+              FC26_DATA.players.length
+            ) {
+              clearInterval(timer);
+              resolve(FC26_DATA.players);
+              return;
+            }
+          } catch {}
+
+          if (
+            Date.now() - started >
+            60000
+          ) {
+            clearInterval(timer);
+            resolve([]);
+          }
+
+        }, 100);
+
     });
   }
 
@@ -395,7 +439,168 @@
     return `<option value="${esc(value)}">${esc(label)}</option>`;
   }
 
-  function buildFcCatalogSection() {
+  
+// ============================================================
+// PROGRESSIVE-FC26-CATALOG
+// FC26 chunks are rendered incrementally while downloading.
+// ============================================================
+
+let progressiveCatalogRenderPending = false;
+
+function syncCatalogSelect(id, key) {
+  const select = document.getElementById(id);
+
+  if (!select) {
+    return;
+  }
+
+  const selectedValue = select.value;
+
+  const existing = new Set(
+    [...select.options].map(
+      (option) => option.value
+    )
+  );
+
+  const values = [
+    ...new Set(
+      fcPlayers
+        .map((player) => player?.[key])
+        .filter(Boolean)
+    )
+  ].sort(
+    (a, b) =>
+      String(a).localeCompare(
+        String(b),
+        "tr"
+      )
+  );
+
+  for (const value of values) {
+    const stringValue = String(value);
+
+    if (existing.has(stringValue)) {
+      continue;
+    }
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      stringValue;
+
+    option.textContent =
+      stringValue;
+
+    select.append(option);
+
+    existing.add(
+      stringValue
+    );
+  }
+
+  if (
+    [...select.options].some(
+      (option) =>
+        option.value === selectedValue
+    )
+  ) {
+    select.value =
+      selectedValue;
+  }
+}
+
+function refreshProgressiveCatalogFilters() {
+  syncCatalogSelect(
+    "fc26League",
+    "league"
+  );
+
+  syncCatalogSelect(
+    "fc26Team",
+    "team"
+  );
+
+  syncCatalogSelect(
+    "fc26Nation",
+    "nation"
+  );
+
+  syncCatalogSelect(
+    "fc26Position",
+    "position"
+  );
+}
+
+function syncProgressiveFcCatalog() {
+  const partial =
+    window.IkiFormaDataLoader
+      ?.state
+      ?.fc26
+      ?.players;
+
+  if (
+    !Array.isArray(partial) ||
+    partial.length === 0
+  ) {
+    return;
+  }
+
+  /*
+    data-loader.js keeps the same players array and
+    appends every new chunk to it.
+  */
+  fcPlayers =
+    partial;
+
+  if (
+    progressiveCatalogRenderPending
+  ) {
+    return;
+  }
+
+  progressiveCatalogRenderPending =
+    true;
+
+  requestAnimationFrame(
+    () => {
+      progressiveCatalogRenderPending =
+        false;
+
+      refreshProgressiveCatalogFilters();
+
+      const catalog =
+        document.getElementById(
+          "fcCatalog"
+        );
+
+      /*
+        Only redraw cards continuously when the user
+        is actually viewing the FC26 catalog.
+      */
+      if (
+        catalog &&
+        catalog.classList.contains(
+          "active"
+        )
+      ) {
+        renderFcCatalog();
+      }
+
+      const count =
+        document.getElementById(
+          "fc26CatalogCount"
+        );
+
+      if (count) {
+        count.textContent =
+          `${fcPlayers.length.toLocaleString("tr-TR")} futbolcu`;
+      }
+    }
+  );
+}
+
+function buildFcCatalogSection() {
     if (document.getElementById("fcCatalog")) return;
     const main = document.querySelector("main");
     if (!main) return;
@@ -677,17 +882,62 @@
   }
 
   async function init() {
-    // CSS harici dosyadan yukleniyor; CSP nedeniyle injectStyles kullanilmiyor.
-    fcPlayers = await waitForData();
-    if (!fcPlayers.length) {
-      console.warn("[FC26 enhancements] FC26_DATA yüklenemedi; FC kataloğu devre dışı.");
-      return;
-    }
-    patchMysteryUI();
+
+    /*
+      Create the FC26 page immediately.
+      Player data will be added progressively.
+    */
+
     addFcCatalogHomeCard();
+
     buildFcCatalogSection();
+
     patchDynamicNavigation();
-    renderFcCatalog();
+
+    patchMysteryUI();
+
+
+    const progressHandler =
+      (event) => {
+
+        if (
+          event.detail?.type ===
+          "fc26"
+        ) {
+          syncProgressiveFcCatalog();
+        }
+
+      };
+
+
+    window.addEventListener(
+      "iki-forma-data-progress",
+      progressHandler
+    );
+
+    window.addEventListener(
+      "iki-forma-data-complete",
+      progressHandler
+    );
+
+
+    const initial =
+      await waitForData();
+
+
+    if (
+      initial.length
+    ) {
+
+      fcPlayers =
+        initial;
+
+      refreshProgressiveCatalogFilters();
+
+      renderFcCatalog();
+
+    }
+
   }
 
   init().catch((error) => {
@@ -2085,6 +2335,8 @@
   );
 
 })();
+
+
 
 
 

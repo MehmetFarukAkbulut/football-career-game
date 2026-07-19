@@ -216,6 +216,12 @@
     bootstrap.players =
       [];
 
+    // PROGRESSIVE-PARTIAL-STATE
+    // Expose bootstrap immediately. The same players array
+    // grows as new chunks arrive.
+    state[type] =
+      bootstrap;
+
 
     emit(
       "iki-forma-data-bootstrap",
@@ -275,7 +281,9 @@
             bootstrap.players.length,
 
           totalPlayers:
-            manifest.totalPlayers
+            manifest.totalPlayers,
+          data:
+            bootstrap
 
         }
       );
@@ -417,3 +425,4 @@
   };
 
 })();
+

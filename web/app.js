@@ -2294,6 +2294,95 @@ $("#twinInput").onkeydown = (event) => { if (event.key === "Enter") { const p = 
 $("#twinNext").onclick = nextTwinStep;
 $("#startTwin").onclick = startTwinGame;
 $$('input[name="twinMode"]').forEach((radio) => radio.onchange = () => { const duo = $('input[name="twinMode"]:checked').value === "duo"; $("#twinDifficultyWrap").hidden = duo; $("#twinNameTwoWrap").hidden = !duo; });
+
+// PROGRESSIVE-SETUP-SHELL
+let progressiveSetupReady = false;
+
+function setDataDependentControls(loading) {
+  const selector = [
+    ".view.setup .cta",
+    ".view.setup .start",
+    "#startGrid",
+    "#startTwin",
+    "#startRandomFive",
+    "#startRatingGame",
+    "#startMysteryGame",
+    "#startHexGame",
+    "#startTrumpsGame",
+    "#startXiDraft"
+  ].join(",");
+
+  document.querySelectorAll(selector).forEach((button) => {
+    button.disabled = Boolean(loading);
+
+    if (loading) {
+      button.dataset.dataLoading = "1";
+      button.title = "Futbolcu verileri arka planda hazirlaniyor";
+    } else {
+      delete button.dataset.dataLoading;
+      button.removeAttribute("title");
+    }
+  });
+}
+
+function bootstrapSetupShell(data) {
+  if (
+    progressiveSetupReady ||
+    !data
+  ) {
+    return;
+  }
+
+  DATA = data;
+  clubs = Array.isArray(data.clubs)
+    ? data.clubs
+    : [];
+
+  players = [];
+
+  setupScreen(
+    "#classicSetup",
+    "Iki Forma",
+    "Iki kulupte de A takim formasi giymis futbolcuyu bul.",
+    "clubs",
+  );
+
+  setupScreen(
+    "#countrySetup",
+    "Ulke x Kulup",
+    "Gosterilen ulkenin vatandasi olup kulupte oynamis futbolcuyu bul.",
+    "country",
+  );
+
+  [
+    "#classicSetup",
+    "#countrySetup",
+    "#gridSetup",
+    "#twinSetup",
+    "#randomFiveSetup",
+    "#hexSetup",
+    "#trumpsSetup",
+    "#xiDraftSetup",
+    "#onlineHostSettings"
+  ].forEach((selector) => {
+    enhanceLeagueSelector(
+      document.querySelector(selector)
+    );
+  });
+
+  organizeHomeMenu();
+
+  setDataDependentControls(true);
+
+  progressiveSetupReady = true;
+
+  window.dispatchEvent(
+    new CustomEvent(
+      "iki-forma-setup-shell-ready"
+    )
+  );
+}
+
 async function init() {
 
   /*
@@ -2328,6 +2417,43 @@ async function init() {
     }
 
     const background = loader.startBackground();
+
+    // WAIT-CAREER-BOOTSTRAP
+    // Only the lightweight metadata package is required
+    // before setup pages and league filters become usable.
+    const careerBootstrap =
+      loader.state.career ||
+      await new Promise((resolve) => {
+
+        const handler = (event) => {
+
+          if (
+            event.detail?.type !== "career"
+          ) {
+            return;
+          }
+
+          window.removeEventListener(
+            "iki-forma-data-bootstrap",
+            handler
+          );
+
+          resolve(
+            event.detail.data
+          );
+
+        };
+
+        window.addEventListener(
+          "iki-forma-data-bootstrap",
+          handler
+        );
+
+      });
+
+    bootstrapSetupShell(
+      careerBootstrap
+    );
 
     [DATA, FC26_DATA] = await Promise.all([
       background.career,
@@ -2423,6 +2549,7 @@ async function init() {
   }
 }
 init();
+
 
 
 

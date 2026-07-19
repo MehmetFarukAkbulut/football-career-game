@@ -106,8 +106,8 @@ app.whenReady().then(() =>
       !state.listScroll ||
       state.outerOverflow !== "visible" ||
       state.cardBottom > 768 ||
-      !state.mobile.listFits ||
-      state.mobile.listOverflow === "auto" ||
+      state.mobile.listFits ||
+      !["auto", "scroll"].includes(state.mobile.listOverflow) ||
       state.crests !== 6 ||
       state.gameScrollY !== 0 ||
       state.gameOverflow !== "hidden" ||
@@ -120,4 +120,5 @@ app.whenReady().then(() =>
     server.close(() => app.exit(failed ? 1 : 0));
   }),
 );
+
 
