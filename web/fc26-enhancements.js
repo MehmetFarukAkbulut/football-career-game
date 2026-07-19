@@ -927,3 +927,119 @@ setTimeout(() => {
 
 }, 1000);
 
+
+// ============================================================
+// MENU DUPLICATE CLEANUP
+// ============================================================
+
+function cleanupInvalidFc26MenuClones() {
+
+  document
+    .querySelectorAll("[data-fc26-catalog-menu]")
+    .forEach((card) => {
+
+      const text =
+        (card.textContent || "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      /*
+        FC26 katalog kartÄ± oluÅŸturulurken yanlÄ±ÅŸlÄ±kla
+        Turnuva 11 kartÄ± clone edilmiÅŸse kaldÄ±r.
+      */
+      if (
+        /Turnuva 11/i.test(text) &&
+        !/FC 26 Futbolcu Kart/i.test(text)
+      ) {
+        card.remove();
+      }
+
+    });
+}
+
+
+/*
+  AynÄ± katalog kartÄ±ndan birden fazla oluÅŸmuÅŸsa
+  yalnÄ±zca ilkini tut.
+*/
+function cleanupDuplicateFc26CatalogCards() {
+
+  const cards = [
+    ...document.querySelectorAll(
+      "[data-fc26-catalog-menu]"
+    )
+  ].filter((card) =>
+    /FC 26 Futbolcu Kart/i.test(
+      card.textContent || ""
+    )
+  );
+
+  cards
+    .slice(1)
+    .forEach((card) =>
+      card.remove()
+    );
+}
+
+
+function cleanupFc26HomeMenu() {
+
+  cleanupInvalidFc26MenuClones();
+
+  cleanupDuplicateFc26CatalogCards();
+
+}
+
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+      setTimeout(
+        cleanupFc26HomeMenu,
+        700
+      );
+
+    }
+  );
+
+}
+else {
+
+  setTimeout(
+    cleanupFc26HomeMenu,
+    700
+  );
+
+}
+
+
+/*
+  Mevcut observer katalog kartÄ±nÄ± tekrar Ã¼retirse
+  temizlik tekrar Ã§alÄ±ÅŸsÄ±n.
+*/
+
+setTimeout(() => {
+
+  const observer =
+    new MutationObserver(() => {
+
+      cleanupFc26HomeMenu();
+
+    });
+
+  observer.observe(
+    document.body,
+    {
+      childList: true,
+      subtree: true
+    }
+  );
+
+}, 1000);
+
