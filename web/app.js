@@ -142,23 +142,14 @@ const progressiveSetupViews =
 
 
 const progressiveFriendlyMessages = [
-
-  "Kramponlar baglaniyor, birazdan sahadayiz âš½",
-
-  "Kulup kariyerlerini hazirliyoruz...",
-
-  "Son oyuncular soyunma odasindan geliyor...",
-
-  "Futbol dunyasi kuruluyor, cok az kaldi...",
-
-  "Scout ekibi son kontrolleri yapiyor...",
-
-  "Veriler geliyor, bu ekrani kapatmana gerek yok.",
-
-  "Baglantina gore son parcalar hazirlaniyor...",
-
-  "Bir kahve yudumu kadar daha, neredeyse hazir â˜•"
-
+  "Kramponlar baglaniyor, birazdan sahadayiz.",
+  "Scout ekibi son oyunculari getiriyor...",
+  "Kulup kariyerleri hazirlaniyor, cok az kaldi.",
+  "Soyunma odasindan son isimleri cagiriyoruz...",
+  "Futbolcular sahaya cikiyor, bekledigine degecek.",
+  "Veriler geliyor. Burada kal, oyun otomatik baslayacak.",
+  "Son birkac pasi tamamliyoruz...",
+  "Hakem dudugu calmak uzere."
 ];
 
 
@@ -179,29 +170,43 @@ function progressiveRequirement(
 ) {
 
   if (
-    progressiveFc26Views.has(
-      viewId
-    )
+    [
+      "ratingSetup",
+      "ratingGame",
+      "mysterySetup",
+      "mysteryGame",
+      "fcCatalog",
+      "xiDraftSetup",
+      "xiDraftGame"
+    ].includes(viewId)
   ) {
-
     return "fc26";
-
   }
-
 
   if (
-    progressiveCareerViews.has(
-      viewId
-    )
+    [
+      "classicSetup",
+      "countrySetup",
+      "game",
+      "grid",
+      "twinSetup",
+      "twinGame",
+      "randomFiveSetup",
+      "randomFiveGame",
+      "hexSetup",
+      "hexGame",
+      "trumpsSetup",
+      "trumpsGame",
+      "catalog",
+      "travelers",
+      "compare",
+      "onlineHostSettings"
+    ].includes(viewId)
   ) {
-
     return "career";
-
   }
 
-
   return null;
-
 }
 
 
@@ -214,69 +219,103 @@ function progressiveViewReady(
       viewId
     );
 
-
   if (!type) {
-
     return true;
-
   }
-
 
   const state =
     progressiveLiveState[type];
 
 
   /*
-    Setup interfaces may appear as soon as metadata exists.
+    Setup sayfalarÄ± metadata geldiÄŸi anda kullanÄ±labilir.
   */
 
   if (
-    progressiveSetupViews.has(
-      viewId
-    )
+    progressiveSetupViews.has(viewId) ||
+    viewId === "grid"
   ) {
-
-    if (
-      type === "career"
-    ) {
-
-      return state.bootstrap;
-
-    }
-
-
-    /*
-      FC26 setup HTML already exists in the app.
-      Keep it visible even while player data downloads.
-    */
-
-    return true;
-
-  }
-
-
-  /*
-    FC26 catalog becomes usable after its first chunk.
-  */
-
-  if (
-    viewId === "fcCatalog"
-  ) {
-
     return (
-      state.loadedPlayers > 0
+      type === "career"
+        ? state.bootstrap
+        : true
     );
-
   }
 
 
   /*
-    Lists and actual games wait for the complete relevant
-    dataset, but their page shell remains visible meanwhile.
+    Listeleme ekranlarÄ± ilk oyuncu chunk'Ä± ile aÃ§Ä±lÄ±r.
   */
 
-  return state.complete;
+  if (
+    [
+      "catalog",
+      "travelers",
+      "compare",
+      "fcCatalog"
+    ].includes(viewId)
+  ) {
+    return state.loadedPlayers > 0;
+  }
 
+
+  /*
+    Turnuva 11 hem kariyer hem FC26 verisini kullanabilir.
+  */
+
+  if (
+    viewId === "xiDraftGame"
+  ) {
+    return (
+      progressiveLiveState.fc26.loadedPlayers >= 500 &&
+      progressiveLiveState.career.loadedPlayers >= 700
+    ) ||
+    (
+      progressiveLiveState.fc26.complete &&
+      progressiveLiveState.career.complete
+    );
+  }
+
+
+  /*
+    FC26 oyunlarÄ± ilk kullanÄ±labilir havuz geldiÄŸinde baÅŸlar.
+  */
+
+  if (
+    [
+      "ratingGame",
+      "mysteryGame"
+    ].includes(viewId)
+  ) {
+    return (
+      state.loadedPlayers >= 400 ||
+      state.complete
+    );
+  }
+
+
+  /*
+    Kariyer oyunlarÄ± bÃ¼tÃ¼n 28 bin oyuncuyu beklemez.
+    YaklaÅŸÄ±k 2-3 chunk yeterli olduÄŸunda ilk deneme yapÄ±lÄ±r.
+  */
+
+  if (
+    [
+      "game",
+      "twinGame",
+      "randomFiveGame",
+      "hexGame",
+      "trumpsGame"
+    ].includes(viewId)
+  ) {
+    return (
+      state.loadedPlayers >= 1000 ||
+      state.complete
+    );
+  }
+
+
+  return state.bootstrap;
 }
 
 
@@ -308,6 +347,612 @@ function progressivePercent(
 
 }
 
+
+
+// ============================================================
+// PARTIAL-RUNTIME-V3
+// Games and lists use the players that have already arrived.
+// ============================================================
+
+let progressiveReplayBypass =
+  false;
+
+let progressiveReplayInFlight =
+  false;
+
+let progressivePendingStartMeta =
+  null;
+
+let progressiveRuntimeCareerCount =
+  -1;
+
+let progressiveRuntimeFc26Count =
+  -1;
+
+
+function progressiveHydrateRuntime(
+  type,
+  force = false
+) {
+
+  const loader =
+    window.IkiFormaDataLoader;
+
+  if (!loader) {
+    return false;
+  }
+
+
+  if (
+    type === "fc26"
+  ) {
+
+    const data =
+      loader.state.fc26;
+
+    if (!data) {
+      return false;
+    }
+
+    const count =
+      data.players?.length || 0;
+
+    if (
+      !force &&
+      count === progressiveRuntimeFc26Count
+    ) {
+      return count > 0;
+    }
+
+    FC26_DATA =
+      data;
+
+    progressiveRuntimeFc26Count =
+      count;
+
+    return count > 0;
+
+  }
+
+
+  if (
+    type === "career"
+  ) {
+
+    const data =
+      loader.state.career;
+
+    if (!data) {
+      return false;
+    }
+
+    const count =
+      data.players?.length || 0;
+
+    if (
+      !force &&
+      count === progressiveRuntimeCareerCount
+    ) {
+      return count > 0;
+    }
+
+
+    DATA =
+      data;
+
+    clubs =
+      Array.isArray(data.clubs)
+        ? data.clubs
+        : [];
+
+    players =
+      Array.isArray(data.players)
+        ? data.players
+        : [];
+
+
+    clubMap =
+      new Map(
+        clubs.map(
+          (club) => [
+            club.id,
+            club
+          ]
+        )
+      );
+
+
+    /*
+      Build indexes only from currently available players.
+      Rebuilt when another start/list action needs newer data.
+    */
+
+    indexes =
+      IkiFormaCore.buildIndexes(
+        DATA
+      );
+
+
+    clubPlayers =
+      new Map();
+
+
+    for (
+      const club of clubs
+    ) {
+      clubPlayers.set(
+        club.id,
+        []
+      );
+    }
+
+
+    for (
+      const player of players
+    ) {
+
+      for (
+        const id of player.clubIds || []
+      ) {
+
+        clubPlayers
+          .get(id)
+          ?.push(player);
+
+      }
+
+    }
+
+
+    progressiveRuntimeCareerCount =
+      count;
+
+
+    /*
+      Club metadata exists in bootstrap,
+      so compare selectors can already work.
+    */
+
+    if (
+      typeof renderCompareOptions ===
+      "function"
+    ) {
+
+      renderCompareOptions();
+
+    }
+
+
+    return count > 0;
+
+  }
+
+
+  return false;
+
+}
+
+
+function progressiveStartRequirement(
+  button
+) {
+
+  if (
+    button.id ===
+    "startXiDraft"
+  ) {
+    return "both";
+  }
+
+
+  if (
+    [
+      "startRatingGame",
+      "startMysteryGame"
+    ].includes(button.id)
+  ) {
+    return "fc26";
+  }
+
+
+  return "career";
+
+}
+
+
+function progressiveRequirementEnough(
+  requirement
+) {
+
+  const careerReady =
+    progressiveLiveState
+      .career
+      .loadedPlayers >= 1000 ||
+    progressiveLiveState
+      .career
+      .complete;
+
+
+  const fc26Ready =
+    progressiveLiveState
+      .fc26
+      .loadedPlayers >= 400 ||
+    progressiveLiveState
+      .fc26
+      .complete;
+
+
+  if (
+    requirement === "both"
+  ) {
+    return (
+      progressiveLiveState
+        .career
+        .loadedPlayers >= 700 &&
+      progressiveLiveState
+        .fc26
+        .loadedPlayers >= 500
+    ) ||
+    (
+      progressiveLiveState
+        .career
+        .complete &&
+      progressiveLiveState
+        .fc26
+        .complete
+    );
+  }
+
+
+  return requirement === "fc26"
+    ? fc26Ready
+    : careerReady;
+
+}
+
+
+function progressiveHydrateRequirement(
+  requirement
+) {
+
+  if (
+    requirement === "career" ||
+    requirement === "both"
+  ) {
+    progressiveHydrateRuntime(
+      "career",
+      true
+    );
+  }
+
+
+  if (
+    requirement === "fc26" ||
+    requirement === "both"
+  ) {
+    progressiveHydrateRuntime(
+      "fc26",
+      true
+    );
+  }
+
+}
+
+
+function progressiveStartTarget(
+  button
+) {
+
+  if (
+    button.id === "startGrid"
+  ) {
+    return "grid";
+  }
+
+  if (
+    button.id === "startTwin"
+  ) {
+    return "twinGame";
+  }
+
+  if (
+    button.id === "startRandomFive"
+  ) {
+    return "randomFiveGame";
+  }
+
+  if (
+    button.id === "startRatingGame"
+  ) {
+    return "ratingGame";
+  }
+
+  if (
+    button.id === "startMysteryGame"
+  ) {
+    return "mysteryGame";
+  }
+
+  if (
+    button.id === "startHexGame"
+  ) {
+    return "hexGame";
+  }
+
+  if (
+    button.id === "startTrumpsGame"
+  ) {
+    return "trumpsGame";
+  }
+
+  if (
+    button.id === "startXiDraft"
+  ) {
+    return "xiDraftGame";
+  }
+
+
+  /*
+    Classic / Country setup use the shared game view.
+  */
+
+  if (
+    button.classList.contains(
+      "start"
+    )
+  ) {
+    return "game";
+  }
+
+
+  return (
+    button.closest(".view")?.id ||
+    "home"
+  );
+
+}
+
+
+function progressiveGameStarted(
+  target
+) {
+
+  if (
+    target === "grid"
+  ) {
+    return (
+      document
+        .getElementById(
+          "gridGame"
+        )
+        ?.hidden === false
+    );
+  }
+
+
+  const checks = {
+
+    game:
+      () =>
+        Boolean(
+          document
+            .getElementById(
+              "sideA"
+            )
+            ?.innerHTML
+        ),
+
+    twinGame:
+      () =>
+        Boolean(
+          document
+            .getElementById(
+              "twinTarget"
+            )
+            ?.innerHTML
+        ),
+
+    randomFiveGame:
+      () =>
+        (
+          document
+            .getElementById(
+              "randomFiveClubs"
+            )
+            ?.children
+            ?.length || 0
+        ) > 0,
+
+    ratingGame:
+      () =>
+        (
+          document
+            .getElementById(
+              "ratingChoices"
+            )
+            ?.children
+            ?.length || 0
+        ) > 0,
+
+    mysteryGame:
+      () =>
+        (
+          document
+            .getElementById(
+              "mysteryPhoto"
+            )
+            ?.children
+            ?.length || 0
+        ) > 0,
+
+    hexGame:
+      () =>
+        (
+          document
+            .getElementById(
+              "hexBoard"
+            )
+            ?.children
+            ?.length || 0
+        ) > 0,
+
+    trumpsGame:
+      () =>
+        Boolean(
+          document
+            .getElementById(
+              "trumpsCurrent"
+            )
+            ?.textContent
+            ?.trim()
+        ),
+
+    xiDraftGame:
+      () =>
+        (
+          document
+            .getElementById(
+              "xiCandidates"
+            )
+            ?.children
+            ?.length || 0
+        ) > 0 ||
+        (
+          document
+            .getElementById(
+              "xiSlots"
+            )
+            ?.children
+            ?.length || 0
+        ) > 0
+
+  };
+
+
+  return checks[target]
+    ? checks[target]()
+    : true;
+
+}
+
+
+function progressiveTryResumePendingStart() {
+
+  if (
+    !progressivePendingStart ||
+    !progressivePendingStartMeta ||
+    progressiveReplayInFlight
+  ) {
+    return;
+  }
+
+
+  const {
+    requirement,
+    target
+  } =
+    progressivePendingStartMeta;
+
+
+  if (
+    !progressiveRequirementEnough(
+      requirement
+    )
+  ) {
+    return;
+  }
+
+
+  const button =
+    progressivePendingStart;
+
+
+  progressiveHydrateRequirement(
+    requirement
+  );
+
+
+  progressiveReplayInFlight =
+    true;
+
+
+  progressiveReplayBypass =
+    true;
+
+
+  try {
+
+    button.click();
+
+  }
+  finally {
+
+    progressiveReplayBypass =
+      false;
+
+  }
+
+
+  setTimeout(
+    () => {
+
+      progressiveReplayInFlight =
+        false;
+
+
+      if (
+        progressiveGameStarted(
+          target
+        )
+      ) {
+
+        progressivePendingStart =
+          null;
+
+        progressivePendingStartMeta =
+          null;
+
+        progressiveRemoveStatus(
+          target
+        );
+
+        return;
+
+      }
+
+
+      /*
+        The current partial data was not enough for the
+        selected leagues/difficulty.
+
+        Keep the game screen open and try again automatically
+        when the next chunk arrives.
+      */
+
+      if (
+        target !== "grid"
+      ) {
+
+        show(
+          target,
+          {
+            history: false
+          }
+        );
+
+      }
+
+
+      progressiveShowStatus(
+        target,
+        true
+      );
+
+    },
+    180
+  );
+
+}
 
 function progressiveEnsureMessageTimer() {
 
@@ -552,16 +1197,26 @@ function progressiveRefreshCurrentView() {
       ".view.active"
     );
 
-
   if (!active) {
-
     return;
-
   }
 
 
   const viewId =
     active.id;
+
+
+  const type =
+    progressiveRequirement(
+      viewId
+    );
+
+
+  if (type) {
+    progressiveHydrateRuntime(
+      type
+    );
+  }
 
 
   if (
@@ -584,14 +1239,14 @@ function progressiveRefreshCurrentView() {
   );
 
 
-  /*
-    Render data-dependent screens immediately when data becomes
-    ready. No browser refresh is needed.
-  */
-
   if (
     viewId === "catalog"
   ) {
+
+    progressiveHydrateRuntime(
+      "career",
+      true
+    );
 
     renderCatalog(
       true
@@ -604,44 +1259,37 @@ function progressiveRefreshCurrentView() {
     viewId === "travelers"
   ) {
 
+    progressiveHydrateRuntime(
+      "career",
+      true
+    );
+
     renderTravelers();
 
   }
 
 
   if (
-    viewId === "grid"
+    viewId === "compare"
   ) {
 
-    openGrid();
+    progressiveHydrateRuntime(
+      "career",
+      true
+    );
+
+    renderCompareOptions();
 
   }
 
 
   /*
-    Re-run current view navigation without adding history.
-    This also refreshes any view-specific handlers.
+    IMPORTANT:
+    Do not call show(viewId) again here.
+
+    The old implementation re-navigated the current page
+    whenever data changed, causing mobile refresh-like behavior.
   */
-
-  if (
-    viewId !== "home"
-  ) {
-
-    setTimeout(
-      () => {
-
-        show(
-          viewId,
-          {
-            history: false
-          }
-        );
-
-      },
-      0
-    );
-
-  }
 
 }
 
@@ -875,17 +1523,27 @@ window.addEventListener(
 
 
 /*
-  Capture Start clicks before the original game handlers.
+  PARTIAL-START-CAPTURE-V3
 
-  Instead of doing nothing while data loads:
-  - remember the user's click
-  - show friendly progress
-  - automatically click again when initialization completes
+  Start button behavior:
+
+  1. Game screen opens immediately.
+  2. Friendly loading message appears there.
+  3. Every arriving chunk triggers another readiness check.
+  4. As soon as enough relevant data exists, the original
+     start handler is replayed automatically.
 */
 
 document.addEventListener(
   "click",
   (event) => {
+
+    if (
+      progressiveReplayBypass
+    ) {
+      return;
+    }
+
 
     const button =
       event.target.closest(
@@ -904,36 +1562,30 @@ document.addEventListener(
 
 
     if (!button) {
-
       return;
-
     }
 
 
-    const view =
-      button.closest(
-        ".view"
+    const requirement =
+      progressiveStartRequirement(
+        button
       );
 
 
-    if (!view) {
-
-      return;
-
-    }
-
-
-    const type =
-      progressiveRequirement(
-        view.id
-      );
-
+    /*
+      Enough partial data already exists:
+      hydrate globals and let the original handler execute now.
+    */
 
     if (
-      !type ||
-      progressiveLiveState[type]
-        .complete
+      progressiveRequirementEnough(
+        requirement
+      )
     ) {
+
+      progressiveHydrateRequirement(
+        requirement
+      );
 
       return;
 
@@ -945,38 +1597,227 @@ document.addEventListener(
     event.stopImmediatePropagation();
 
 
+    const target =
+      progressiveStartTarget(
+        button
+      );
+
+
     progressivePendingStart =
       button;
 
 
+    progressivePendingStartMeta = {
+      requirement,
+      target
+    };
+
+
+    /*
+      Enter the actual game screen immediately.
+    */
+
+    if (
+      target !== "grid"
+    ) {
+
+      show(
+        target
+      );
+
+    }
+
+
     progressiveShowStatus(
-      view.id,
+      target,
       true
     );
+
+
+    /*
+      Maybe a chunk arrived between the click and this handler.
+    */
+
+    progressiveTryResumePendingStart();
 
   },
   true
 );
 
+
+/*
+  Event-driven readiness.
+
+  No 20-second polling loop and no manual restart:
+  every arriving chunk instantly triggers a new check.
+*/
+
+window.addEventListener(
+  "iki-forma-data-progress",
+  () => {
+
+    progressiveTryResumePendingStart();
+
+    progressiveRefreshCurrentView();
+
+  }
+);
+
+
+window.addEventListener(
+  "iki-forma-data-complete",
+  () => {
+
+    progressiveTryResumePendingStart();
+
+    progressiveRefreshCurrentView();
+
+  }
+);
+
+
 let handlingPopState = false;
 function show(id, options = {}) {
+
   clearInterval(timer);
+
   clearTimeout(ratingTimer);
+
   clearTimeout(trumpsTimer);
-  if (id !== "grid") clearTimeout(computerTimer);
-  $$(".view").forEach((v) => v.classList.toggle("active", v.id === id));
+
+  if (
+    id !== "grid"
+  ) {
+    clearTimeout(
+      computerTimer
+    );
+  }
+
+
+  $$(".view").forEach(
+    (view) =>
+      view.classList.toggle(
+        "active",
+        view.id === id
+      )
+  );
+
+
   scrollTo({
     top: 0,
-    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "auto"
-      : "smooth",
+    behavior:
+      matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches
+        ? "auto"
+        : "smooth",
   });
-  if (id === "catalog") renderCatalog(true);
-  if (id === "travelers") renderTravelers();
-  if (id === "grid") openGrid();
-  if (!handlingPopState && options.history !== false && history.state?.view !== id)
+
+
+  const type =
+    progressiveRequirement(
+      id
+    );
+
+
+  if (
+    type &&
+    progressiveLiveState[type]
+      .loadedPlayers > 0
+  ) {
+
+    progressiveHydrateRuntime(
+      type
+    );
+
+  }
+
+
+  const waiting =
+    progressiveShowStatus(
+      id
+    );
+
+
+  /*
+    Never render an empty list just because the first chunk
+    has not arrived yet.
+  */
+
+  if (
+    id === "catalog" &&
+    !waiting
+  ) {
+
+    progressiveHydrateRuntime(
+      "career",
+      true
+    );
+
+    renderCatalog(
+      true
+    );
+
+  }
+
+
+  if (
+    id === "travelers" &&
+    !waiting
+  ) {
+
+    progressiveHydrateRuntime(
+      "career",
+      true
+    );
+
+    renderTravelers();
+
+  }
+
+
+  if (
+    id === "compare" &&
+    !waiting
+  ) {
+
+    progressiveHydrateRuntime(
+      "career",
+      true
+    );
+
+    renderCompareOptions();
+
+  }
+
+
+  if (
+    id === "grid" &&
+    !waiting
+  ) {
+
+    progressiveHydrateRuntime(
+      "career"
+    );
+
+    openGrid();
+
+  }
+
+
+  if (
+    !handlingPopState &&
+    options.history !== false &&
+    history.state?.view !== id
+  ) {
+
     history.pushState({ view: id }, "", `#${id}`);
+
+  }
+
 }
+
+
 window.addEventListener("popstate", (event) => {
   handlingPopState = true;
   show(event.state?.view || "home", { history: false });
@@ -3449,6 +4290,9 @@ async function init() {
   }
 }
 init();
+
+
+
 
 
 

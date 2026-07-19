@@ -2189,3 +2189,196 @@
 
 }
 
+
+/* MOBILE-GAME-LAYOUT-FIX-V4 */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       GIZLI FUTBOLCU
+       Oyuncu / Ulke / Takim / Mevki / Yas / OVR
+       tek ekran genisligine sigar.
+       ======================================================== */
+
+    #mysteryGame .mystery-layout {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        gap: 12px !important;
+    }
+
+    #mysteryGame .mystery-feedback {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    #mysteryGame .mystery-head,
+    #mysteryGame .mystery-row {
+        display: grid !important;
+
+        /*
+          Oyuncuya daha fazla alan;
+          diger 5 metrik daha kompakt.
+        */
+        grid-template-columns:
+            minmax(74px, 1.5fr)
+            minmax(38px, .7fr)
+            minmax(48px, .9fr)
+            minmax(40px, .7fr)
+            30px
+            34px !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        column-gap: 3px !important;
+
+        align-items: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #mysteryGame .mystery-head > *,
+    #mysteryGame .mystery-row > * {
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        overflow: hidden !important;
+
+        text-overflow: ellipsis !important;
+
+        white-space: nowrap !important;
+
+        font-size: 10px !important;
+    }
+
+    #mysteryGame .mystery-head > :nth-child(5),
+    #mysteryGame .mystery-head > :nth-child(6),
+    #mysteryGame .mystery-row > :nth-child(5),
+    #mysteryGame .mystery-row > :nth-child(6) {
+        text-align: center !important;
+    }
+
+    #mysteryGame #mysteryHistory {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /* ========================================================
+       KARIYER PETEGI
+       Sag taraftaki hucrelerin mobilde kesilmesini engelle.
+       ======================================================== */
+
+    #hexGame {
+        width: 100% !important;
+
+        max-width: 100vw !important;
+
+        overflow-x: hidden !important;
+    }
+
+    #hexGame .hex-layout {
+        display: grid !important;
+
+        grid-template-columns:
+            minmax(0, 1fr) !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        gap: 14px !important;
+
+        overflow: visible !important;
+    }
+
+    #hexGame .hex-board {
+        width: 125% !important;
+
+        max-width: none !important;
+
+        min-width: 0 !important;
+
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        transform:
+            scale(.80) !important;
+
+        transform-origin:
+            top left !important;
+
+        /*
+          scale sonrasi boslugu azalt.
+        */
+        margin-bottom:
+            -18% !important;
+
+        overflow:
+            visible !important;
+    }
+
+    #hexGame .hex-panel {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /*
+      Dar telefonlarda biraz daha kucult.
+    */
+
+    @media (max-width: 420px) {
+
+        #hexGame .hex-board {
+            width: 132% !important;
+
+            transform:
+                scale(.75) !important;
+
+            margin-bottom:
+                -24% !important;
+        }
+
+        #mysteryGame .mystery-head,
+        #mysteryGame .mystery-row {
+
+            grid-template-columns:
+                minmax(68px, 1.4fr)
+                minmax(34px, .6fr)
+                minmax(42px, .8fr)
+                minmax(36px, .6fr)
+                28px
+                32px !important;
+        }
+
+        #mysteryGame .mystery-head > *,
+        #mysteryGame .mystery-row > * {
+            font-size:
+                9px !important;
+        }
+
+    }
+
+}
+
+/* END-MOBILE-GAME-LAYOUT-FIX-V4 */
+
