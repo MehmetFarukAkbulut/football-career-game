@@ -1388,3 +1388,36 @@
 
 }
 
+
+/* navigation touch fix */
+#home .mode-card {
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#home .mode-card * {
+    pointer-events: none;
+}
+
+#home .mode-card:hover {
+    z-index: 2;
+}
+
+@media (max-width: 760px) {
+    #home .mode-card {
+        width: 100%;
+        min-height: 110px;
+    }
+
+    #fcCatalog {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    #fcCatalog .fc26-catalog-toolbar {
+        grid-template-columns: 1fr !important;
+    }
+}

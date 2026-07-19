@@ -599,7 +599,7 @@
 
       grid.innerHTML = `
         <div class="surface fc26-catalog-empty">
-          <h3>SonuÃ§ bulunamadÄ±</h3>
+          <h3>Sonuç bulunamadı</h3>
           <p>Filtreleri deÄŸiÅŸtirerek tekrar deneyin.</p>
         </div>
       `;
@@ -624,14 +624,14 @@
               ? `
                 <img
                   src="${esc(player.cardUrl)}"
-                  alt="${esc(player.name)} FC 26 kartÄ±"
+                  alt="${esc(player.name)} FC 26 kartı"
                   loading="lazy"
                 >
               `
               : `
                 <div class="fc26-card-missing">
                   <strong>${esc(player.name)}</strong>
-                  <span>FC 26 kart gÃ¶rseli bulunamadÄ±</span>
+                  <span>FC 26 kart görseli bulunamadı</span>
                 </div>
               `;
 
@@ -650,13 +650,13 @@
 
                 <p>
                   ${esc(player.nation || "Ãœlke bilinmiyor")}
-                  Â·
+                  ·
                   ${esc(positions || "Mevki bilinmiyor")}
                 </p>
 
                 <small>
-                  ${esc(player.team || "TakÄ±m bilinmiyor")}
-                  Â·
+                  ${esc(player.team || "Takım bilinmiyor")}
+                  ·
                   ${esc(player.league || "Lig bilinmiyor")}
                 </small>
 
@@ -794,7 +794,7 @@
 
 
     /*
-      Gezgin Futbolcular tamamen kaldÄ±rÄ±lÄ±yor.
+      Gezgin Futbolcular tamamen kaldırılıyor.
     */
 
     [...root.children]
@@ -822,10 +822,10 @@
 
 
     /*
-      Ã–nceki clone yamalarÄ±nÄ±n oluÅŸturduÄŸu
-      sahte Futbolcu KataloÄŸu kartlarÄ±nÄ± kaldÄ±r.
+      Ã–nceki clone yamalarının oluÅŸturduÄŸu
+      sahte Futbolcu KataloÄŸu kartlarını kaldır.
 
-      GerÃ§ek katalog kartÄ± data-view="catalog" taÅŸÄ±yor.
+      Gerçek katalog kartı data-view="catalog" taÅŸıyor.
     */
 
     [...root.children]
@@ -857,7 +857,7 @@
 
 
     /*
-      Eski FC26 katalog kartÄ± varsa yalnÄ±zca bir tane tut.
+      Eski FC26 katalog kartı varsa yalnızca bir tane tut.
     */
 
     const oldFcCards =
@@ -897,7 +897,7 @@
 
 
     /*
-      HiÃ§ yoksa clone kullanmadan sÄ±fÄ±rdan oluÅŸtur.
+      Hiç yoksa clone kullanmadan sıfırdan oluÅŸtur.
     */
 
     if (!fcCard) {
@@ -921,12 +921,12 @@
       fcCard.innerHTML = `
         <span class="icon">\uD83C\uDFAE</span>
         <span>
-          <b>FC 26 Futbolcu KartlarÄ±</b>
+          <b>FC 26 Futbolcu Kartları</b>
           <small>
-            EA SPORTS FC 26 kartlarÄ±nÄ± ara ve filtrele.
+            EA SPORTS FC 26 kartlarını ara ve filtrele.
           </small>
         </span>
-        <i>GÃ¶z at \u2192</i>
+        <i>Göz at \u2192</i>
       `;
 
       root.appendChild(
@@ -943,81 +943,25 @@
 
 
     /*
-      Eski clone attribute'larÄ±nÄ± temizle.
+      Eski clone attribute'larını temizle.
     */
 
     fcCard.removeAttribute(
       "data-fc26-catalog-menu"
     );
 
-    fcCard.removeAttribute(
-      "data-view"
-    );
+    fcCard.setAttribute("data-view", "fcCatalog");
 
 
     /*
-      Listener Ã§oÄŸalmasÄ±nÄ± engellemek iÃ§in property kullan.
+      Listener çoÄŸalmasını engellemek için property kullan.
     */
 
-    fcCard.onclick =
-      (event) => {
+    fcCard.onclick = null;
 
-        event.preventDefault();
-
-        event.stopPropagation();
-
-
-        const catalog =
-          document.getElementById(
-            "fcCatalog"
-          );
-
-
-        if (!catalog) {
-          return;
-        }
-
-
-        document
-          .querySelectorAll(
-            ".view"
-          )
-          .forEach(
-            (view) => {
-
-              view.classList.remove(
-                "active"
-              );
-
-              view.hidden =
-                true;
-
-            }
-          );
-
-
-        catalog.hidden =
-          false;
-
-        catalog.classList.add(
-          "active"
-        );
-
-        catalog.style.display =
-          "";
-
-
-        window.scrollTo(
-          0,
-          0
-        );
-
-      };
-
-
-    /*
-      AraÃ§lar son bÃ¶lÃ¼mde:
-      KulÃ¼p KarÅŸÄ±laÅŸtÄ±r
+/*
+      Araçlar son bölümde:
+      Kulüp KarÅŸılaÅŸtır
       Futbolcu KataloÄŸu
       FC26 Katalog
     */
@@ -1077,8 +1021,8 @@
 
 
   /*
-    Bayraklar dosyaya gerÃ§ek emoji olarak yazÄ±lmÄ±yor.
-    Unicode escape kullanÄ±ldÄ±ÄŸÄ± iÃ§in encoding bozulamaz.
+    Bayraklar dosyaya gerçek emoji olarak yazılmıyor.
+    Unicode escape kullanıldıÄŸı için encoding bozulamaz.
   */
 
   const FLAGS = {
@@ -1364,7 +1308,7 @@
 
 
     /*
-      Bilinen Ã¼lke bayraÄŸÄ±nÄ± alt liglere de ver.
+      Bilinen ülke bayraÄŸını alt liglere de ver.
     */
 
     let flag =
@@ -1412,7 +1356,7 @@
         ""
       )
       /*
-        SaÄŸlam emoji bayraÄŸÄ± varsa da kaldÄ±rÄ±p yeniden ekle.
+        SaÄŸlam emoji bayraÄŸı varsa da kaldırıp yeniden ekle.
       */
       .replace(
         /^\p{Regional_Indicator}{2}\s*/u,
@@ -1488,7 +1432,7 @@
 
 
     /*
-      AynÄ± value tekrarlarÄ±nÄ± engelle.
+      Aynı value tekrarlarını engelle.
     */
 
     const unique =
@@ -1563,7 +1507,7 @@
 
     all.textContent =
       firstText ||
-      "TÃ¼m ligler";
+      "Tüm ligler";
 
     select.appendChild(
       all
@@ -1721,8 +1665,8 @@
 
 
   /*
-    Bu fonksiyon mevcut Ã–nceki/Sonraki butonlarÄ±nÄ±n click
-    eventlerini kullanÄ±yor ancak butonlar kullanÄ±cÄ±dan gizleniyor.
+    Bu fonksiyon mevcut Ã–nceki/Sonraki butonlarının click
+    eventlerini kullanıyor ancak butonlar kullanıcıdan gizleniyor.
   */
 
   function goToPage(
@@ -1814,8 +1758,8 @@
 
 
     /*
-      Eski Ã–nceki / Sonraki ve 1 / 745 tamamen gÃ¶rÃ¼nmez.
-      Event listener'larÄ± Ã§alÄ±ÅŸmaya devam eder.
+      Eski Ã–nceki / Sonraki ve 1 / 745 tamamen görünmez.
+      Event listener'ları çalıÅŸmaya devam eder.
     */
 
     prev.classList.add(
@@ -2090,7 +2034,7 @@
 
 
   /*
-    Sonsuz observer dÃ¶ngÃ¼sÃ¼nÃ¼ engellemek iÃ§in debounce.
+    Sonsuz observer döngüsünü engellemek için debounce.
   */
 
   let pending =
@@ -2142,5 +2086,7 @@
   );
 
 })();
+
+
 
 
