@@ -1368,14 +1368,13 @@
   }
 
 
-  function reorderLeagueSelect(
-    select
-  ) {
+  function reorderLeagueSelect(select) {
 
-    if (
-      !select ||
-      select.options.length < 2
-    ) {
+    if (!select || select.options.length < 2) {
+      return;
+    }
+
+    if (select.dataset.leagueOrderReady === "1") {
       return;
     }
 
@@ -1549,6 +1548,9 @@
         selectedValue;
 
     }
+
+  
+    select.dataset.leagueOrderReady = "1";
 
   }
 
@@ -2083,6 +2085,8 @@
   );
 
 })();
+
+
 
 
 

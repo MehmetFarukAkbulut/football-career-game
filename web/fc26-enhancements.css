@@ -1533,3 +1533,77 @@
 
 }
 
+
+/* ==========================================================
+   MOBILE SELECT AND XI LEAGUE SCROLL FIX
+   ========================================================== */
+
+/*
+  Native mobile select must stay stable.
+*/
+#fcCatalog select,
+#compare select {
+    touch-action: manipulation !important;
+}
+
+/*
+  Tournament XI and other league option panels.
+  Allow finger scrolling inside the list instead of locking
+  the whole page.
+*/
+#xiSetup .league-list,
+#xiSetup .league-options .league-list,
+#xiSetup .league-options,
+.xi-setup .league-list,
+.xi-setup .league-options {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+
+/*
+  Desktop.
+*/
+#xiSetup .league-list,
+#xiSetup .league-options .league-list,
+.xi-setup .league-list {
+    max-height: 520px;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/*
+  Mobile.
+*/
+@media (max-width: 760px) {
+
+    #xiSetup .league-options,
+    .xi-setup .league-options {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #xiSetup .league-list,
+    #xiSetup .league-options .league-list,
+    .xi-setup .league-list {
+        display: grid !important;
+        max-height: 48vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        overscroll-behavior-y: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+        padding-right: 4px !important;
+    }
+
+    /*
+      Do not let a parent block steal the vertical swipe.
+    */
+    #xiSetup,
+    #xiSetup .surface,
+    .xi-setup {
+        touch-action: pan-y !important;
+    }
+
+}
+
