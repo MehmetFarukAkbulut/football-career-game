@@ -1351,10 +1351,7 @@
       /*
         Eski bozuk emoji byte dizilerini tamamen temizle.
       */
-      .replace(
-        /^[\u00C0-\u00FF\u0080-\u00BF\u2018-\u2026\u20AC\uFFFD\s]+/,
-        ""
-      )
+      
       /*
         SaÄŸlam emoji bayraÄŸı varsa da kaldırıp yeniden ekle.
       */
@@ -2086,6 +2083,7 @@
   );
 
 })();
+
 
 
 

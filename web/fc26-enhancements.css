@@ -1421,3 +1421,115 @@
         grid-template-columns: 1fr !important;
     }
 }
+
+/* final home card hover normalization */
+
+#home .mode-card {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    font: inherit !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background-color .18s ease,
+        box-shadow .18s ease !important;
+}
+
+#home .mode-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: rgba(73, 229, 165, .65) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .18) !important;
+}
+
+#home .mode-card:active {
+    transform: translateY(0) !important;
+}
+
+#home .mode-card:focus-visible {
+    outline: 2px solid #49e5a5 !important;
+    outline-offset: 2px !important;
+}
+
+/*
+ FC26 kartina onceki yamadan kalan ozel gorunumleri etkisizlestir.
+*/
+#home .fc26-catalog-home-card {
+    background: inherit;
+    color: inherit;
+}
+
+
+/* compact FC26 filters on mobile */
+
+@media (max-width: 760px) {
+
+    #fcCatalog {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    #fcCatalog .fc26-catalog-toolbar {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 7px !important;
+        margin-bottom: 12px !important;
+    }
+
+    #fcCatalog .fc26-catalog-toolbar > :first-child {
+        grid-column: 1 / -1 !important;
+    }
+
+    #fcCatalog .fc26-catalog-toolbar input,
+    #fcCatalog .fc26-catalog-toolbar select {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        padding: 7px 10px !important;
+        font-size: 13px !important;
+        box-sizing: border-box !important;
+    }
+
+    #fcCatalog .section-head {
+        margin-bottom: 14px !important;
+    }
+
+    #fcCatalog .section-head h2 {
+        font-size: clamp(28px, 8vw, 38px) !important;
+        line-height: 1.1 !important;
+    }
+
+    #fcCatalog .section-head p {
+        font-size: 13px !important;
+        line-height: 1.45 !important;
+    }
+
+    #fcCatalog .counter {
+        font-size: 14px !important;
+        padding: 10px 12px !important;
+    }
+
+    #fcCatalog .fc26-catalog-grid {
+        margin-top: 8px !important;
+    }
+
+}
+
+@media (max-width: 420px) {
+
+    #fcCatalog .fc26-catalog-toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    #fcCatalog .fc26-catalog-toolbar input,
+    #fcCatalog .fc26-catalog-toolbar select {
+        font-size: 12px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+}
+
