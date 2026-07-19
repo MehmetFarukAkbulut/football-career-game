@@ -696,472 +696,369 @@
 })();
 
 
-
-
-
-
 // ============================================================
-// FC26 KATALOG ANA MENU GIRISI
+// FINAL FC26 CATALOG UI PATCH
 // ============================================================
 
-function ensureFc26CatalogMenuCard() {
+(() => {
 
-  // Katalog zaten ana menude varsa ikinci kez ekleme.
-  if (document.querySelector("[data-fc26-catalog-menu]")) {
-    return;
+  "use strict";
+
+
+  // ----------------------------------------------------------
+  // METIN BOZULMALARINI TEMIZLE
+  // ----------------------------------------------------------
+
+  function cleanMojibake(value) {
+
+    return String(value || "")
+      .replace(/\u00C2\u00B7/g, "\u00B7")
+      .replace(/\u00C3\u201A\u00C2\u00B7/g, "\u00B7")
+      .replace(/\u00C2/g, "")
+      .replace(/\u00E2\u20AC\u00A6/g, "\u2026")
+      .replace(/\u00E2\u2020\u2019/g, "\u2192")
+      .replace(/\u00E2\u2020\u0090/g, "\u2190")
+      .replace(/\u00C3\u00A2\u00C2\u20AC\u00C2\u00A6/g, "\u2026");
+
   }
 
-  // Ana sayfadaki oyun/menu kartlarini bul.
-  const cards = Array.from(
-    document.querySelectorAll(
-      ".game-card, .mode-card, [data-game], .home-card"
-    )
-  );
 
-  if (!cards.length) {
-    return;
-  }
+  function cleanCatalogText() {
 
-  // MÃ¼mkÃ¼nse Futbolcu KataloÄŸu kartÄ±nÄ± referans al.
-  const reference =
-    cards.find((card) =>
-      /Futbolcu KataloÄŸu/i.test(card.textContent || "")
-    ) ||
-    cards[cards.length - 1];
+    const catalog =
+      document.getElementById(
+        "fcCatalog"
+      );
 
-  const card = reference.cloneNode(true);
+    if (!catalog) {
+      return;
+    }
 
-  card.setAttribute(
-    "data-fc26-catalog-menu",
-    "true"
-  );
 
-  // Eski oyun/menu attribute'larini temizle.
-  [
-    "data-game",
-    "data-mode",
-    "data-view",
-    "data-action"
-  ].forEach((attr) => {
-    card.removeAttribute(attr);
-  });
+    const walker =
+      document.createTreeWalker(
+        catalog,
+        NodeFilter.SHOW_TEXT
+      );
 
-  // Kart icerigini degistir.
-  const title =
-    card.querySelector(
-      "h2, h3, h4, strong, .title, .card-title"
-    );
 
-  const description =
-    card.querySelector(
-      "p, .description, .card-description"
-    );
+    const nodes = [];
 
-  if (title) {
-    title.textContent =
-      "FC 26 Futbolcu KartlarÄ±";
-  }
+    while (
+      walker.nextNode()
+    ) {
+      nodes.push(
+        walker.currentNode
+      );
+    }
 
-  if (description) {
-    description.textContent =
-      "GerÃ§ek FC 26 kartlarÄ±nÄ± gÃ¶rÃ¼ntÃ¼le, filtrele ve incele.";
-  }
 
-  // Emoji/icon varsa deÄŸiÅŸtir.
-  const icon =
-    card.querySelector(
-      ".icon, .emoji, .game-icon, .mode-icon"
-    );
+    nodes.forEach(
+      (node) => {
 
-  if (icon) {
-    icon.textContent = "â­";
-  }
+        const cleaned =
+          cleanMojibake(
+            node.nodeValue
+          );
 
-  // Clone edilen eski click davranisini engellemek icin
-  // yeni node ile tekrar klonla.
-  const cleanCard =
-    card.cloneNode(true);
+        if (
+          cleaned !==
+          node.nodeValue
+        ) {
 
-  cleanCard.setAttribute(
-    "data-fc26-catalog-menu",
-    "true"
-  );
+          node.nodeValue =
+            cleaned;
 
-  cleanCard.style.cursor =
-    "pointer";
+        }
 
-  cleanCard.addEventListener(
-    "click",
-    (event) => {
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      if (
-        typeof window.openFc26Catalog ===
-        "function"
-      ) {
-
-        window.openFc26Catalog();
-
-        return;
       }
+    );
 
-      // Mevcut katalog butonu varsa onu tetikle.
-      const existingButton =
-        document.querySelector(
-          '[data-open-fc26-catalog]'
+  }
+
+
+  // ----------------------------------------------------------
+  // ANA MENU
+  // ----------------------------------------------------------
+
+  function normalizeHomeMenu() {
+
+    const root =
+      document.querySelector(
+        "#home .mode-grid"
+      );
+
+    if (!root) {
+      return;
+    }
+
+
+    /*
+      Gezgin Futbolcular tamamen kaldÄ±rÄ±lÄ±yor.
+    */
+
+    [...root.children]
+      .forEach(
+        (card) => {
+
+          const text =
+            cleanMojibake(
+              card.textContent
+            )
+              .replace(/\s+/g, " ")
+              .trim();
+
+
+          if (
+            /Gezgin Futbolcu/i.test(text)
+          ) {
+
+            card.remove();
+
+          }
+
+        }
+      );
+
+
+    /*
+      Ã–nceki clone yamalarÄ±nÄ±n oluÅŸturduÄŸu
+      sahte Futbolcu KataloÄŸu kartlarÄ±nÄ± kaldÄ±r.
+
+      GerÃ§ek katalog kartÄ± data-view="catalog" taÅŸÄ±yor.
+    */
+
+    [...root.children]
+      .forEach(
+        (card) => {
+
+          const text =
+            cleanMojibake(
+              card.textContent
+            )
+              .replace(/\s+/g, " ")
+              .trim();
+
+
+          if (
+            /Futbolcu KataloÄŸu/i.test(text) &&
+            card.dataset.view !== "catalog" &&
+            !card.hasAttribute(
+              "data-real-fc26-catalog-card"
+            )
+          ) {
+
+            card.remove();
+
+          }
+
+        }
+      );
+
+
+    /*
+      Eski FC26 katalog kartÄ± varsa yalnÄ±zca bir tane tut.
+    */
+
+    const oldFcCards =
+      [...root.children]
+        .filter(
+          (card) => {
+
+            const text =
+              cleanMojibake(
+                card.textContent
+              );
+
+            return (
+              /FC 26 Futbolcu/i.test(text) ||
+              card.hasAttribute(
+                "data-fc26-catalog-menu"
+              ) ||
+              card.hasAttribute(
+                "data-real-fc26-catalog-card"
+              )
+            );
+
+          }
         );
 
-      if (existingButton) {
 
-        existingButton.click();
+    oldFcCards
+      .slice(1)
+      .forEach(
+        (card) =>
+          card.remove()
+      );
 
-        return;
-      }
 
-      // fc26Catalog view mevcutsa doÄŸrudan aÃ§.
-      const catalog =
-        document.getElementById(
-          "fc26Catalog"
+    let fcCard =
+      oldFcCards[0];
+
+
+    /*
+      HiÃ§ yoksa clone kullanmadan sÄ±fÄ±rdan oluÅŸtur.
+    */
+
+    if (!fcCard) {
+
+      fcCard =
+        document.createElement(
+          "button"
         );
 
-      if (catalog) {
+      fcCard.type =
+        "button";
+
+      fcCard.className =
+        "mode-card fc26-catalog-home-card";
+
+      fcCard.setAttribute(
+        "data-real-fc26-catalog-card",
+        "true"
+      );
+
+      fcCard.innerHTML = `
+        <span class="icon">\uD83C\uDFAE</span>
+        <span>
+          <b>FC 26 Futbolcu KartlarÄ±</b>
+          <small>
+            EA SPORTS FC 26 kartlarÄ±nÄ± ara ve filtrele.
+          </small>
+        </span>
+        <i>GÃ¶z at \u2192</i>
+      `;
+
+      root.appendChild(
+        fcCard
+      );
+
+    }
+
+
+    fcCard.setAttribute(
+      "data-real-fc26-catalog-card",
+      "true"
+    );
+
+
+    /*
+      Eski clone attribute'larÄ±nÄ± temizle.
+    */
+
+    fcCard.removeAttribute(
+      "data-fc26-catalog-menu"
+    );
+
+    fcCard.removeAttribute(
+      "data-view"
+    );
+
+
+    /*
+      Listener Ã§oÄŸalmasÄ±nÄ± engellemek iÃ§in property kullan.
+    */
+
+    fcCard.onclick =
+      (event) => {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        const catalog =
+          document.getElementById(
+            "fcCatalog"
+          );
+
+
+        if (!catalog) {
+          return;
+        }
+
 
         document
           .querySelectorAll(
-            ".game-screen, .screen, .view"
+            ".view"
           )
-          .forEach((screen) => {
+          .forEach(
+            (view) => {
 
-            if (screen !== catalog) {
-              screen.hidden = true;
+              view.classList.remove(
+                "active"
+              );
+
+              view.hidden =
+                true;
+
             }
+          );
 
-          });
 
-        catalog.hidden = false;
+        catalog.hidden =
+          false;
+
+        catalog.classList.add(
+          "active"
+        );
 
         catalog.style.display =
           "";
+
 
         window.scrollTo(
           0,
           0
         );
 
-      }
-
-    }
-  );
-
-  reference.parentElement.appendChild(
-    cleanCard
-  );
-
-}
+      };
 
 
-// DOM hazir oldugunda ekle.
+    /*
+      AraÃ§lar son bÃ¶lÃ¼mde:
+      KulÃ¼p KarÅŸÄ±laÅŸtÄ±r
+      Futbolcu KataloÄŸu
+      FC26 Katalog
+    */
 
-if (
-  document.readyState ===
-  "loading"
-) {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-      setTimeout(
-        ensureFc26CatalogMenuCard,
-        500
+    const compare =
+      root.querySelector(
+        '[data-view="compare"]'
       );
 
-    }
-  );
-
-}
-else {
-
-  setTimeout(
-    ensureFc26CatalogMenuCard,
-    500
-  );
-
-}
-
-
-// Ana menu yeniden render edilirse tekrar kontrol et.
-
-const fc26CatalogMenuObserver =
-  new MutationObserver(() => {
-
-    const isHomeVisible =
-      document.querySelector(
-        ".game-card, .mode-card, [data-game], .home-card"
+    const catalog =
+      root.querySelector(
+        '[data-view="catalog"]'
       );
 
-    if (isHomeVisible) {
 
-      ensureFc26CatalogMenuCard();
-
+    if (compare) {
+      root.appendChild(
+        compare
+      );
     }
 
-  });
+
+    if (catalog) {
+      root.appendChild(
+        catalog
+      );
+    }
 
 
-setTimeout(() => {
-
-  if (document.body) {
-
-    fc26CatalogMenuObserver.observe(
-      document.body,
-      {
-        childList: true,
-        subtree: true
-      }
+    root.appendChild(
+      fcCard
     );
 
   }
 
-}, 1000);
-
-
-// ============================================================
-// MENU DUPLICATE CLEANUP
-// ============================================================
-
-function cleanupInvalidFc26MenuClones() {
-
-  document
-    .querySelectorAll("[data-fc26-catalog-menu]")
-    .forEach((card) => {
-
-      const text =
-        (card.textContent || "")
-          .replace(/\s+/g, " ")
-          .trim();
-
-      /*
-        FC26 katalog kartÄ± oluÅŸturulurken yanlÄ±ÅŸlÄ±kla
-        Turnuva 11 kartÄ± clone edilmiÅŸse kaldÄ±r.
-      */
-      if (
-        /Turnuva 11/i.test(text) &&
-        !/FC 26 Futbolcu Kart/i.test(text)
-      ) {
-        card.remove();
-      }
-
-    });
-}
-
-
-/*
-  AynÄ± katalog kartÄ±ndan birden fazla oluÅŸmuÅŸsa
-  yalnÄ±zca ilkini tut.
-*/
-function cleanupDuplicateFc26CatalogCards() {
-
-  const cards = [
-    ...document.querySelectorAll(
-      "[data-fc26-catalog-menu]"
-    )
-  ].filter((card) =>
-    /FC 26 Futbolcu Kart/i.test(
-      card.textContent || ""
-    )
-  );
-
-  cards
-    .slice(1)
-    .forEach((card) =>
-      card.remove()
-    );
-}
-
-
-function cleanupFc26HomeMenu() {
-
-  cleanupInvalidFc26MenuClones();
-
-  cleanupDuplicateFc26CatalogCards();
-
-}
-
-
-if (
-  document.readyState ===
-  "loading"
-) {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-      setTimeout(
-        cleanupFc26HomeMenu,
-        700
-      );
-
-    }
-  );
-
-}
-else {
-
-  setTimeout(
-    cleanupFc26HomeMenu,
-    700
-  );
-
-}
-
-
-/*
-  Mevcut observer katalog kartÄ±nÄ± tekrar Ã¼retirse
-  temizlik tekrar Ã§alÄ±ÅŸsÄ±n.
-*/
-
-setTimeout(() => {
-
-  const observer =
-    new MutationObserver(() => {
-
-      cleanupFc26HomeMenu();
-
-    });
-
-  observer.observe(
-    document.body,
-    {
-      childList: true,
-      subtree: true
-    }
-  );
-
-}, 1000);
-
-
-// ============================================================
-// CATALOG PAGINATION AND LEAGUE PRIORITY PATCH
-// ============================================================
-
-(() => {
-
-  const PATCH_MARKER =
-    "CATALOG PAGINATION AND LEAGUE PRIORITY PATCH";
-
 
   // ----------------------------------------------------------
-  // GEZGIN FUTBOLCULARI ANA MENUDEN KALDIR
+  // LIG SIRALAMA
   // ----------------------------------------------------------
 
-  function removeTravelersFeature() {
-
-    /*
-      Ana menudeki orijinal veya onceki yamalarla olusmus
-      tum Gezgin Futbolcular kartlarini kaldir.
-    */
-
-    document
-      .querySelectorAll(
-        '#home [data-view="travelers"], ' +
-        '#home [data-fc26-catalog-menu], ' +
-        '#home .mode-card, ' +
-        '#home button'
-      )
-      .forEach((card) => {
-
-        const text =
-          (card.textContent || "")
-            .replace(/\s+/g, " ")
-            .trim();
-
-        if (
-          /Gezgin Futbolcu/i.test(text)
-        ) {
-
-          card.remove();
-
-        }
-
-      });
-
-
-    /*
-      Gezgin Futbolcular sayfasini DOM'da tutuyoruz.
-      app.js eski event referanslari nedeniyle elementin tamamen
-      silinmesi hata uretebilir. Kullanici tarafindan erisilemez.
-    */
-
-    const travelers =
-      document.getElementById(
-        "travelers"
-      );
-
-    if (travelers) {
-
-      travelers.hidden = true;
-
-      travelers.classList.remove(
-        "active"
-      );
-
-      travelers.style.display =
-        "none";
-
-    }
-
-  }
-
-
-  // ----------------------------------------------------------
-  // LIG ONCELIGI
-  // ----------------------------------------------------------
-
-  const LEAGUE_PRIORITY = [
-
-    // 5 buyuk + Turkiye
-    "Premier League",
-    "LALIGA EA SPORTS",
-    "LaLiga",
-    "Serie A Enilive",
-    "Serie A",
-    "Bundesliga",
-    "Ligue 1 McDonald's",
-    "Ligue 1",
-    "Trendyol SÃ¼per Lig",
-    "SÃ¼per Lig",
-
-    // Diger bilinen ligler
-    "EFL Championship",
-    "Eredivisie",
-    "Liga Portugal",
-    "Primeira Liga",
-    "MLS",
-    "Major League Soccer",
-    "BrasileirÃ£o",
-    "SÃ©rie A",
-    "Liga Profesional",
-    "Profesyonel Lig",
-    "Belgian Pro League",
-    "Pro League",
-    "Scottish Premiership",
-    "Superliga",
-    "Allsvenskan",
-    "Eliteserien",
-    "A-League",
-    "J1 League",
-    "J1 Ligi",
-    "K League 1",
-    "K Ligi 1"
-
-  ];
-
-
-  function normalizeLeagueName(value) {
+  function normLeague(value) {
 
     return String(value || "")
       .normalize("NFD")
@@ -1169,241 +1066,363 @@ setTimeout(() => {
         /[\u0300-\u036f]/g,
         ""
       )
-      .toLocaleLowerCase("tr")
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]+/g,
+        " "
+      )
       .trim();
 
   }
 
 
-  const PRIORITY_MAP =
-    new Map(
-      LEAGUE_PRIORITY.map(
-        (name, index) => [
-          normalizeLeagueName(name),
-          index
-        ]
-      )
-    );
+  /*
+    Bayraklar dosyaya gerÃ§ek emoji olarak yazÄ±lmÄ±yor.
+    Unicode escape kullanÄ±ldÄ±ÄŸÄ± iÃ§in encoding bozulamaz.
+  */
+
+  const FLAGS = {
+
+    GB:
+      "\uD83C\uDDEC\uD83C\uDDE7",
+
+    ES:
+      "\uD83C\uDDEA\uD83C\uDDF8",
+
+    IT:
+      "\uD83C\uDDEE\uD83C\uDDF9",
+
+    DE:
+      "\uD83C\uDDE9\uD83C\uDDEA",
+
+    FR:
+      "\uD83C\uDDEB\uD83C\uDDF7",
+
+    TR:
+      "\uD83C\uDDF9\uD83C\uDDF7",
+
+    NL:
+      "\uD83C\uDDF3\uD83C\uDDF1",
+
+    PT:
+      "\uD83C\uDDF5\uD83C\uDDF9",
+
+    US:
+      "\uD83C\uDDFA\uD83C\uDDF8",
+
+    BE:
+      "\uD83C\uDDE7\uD83C\uDDEA",
+
+    SA:
+      "\uD83C\uDDF8\uD83C\uDDE6",
+
+    BR:
+      "\uD83C\uDDE7\uD83C\uDDF7",
+
+    AR:
+      "\uD83C\uDDE6\uD83C\uDDF7",
+
+    MX:
+      "\uD83C\uDDF2\uD83C\uDDFD",
+
+    JP:
+      "\uD83C\uDDEF\uD83C\uDDF5",
+
+    KR:
+      "\uD83C\uDDF0\uD83C\uDDF7",
+
+    AU:
+      "\uD83C\uDDE6\uD83C\uDDFA"
+
+  };
 
 
-  function leagueFlag(name) {
+  /*
+    Kesin ilk 6.
+    Bundesliga 2 gibi ligler Bundesliga ile eÅŸleÅŸmez.
+  */
+
+  function topLeagueGroup(name) {
 
     const n =
-      normalizeLeagueName(name);
+      normLeague(name);
 
 
     if (
-      n.includes("premier league") ||
-      n.includes("championship") ||
-      n.includes("league one") ||
-      n.includes("league two")
+      n === "premier league"
     ) {
-      return "ğŸ‡¬ğŸ‡§";
+      return {
+        rank: 0,
+        flag: FLAGS.GB
+      };
     }
 
 
     if (
-      n.includes("laliga") ||
+      n === "laliga ea sports" ||
       n === "la liga" ||
-      n.includes("segunda")
+      n === "laliga"
     ) {
-      return "ğŸ‡ªğŸ‡¸";
+      return {
+        rank: 1,
+        flag: FLAGS.ES
+      };
     }
 
 
     if (
-      n.includes("serie a") ||
-      n.includes("serie b") ||
-      n.includes("calcio")
+      n === "serie a enilive" ||
+      n === "serie a"
     ) {
-      return "ğŸ‡®ğŸ‡¹";
+      return {
+        rank: 2,
+        flag: FLAGS.IT
+      };
     }
 
 
     if (
-      n === "bundesliga" ||
-      n.includes("bundesliga 2") ||
-      n.includes("2. bundesliga") ||
-      n.includes("3. liga")
+      n === "bundesliga"
     ) {
-      return "ğŸ‡©ğŸ‡ª";
+      return {
+        rank: 3,
+        flag: FLAGS.DE
+      };
     }
 
 
     if (
-      n.includes("ligue 1") ||
-      n.includes("ligue 2")
+      n === "ligue 1 mcdonald s" ||
+      n === "ligue 1"
     ) {
-      return "ğŸ‡«ğŸ‡·";
+      return {
+        rank: 4,
+        flag: FLAGS.FR
+      };
     }
 
 
     if (
-      n.includes("super lig") ||
-      n.includes("sÃ¼per lig") ||
-      n.includes("1. lig")
+      n === "trendyol super lig" ||
+      n === "super lig"
     ) {
-      return "ğŸ‡¹ğŸ‡·";
+      return {
+        rank: 5,
+        flag: FLAGS.TR
+      };
     }
 
 
-    if (
-      n.includes("eredivisie")
-    ) {
-      return "ğŸ‡³ğŸ‡±";
-    }
-
-
-    if (
-      n.includes("liga portugal") ||
-      n.includes("primeira liga")
-    ) {
-      return "ğŸ‡µğŸ‡¹";
-    }
-
-
-    if (
-      n === "mls" ||
-      n.includes("major league soccer")
-    ) {
-      return "ğŸ‡ºğŸ‡¸";
-    }
-
-
-    if (
-      n.includes("brasile") ||
-      n.includes("sÃ©rie a")
-    ) {
-      return "ğŸ‡§ğŸ‡·";
-    }
-
-
-    if (
-      n.includes("profesyonel lig") ||
-      n.includes("liga profesional")
-    ) {
-      return "ğŸ‡¦ğŸ‡·";
-    }
-
-
-    if (
-      n.includes("pro league") &&
-      !n.includes("saudi")
-    ) {
-      return "ğŸ‡§ğŸ‡ª";
-    }
-
-
-    if (
-      n.includes("saudi")
-    ) {
-      return "ğŸ‡¸ğŸ‡¦";
-    }
-
-
-    if (
-      n.includes("superliga") ||
-      n.includes("superligaen")
-    ) {
-      return "ğŸ‡©ğŸ‡°";
-    }
-
-
-    if (
-      n.includes("allsvenskan")
-    ) {
-      return "ğŸ‡¸ğŸ‡ª";
-    }
-
-
-    if (
-      n.includes("eliteserien")
-    ) {
-      return "ğŸ‡³ğŸ‡´";
-    }
-
-
-    if (
-      n.includes("a-league")
-    ) {
-      return "ğŸ‡¦ğŸ‡º";
-    }
-
-
-    if (
-      n.includes("j1")
-    ) {
-      return "ğŸ‡¯ğŸ‡µ";
-    }
-
-
-    if (
-      n.includes("k league") ||
-      n.includes("k ligi")
-    ) {
-      return "ğŸ‡°ğŸ‡·";
-    }
-
-
-    if (
-      n.includes("Äesk") ||
-      n.includes("ceska")
-    ) {
-      return "ğŸ‡¨ğŸ‡¿";
-    }
-
-
-    return "âš½";
+    return null;
 
   }
 
 
-  function priorityIndex(name) {
+  const OTHER_POPULAR = [
 
-    const normalized =
-      normalizeLeagueName(name);
+    {
+      names: [
+        "efl championship",
+        "championship"
+      ],
+      rank: 100,
+      flag: FLAGS.GB
+    },
+
+    {
+      names: [
+        "eredivisie"
+      ],
+      rank: 101,
+      flag: FLAGS.NL
+    },
+
+    {
+      names: [
+        "liga portugal",
+        "primeira liga"
+      ],
+      rank: 102,
+      flag: FLAGS.PT
+    },
+
+    {
+      names: [
+        "major league soccer",
+        "mls"
+      ],
+      rank: 103,
+      flag: FLAGS.US
+    },
+
+    {
+      names: [
+        "belgian pro league",
+        "pro league"
+      ],
+      rank: 104,
+      flag: FLAGS.BE
+    },
+
+    {
+      names: [
+        "saudi pro league"
+      ],
+      rank: 105,
+      flag: FLAGS.SA
+    },
+
+    {
+      names: [
+        "brasileirao",
+        "brasileirao serie a"
+      ],
+      rank: 106,
+      flag: FLAGS.BR
+    },
+
+    {
+      names: [
+        "liga profesional"
+      ],
+      rank: 107,
+      flag: FLAGS.AR
+    },
+
+    {
+      names: [
+        "liga mx"
+      ],
+      rank: 108,
+      flag: FLAGS.MX
+    },
+
+    {
+      names: [
+        "j1 league",
+        "j1 ligi"
+      ],
+      rank: 109,
+      flag: FLAGS.JP
+    },
+
+    {
+      names: [
+        "k league 1",
+        "k ligi 1"
+      ],
+      rank: 110,
+      flag: FLAGS.KR
+    },
+
+    {
+      names: [
+        "a league"
+      ],
+      rank: 111,
+      flag: FLAGS.AU
+    }
+
+  ];
 
 
-    if (
-      PRIORITY_MAP.has(normalized)
-    ) {
+  function leagueMeta(name) {
 
-      return PRIORITY_MAP.get(
-        normalized
+    const top =
+      topLeagueGroup(
+        name
       );
+
+
+    if (top) {
+      return top;
+    }
+
+
+    const n =
+      normLeague(name);
+
+
+    const popular =
+      OTHER_POPULAR.find(
+        (entry) =>
+          entry.names.includes(n)
+      );
+
+
+    if (popular) {
+
+      return {
+        rank:
+          popular.rank,
+
+        flag:
+          popular.flag
+      };
 
     }
 
 
     /*
-      Isim tam eslesmese bile
-      ana ligleri yukarida tut.
+      Bilinen Ã¼lke bayraÄŸÄ±nÄ± alt liglere de ver.
     */
 
-    for (
-      let i = 0;
-      i < LEAGUE_PRIORITY.length;
-      i++
+    let flag =
+      "\u26BD";
+
+
+    if (
+      n.includes("bundesliga") ||
+      n === "3 liga"
     ) {
-
-      const candidate =
-        normalizeLeagueName(
-          LEAGUE_PRIORITY[i]
-        );
-
-      if (
-        normalized.includes(candidate) ||
-        candidate.includes(normalized)
-      ) {
-
-        return i;
-
-      }
-
+      flag = FLAGS.DE;
+    }
+    else if (
+      n.includes("liga") &&
+      n.includes("spain")
+    ) {
+      flag = FLAGS.ES;
+    }
+    else if (
+      n.includes("efl") ||
+      n.includes("barclays wsl")
+    ) {
+      flag = FLAGS.GB;
     }
 
 
-    return 9999;
+    return {
+      rank: 1000,
+      flag
+    };
+
+  }
+
+
+  function stripExistingFlag(text) {
+
+    return cleanMojibake(
+      text
+    )
+      /*
+        Eski bozuk emoji byte dizilerini tamamen temizle.
+      */
+      .replace(
+        /^[\u00C0-\u00FF\u0080-\u00BF\u2018-\u2026\u20AC\uFFFD\s]+/,
+        ""
+      )
+      /*
+        SaÄŸlam emoji bayraÄŸÄ± varsa da kaldÄ±rÄ±p yeniden ekle.
+      */
+      .replace(
+        /^\p{Regional_Indicator}{2}\s*/u,
+        ""
+      )
+      .replace(
+        /^\u26BD\s*/u,
+        ""
+      )
+      .trim();
 
   }
 
@@ -1414,70 +1433,115 @@ setTimeout(() => {
 
     if (
       !select ||
-      !select.options ||
-      select.options.length <= 1
+      select.options.length < 2
     ) {
       return;
     }
 
 
-    /*
-      Orijinal option degerlerini koru.
-      Sadece gorunen text ve siralama degisir.
-    */
-
-    const first =
-      select.options[0];
-
-
-    const currentValue =
+    const selectedValue =
       select.value;
 
 
-    const options =
+    const firstText =
+      cleanMojibake(
+        select.options[0].textContent
+      );
+
+
+    const rows =
       [...select.options]
         .slice(1)
-        .map((option) => ({
+        .map(
+          (option) => {
 
-          value:
-            option.value,
-
-          originalText:
-            option.dataset.originalLeagueText ||
-            option.textContent
-              .replace(
-                /^[^\p{L}\p{N}]+/u,
-                ""
-              )
-              .trim()
-
-        }));
+            const name =
+              option.dataset.cleanLeagueName ||
+              stripExistingFlag(
+                option.textContent
+              );
 
 
-    options.sort(
+            const meta =
+              leagueMeta(
+                name
+              );
+
+
+            return {
+
+              value:
+                option.value,
+
+              name,
+
+              rank:
+                meta.rank,
+
+              flag:
+                meta.flag
+
+            };
+
+          }
+        );
+
+
+    /*
+      AynÄ± value tekrarlarÄ±nÄ± engelle.
+    */
+
+    const unique =
+      [];
+
+
+    const seen =
+      new Set();
+
+
+    rows.forEach(
+      (row) => {
+
+        const key =
+          `${row.value}::${normLeague(row.name)}`;
+
+
+        if (
+          seen.has(key)
+        ) {
+          return;
+        }
+
+
+        seen.add(key);
+
+        unique.push(
+          row
+        );
+
+      }
+    );
+
+
+    unique.sort(
       (a, b) => {
 
-        const pa =
-          priorityIndex(
-            a.originalText
+        if (
+          a.rank !==
+          b.rank
+        ) {
+
+          return (
+            a.rank -
+            b.rank
           );
-
-        const pb =
-          priorityIndex(
-            b.originalText
-          );
-
-
-        if (pa !== pb) {
-
-          return pa - pb;
 
         }
 
 
-        return a.originalText
+        return a.name
           .localeCompare(
-            b.originalText,
+            b.name,
             "tr"
           );
 
@@ -1485,32 +1549,29 @@ setTimeout(() => {
     );
 
 
-    select.innerHTML = "";
+    select.innerHTML =
+      "";
 
 
-    if (first) {
-
-      const all =
-        document.createElement(
-          "option"
-        );
-
-      all.value =
-        first.value || "";
-
-      all.textContent =
-        first.textContent ||
-        "TÃ¼m ligler";
-
-      select.appendChild(
-        all
+    const all =
+      document.createElement(
+        "option"
       );
 
-    }
+    all.value =
+      "";
+
+    all.textContent =
+      firstText ||
+      "TÃ¼m ligler";
+
+    select.appendChild(
+      all
+    );
 
 
-    options.forEach(
-      (item) => {
+    unique.forEach(
+      (row) => {
 
         const option =
           document.createElement(
@@ -1518,13 +1579,13 @@ setTimeout(() => {
           );
 
         option.value =
-          item.value;
+          row.value;
 
-        option.dataset.originalLeagueText =
-          item.originalText;
+        option.dataset.cleanLeagueName =
+          row.name;
 
         option.textContent =
-          `${leagueFlag(item.originalText)} ${item.originalText}`;
+          `${row.flag} ${row.name}`;
 
         select.appendChild(
           option
@@ -1539,29 +1600,26 @@ setTimeout(() => {
         .some(
           (option) =>
             option.value ===
-            currentValue
+            selectedValue
         )
     ) {
 
       select.value =
-        currentValue;
+        selectedValue;
 
     }
 
   }
 
 
-  function reorderAllRelevantLeagues() {
-
-    /*
-      Kullanici tarafindan belirtilen iki alan.
-    */
+  function fixLeagueFilters() {
 
     reorderLeagueSelect(
       document.getElementById(
         "fc26League"
       )
     );
+
 
     reorderLeagueSelect(
       document.getElementById(
@@ -1573,7 +1631,7 @@ setTimeout(() => {
 
 
   // ----------------------------------------------------------
-  // SAYFA NUMARALI PAGINATION
+  // PAGINATION
   // ----------------------------------------------------------
 
   function parsePageInfo(
@@ -1587,22 +1645,15 @@ setTimeout(() => {
         );
 
 
-    if (!match) {
+    return match
+      ? {
+          current:
+            Number(match[1]),
 
-      return null;
-
-    }
-
-
-    return {
-
-      current:
-        Number(match[1]),
-
-      total:
-        Number(match[2])
-
-    };
+          total:
+            Number(match[2])
+        }
+      : null;
 
   }
 
@@ -1612,7 +1663,7 @@ setTimeout(() => {
     total
   ) {
 
-    const values =
+    const pages =
       new Set([
         1,
         total
@@ -1620,21 +1671,21 @@ setTimeout(() => {
 
 
     for (
-      let page =
+      let i =
         Math.max(
           1,
           current - 2
         );
-      page <=
+      i <=
         Math.min(
           total,
           current + 2
         );
-      page++
+      i++
     ) {
 
-      values.add(
-        page
+      pages.add(
+        i
       );
 
     }
@@ -1645,49 +1696,22 @@ setTimeout(() => {
     ) {
 
       for (
-        let page = 1;
-        page <=
+        let i = 1;
+        i <=
           Math.min(
             5,
             total
           );
-        page++
+        i++
       ) {
-
-        values.add(
-          page
-        );
-
-      }
-
-    }
-
-
-    if (
-      current >= total - 3
-    ) {
-
-      for (
-        let page =
-          Math.max(
-            1,
-            total - 4
-          );
-        page <= total;
-        page++
-      ) {
-
-        values.add(
-          page
-        );
-
+        pages.add(i);
       }
 
     }
 
 
     return [
-      ...values
+      ...pages
     ].sort(
       (a, b) =>
         a - b
@@ -1696,49 +1720,40 @@ setTimeout(() => {
   }
 
 
-  function clickToPage(
+  /*
+    Bu fonksiyon mevcut Ã–nceki/Sonraki butonlarÄ±nÄ±n click
+    eventlerini kullanÄ±yor ancak butonlar kullanÄ±cÄ±dan gizleniyor.
+  */
+
+  function goToPage(
     current,
     target,
-    prevButton,
-    nextButton
+    prev,
+    next
   ) {
 
     if (
-      target === current
+      current === target
     ) {
-
       return;
-
     }
 
 
     const button =
       target > current
-        ? nextButton
-        : prevButton;
+        ? next
+        : prev;
 
 
-    const count =
+    const steps =
       Math.abs(
         target - current
       );
 
 
-    if (!button) {
-
-      return;
-
-    }
-
-
-    /*
-      Mevcut katalog kodlarina dokunmadan
-      var olan onceki/sonraki aksiyonlarini kullan.
-    */
-
     for (
       let i = 0;
-      i < count;
+      i < steps;
       i++
     ) {
 
@@ -1747,6 +1762,7 @@ setTimeout(() => {
       ) {
         break;
       }
+
 
       button.click();
 
@@ -1761,42 +1777,63 @@ setTimeout(() => {
   }
 
 
-  function enhancePager({
-    root,
-    pageLabel,
-    prevButton,
-    nextButton,
+  function enhancePager(
+    prev,
+    next,
+    label,
     key
-  }) {
+  ) {
 
     if (
-      !root ||
-      !pageLabel ||
-      !prevButton ||
-      !nextButton
+      !prev ||
+      !next ||
+      !label
     ) {
-
       return;
-
     }
 
 
     const info =
       parsePageInfo(
-        pageLabel.textContent
+        label.textContent
       );
 
 
     if (!info) {
-
       return;
-
     }
 
 
+    const originalPager =
+      prev.parentElement;
+
+
+    if (!originalPager) {
+      return;
+    }
+
+
+    /*
+      Eski Ã–nceki / Sonraki ve 1 / 745 tamamen gÃ¶rÃ¼nmez.
+      Event listener'larÄ± Ã§alÄ±ÅŸmaya devam eder.
+    */
+
+    prev.classList.add(
+      "legacy-pager-control"
+    );
+
+    next.classList.add(
+      "legacy-pager-control"
+    );
+
+    label.classList.add(
+      "legacy-pager-control"
+    );
+
+
     let enhanced =
-      root.querySelector(
-        `[data-enhanced-pager="${key}"]`
+      originalPager.querySelector(
+        `[data-final-pager="${key}"]`
       );
 
 
@@ -1807,18 +1844,13 @@ setTimeout(() => {
           "div"
         );
 
-      enhanced.className =
-        "enhanced-pagination";
-
-      enhanced.dataset.enhancedPager =
+      enhanced.dataset.finalPager =
         key;
 
+      enhanced.className =
+        "final-pagination";
 
-      /*
-        Mevcut pager altina ekle.
-      */
-
-      root.appendChild(
+      originalPager.appendChild(
         enhanced
       );
 
@@ -1832,78 +1864,80 @@ setTimeout(() => {
       );
 
 
-    let html =
-      '<div class="enhanced-page-numbers">';
-
-
-    let previousPage =
+    let last =
       null;
+
+
+    let buttons =
+      "";
 
 
     pages.forEach(
       (page) => {
 
         if (
-          previousPage !== null &&
-          page - previousPage > 1
+          last !== null &&
+          page - last > 1
         ) {
 
-          html +=
-            '<span class="page-ellipsis">â€¦</span>';
+          buttons +=
+            '<span class="final-page-dots">\u2026</span>';
 
         }
 
 
-        html += `
+        buttons += `
           <button
             type="button"
-            class="page-number ${
+            data-final-page="${page}"
+            class="${
               page === info.current
                 ? "active"
                 : ""
-            }"
-            data-page-target="${page}">
+            }">
             ${page}
           </button>
         `;
 
 
-        previousPage =
+        last =
           page;
 
       }
     );
 
 
-    html +=
-      `</div>
+    enhanced.innerHTML = `
+      <div class="final-page-list">
+        ${buttons}
+      </div>
 
-       <form class="page-jump">
-         <label>
-           Sayfaya git
-           <input
-             type="number"
-             min="1"
-             max="${info.total}"
-             value="${info.current}"
-             inputmode="numeric"
-           >
-         </label>
+      <form class="final-page-jump">
 
-         <button
-           type="submit">
-           Git â†’
-         </button>
-       </form>`;
+        <label>
+          Sayfaya git
 
+          <input
+            type="number"
+            min="1"
+            max="${info.total}"
+            placeholder="1-${info.total}"
+            inputmode="numeric"
+          >
+        </label>
 
-    enhanced.innerHTML =
-      html;
+        <button
+          type="submit">
+          Git \u2192
+        </button>
+
+      </form>
+    `;
 
 
     enhanced
       .querySelectorAll(
-        "[data-page-target]"
+        "[data-final-page]"
       )
       .forEach(
         (button) => {
@@ -1911,13 +1945,13 @@ setTimeout(() => {
           button.onclick =
             () => {
 
-              clickToPage(
+              goToPage(
                 info.current,
                 Number(
-                  button.dataset.pageTarget
+                  button.dataset.finalPage
                 ),
-                prevButton,
-                nextButton
+                prev,
+                next
               );
 
             };
@@ -1928,7 +1962,7 @@ setTimeout(() => {
 
     const form =
       enhanced.querySelector(
-        ".page-jump"
+        ".final-page-jump"
       );
 
 
@@ -1956,11 +1990,11 @@ setTimeout(() => {
           );
 
 
-        clickToPage(
+        goToPage(
           info.current,
           target,
-          prevButton,
-          nextButton
+          prev,
+          next
         );
 
       };
@@ -1968,93 +2002,61 @@ setTimeout(() => {
   }
 
 
-  function enhanceAllPagers() {
+  function fixPagination() {
 
-    /*
-      Normal futbolcu katalogu
-    */
+    enhancePager(
 
-    const catalogPager =
       document.getElementById(
         "catalogPrev"
-      )?.parentElement;
+      ),
+
+      document.getElementById(
+        "catalogNext"
+      ),
+
+      document.getElementById(
+        "catalogPage"
+      ),
+
+      "catalog"
+
+    );
 
 
-    enhancePager({
+    enhancePager(
 
-      root:
-        catalogPager,
-
-      pageLabel:
-        document.getElementById(
-          "catalogPage"
-        ),
-
-      prevButton:
-        document.getElementById(
-          "catalogPrev"
-        ),
-
-      nextButton:
-        document.getElementById(
-          "catalogNext"
-        ),
-
-      key:
-        "career-catalog"
-
-    });
-
-
-    /*
-      FC26 katalog
-    */
-
-    const fcPager =
       document.getElementById(
         "fc26Prev"
-      )?.parentElement;
+      ),
 
+      document.getElementById(
+        "fc26Next"
+      ),
 
-    enhancePager({
+      document.getElementById(
+        "fc26Page"
+      ),
 
-      root:
-        fcPager,
+      "fc26"
 
-      pageLabel:
-        document.getElementById(
-          "fc26Page"
-        ),
-
-      prevButton:
-        document.getElementById(
-          "fc26Prev"
-        ),
-
-      nextButton:
-        document.getElementById(
-          "fc26Next"
-        ),
-
-      key:
-        "fc26-catalog"
-
-    });
+    );
 
   }
 
 
   // ----------------------------------------------------------
-  // BASLAT
+  // HEPSINI UYGULA
   // ----------------------------------------------------------
 
-  function applyCatalogUiFixes() {
+  function applyFinalFixes() {
 
-    removeTravelersFeature();
+    normalizeHomeMenu();
 
-    reorderAllRelevantLeagues();
+    fixLeagueFilters();
 
-    enhanceAllPagers();
+    fixPagination();
+
+    cleanCatalogText();
 
   }
 
@@ -2069,8 +2071,8 @@ setTimeout(() => {
       () => {
 
         setTimeout(
-          applyCatalogUiFixes,
-          400
+          applyFinalFixes,
+          300
         );
 
       }
@@ -2080,19 +2082,18 @@ setTimeout(() => {
   else {
 
     setTimeout(
-      applyCatalogUiFixes,
-      400
+      applyFinalFixes,
+      300
     );
 
   }
 
 
   /*
-    app.js bazi ekranlari sonradan render ediyor.
-    Bu nedenle degisiklikleri observer ile koru.
+    Sonsuz observer dÃ¶ngÃ¼sÃ¼nÃ¼ engellemek iÃ§in debounce.
   */
 
-  let scheduled =
+  let pending =
     false;
 
 
@@ -2100,27 +2101,25 @@ setTimeout(() => {
     new MutationObserver(
       () => {
 
-        if (scheduled) {
-
+        if (pending) {
           return;
-
         }
 
 
-        scheduled =
+        pending =
           true;
 
 
         setTimeout(
           () => {
 
-            scheduled =
+            pending =
               false;
 
-            applyCatalogUiFixes();
+            applyFinalFixes();
 
           },
-          150
+          250
         );
 
       }
@@ -2130,23 +2129,18 @@ setTimeout(() => {
   setTimeout(
     () => {
 
-      if (
-        document.body
-      ) {
-
-        observer.observe(
-          document.body,
-          {
-            childList: true,
-            subtree: true
-          }
-        );
-
-      }
+      observer.observe(
+        document.body,
+        {
+          childList: true,
+          subtree: true
+        }
+      );
 
     },
     800
   );
 
 })();
+
 
