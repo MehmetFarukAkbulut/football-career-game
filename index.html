@@ -5,14 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#071525" />
     <!-- DATA-PRELOAD-OPTIMIZATION -->
-    <link
-      rel="preload"
-      href="data/web-data.json"
-      as="fetch"
-      crossorigin="anonymous"
-      fetchpriority="high"
-    />
-    <meta
+<meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; img-src 'self' data: https:; style-src 'self'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co wss://*.supabase.co"
     />
@@ -26,7 +19,61 @@
     <link rel="stylesheet" href="web/multiple-choice.css?v=4" />
     <link rel="stylesheet" href="web/setup-fixes.css?v=1" />
     <link rel="stylesheet" href="web/fc26-enhancements.css?v=203" />
-  </head>
+  
+<style id="INSTANT-BACKGROUND-DATA-LOADING">
+
+/*
+  Never let the old full-screen loading layer block the site.
+*/
+#loading {
+    display: none !important;
+}
+
+/*
+  Small background status instead.
+*/
+body.background-data-loading::after {
+    content: "Futbol verileri arka planda yukleniyor...";
+
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+
+    z-index: 99999;
+
+    max-width: 260px;
+
+    padding: 9px 12px;
+
+    border: 1px solid #315775;
+    border-radius: 10px;
+
+    background: rgba(7, 21, 37, 0.95);
+    color: #9fc5df;
+
+    font-family: inherit;
+    font-size: 11px;
+
+    pointer-events: none;
+}
+
+body.background-data-ready::after {
+    display: none;
+}
+
+@media (max-width: 760px) {
+
+    body.background-data-loading::after {
+        right: 8px;
+        bottom: 8px;
+        max-width: calc(100vw - 32px);
+    }
+
+}
+
+</style>
+
+</head>
   <body>
     <div class="ambient one"></div>
     <div class="ambient two"></div>
@@ -505,10 +552,11 @@
     <script src="web/game-core.js?v=99" defer></script>
     <script src="web/online-core.js?v=9" defer></script>
     <script src="web/online-service.js?v=5" defer></script>
-    <script src="web/app.js?v=99" defer></script>
+    <script src="web/app.js?v=100" defer></script>
     <script src="web/fc26-enhancements.js?v=201" defer></script>
   </body>
 </html>
+
 
 
 

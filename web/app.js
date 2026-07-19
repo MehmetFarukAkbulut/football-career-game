@@ -2287,7 +2287,32 @@ $("#twinNext").onclick = nextTwinStep;
 $("#startTwin").onclick = startTwinGame;
 $$('input[name="twinMode"]').forEach((radio) => radio.onchange = () => { const duo = $('input[name="twinMode"]:checked').value === "duo"; $("#twinDifficultyWrap").hidden = duo; $("#twinNameTwoWrap").hidden = !duo; });
 async function init() {
+
+  /*
+    Show the application shell immediately.
+    Large football datasets continue loading in background.
+  */
+
+  window.IKI_FORMA_DATA_READY = false;
+  window.IKI_FORMA_FC26_READY = false;
+
+  document.body.classList.add(
+    "background-data-loading"
+  );
+
+  history.replaceState(
+    { view: "home" },
+    "",
+    "#home"
+  );
+
+  show(
+    "home",
+    { history: false }
+  );
+
   try {
+
     const [response, ratingResponse] = await Promise.all([
       fetch("data/web-data.json"),
       fetch("data/fc26-ratings.json?v=fc26-update-2"),
@@ -2298,6 +2323,13 @@ async function init() {
       response.json(),
       ratingResponse.json(),
     ]);
+
+    window.IKI_FORMA_DATA_READY = true;
+    window.IKI_FORMA_FC26_READY = true;
+
+    window.dispatchEvent(
+      new CustomEvent("iki-forma-data-ready")
+    );
     setupFcLeagueSelector("#ratingLeagueOptions");
     setupFcLeagueSelector("#mysteryLeagueOptions");
     const fcNations = [...new Set(FC26_DATA.players.filter((player) => player.gender === "M").map((player) => player.nation).filter(Boolean))].sort((a, b) => a.localeCompare(b, "tr"));
@@ -2365,17 +2397,22 @@ async function init() {
     $("#onlineHostSettings .league-options").addEventListener("change", () => { online.leagueSelectionDirty = true; });
     organizeHomeMenu();
     if (await restoreOnlineSession()) return;
-    const requested = location.hash.slice(1);
-    history.replaceState({ view: "home" }, "", "#home");
-    show(
-      document.getElementById(requested)?.classList.contains("view")
-        ? requested
-        : "home",
+    document.body.classList.remove(
+      "background-data-loading"
+    );
+
+    document.body.classList.add(
+      "background-data-ready"
+    );
+
+    window.dispatchEvent(
+      new CustomEvent("iki-forma-ui-ready")
     );
   } catch (error) {
     $("#loadingText").textContent = `Site yüklenemedi: ${error.message}`;
   }
 }
 init();
+
 
 
