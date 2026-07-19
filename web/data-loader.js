@@ -43,31 +43,17 @@
 
   function yieldThread() {
 
+    /*
+      Parsing chunks must not freeze touch/scroll input,
+      but required data should also not wait for long idle periods.
+    */
+
     return new Promise(
-      (resolve) => {
-
-        if (
-          "requestIdleCallback" in window
-        ) {
-
-          requestIdleCallback(
-            () => resolve(),
-            {
-              timeout: 60
-            }
-          );
-
-        }
-        else {
-
-          setTimeout(
-            resolve,
-            0
-          );
-
-        }
-
-      }
+      (resolve) =>
+        setTimeout(
+          resolve,
+          0
+        )
     );
 
   }
@@ -557,5 +543,6 @@
   };
 
 })();
+
 
 
