@@ -2382,3 +2382,173 @@
 
 /* END-MOBILE-GAME-LAYOUT-FIX-V4 */
 
+
+/* MYSTERY-MOBILE-COMPACT-V5 */
+
+@media (max-width: 760px) {
+
+  #mysteryGame .mystery-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  #mysteryGame .mystery-feedback {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 12px 9px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  #mysteryGame .mystery-feedback h3 {
+    margin: 0 0 12px !important;
+  }
+
+  /*
+    6 kolon:
+    Oyuncu | Ulke | Takim | Mevki | Yas | OVR
+  */
+
+  #mysteryGame .mystery-head,
+  #mysteryGame .mystery-row {
+    display: grid !important;
+
+    grid-template-columns:
+      minmax(82px, 1.55fr)
+      minmax(44px, .72fr)
+      minmax(50px, .85fr)
+      minmax(42px, .70fr)
+      34px
+      38px !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    gap: 4px !important;
+
+    align-items: stretch !important;
+
+    box-sizing: border-box !important;
+  }
+
+  #mysteryGame .mystery-head {
+    margin-bottom: 6px !important;
+  }
+
+  #mysteryGame .mystery-head > span {
+    min-width: 0 !important;
+
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+
+    text-align: center !important;
+
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  #mysteryGame .mystery-head > span:first-child {
+    text-align: left !important;
+  }
+
+  #mysteryGame .mystery-row {
+    margin-bottom: 6px !important;
+  }
+
+  #mysteryGame .mystery-row > b {
+    display: flex !important;
+    align-items: center !important;
+
+    min-width: 0 !important;
+
+    padding: 5px 3px !important;
+
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  #mysteryGame .mystery-clue {
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    min-width: 0 !important;
+
+    padding: 5px 2px !important;
+
+    border-radius: 9px !important;
+  }
+
+  #mysteryGame .mystery-clue small {
+    width: 100% !important;
+
+    font-size: 8px !important;
+    line-height: 1.05 !important;
+
+    text-align: center !important;
+
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  #mysteryGame .mystery-clue strong {
+    margin-top: 3px !important;
+
+    font-size: 19px !important;
+    line-height: 1 !important;
+  }
+
+  #mysteryGame .mystery-help {
+    display: block !important;
+
+    margin-top: 12px !important;
+
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+  }
+
+}
+
+
+@media (max-width: 390px) {
+
+  #mysteryGame .mystery-head,
+  #mysteryGame .mystery-row {
+
+    grid-template-columns:
+      minmax(74px, 1.45fr)
+      41px
+      46px
+      39px
+      30px
+      34px !important;
+
+    gap: 3px !important;
+  }
+
+  #mysteryGame .mystery-row > b {
+    font-size: 8px !important;
+  }
+
+  #mysteryGame .mystery-clue small {
+    font-size: 7px !important;
+  }
+
+  #mysteryGame .mystery-clue strong {
+    font-size: 17px !important;
+  }
+
+}
+
+/* END-MYSTERY-MOBILE-COMPACT-V5 */
+

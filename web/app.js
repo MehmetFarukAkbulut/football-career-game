@@ -2132,7 +2132,13 @@ function setupFcLeagueSelector(selector) {
 }
 
 function mysteryArrow(value) {
-  return value === "equal" ? "✓" : value === "up" ? "↑" : value === "down" ? "↓" : "✕";
+  return value === "equal" || value === "exact"
+    ? "✓"
+    : value === "up"
+      ? "↑"
+      : value === "down"
+        ? "↓"
+        : "✕";
 }
 
 function nextMysteryPlayer() {
@@ -4290,6 +4296,7 @@ async function init() {
   }
 }
 init();
+
 
 
 
