@@ -1,64 +1,67 @@
 {
-  "name": "iki-forma",
-  "version": "2.0.0",
-  "description": "Yerel SQLite destekli futbol kariyer oyunu",
-  "author": "İki Forma",
-  "main": "main.js",
-  "private": true,
-  "scripts": {
-    "start": "node scripts/launch-electron.js",
-    "dev": "node scripts/launch-electron.js",
-    "test": "node --test tests/*.test.js",
-    "test:web": "node --test tests/normalize.test.js tests/web-data.test.js tests/game-core.test.js tests/online-core.test.js tests/web-model.test.js tests/ipc.test.js tests/navigation-source.test.js tests/random-five-core.test.js tests/twin-core.test.js tests/fc26-ratings.test.js tests/hex-core.test.js tests/trumps-core.test.js tests/xi-draft-core.test.js",
-    "lint": "node scripts/lint.js",
-    "data:build": "node scripts/build-database.js",
-    "data:update": "node scripts/download-open-data.js && node scripts/import-open-data.js && node scripts/import-curated-careers.js",
-    "data:update:wikidata": "node scripts/update-data.js",
-    "data:import-open": "node scripts/import-open-data.js",
-    "data:curated": "node scripts/import-curated-careers.js",
-    "data:verify": "node scripts/verify-data.js",
-    "data:audit": "node scripts/audit-web-data.js",
-    "web:export": "node scripts/export-web-data.js && node scripts/enrich-career-statistics.js && node scripts/enrich-popularity.js",
-    "data:popularity": "node scripts/enrich-popularity.js",
-    "ratings:fc26": "node scripts/update-fc26-ratings.js",
-    "assets:update": "node scripts/update-assets.js",
-    "assets:dry-run": "node scripts/update-assets.js --dry-run",
-    "web:smoke": "node scripts/launch-smoke.js",
-    "web:serve": "npx serve .",
-    "build": "npm run build:portable",
-    "build:portable": "npm test && npm run lint && electron-builder --win portable"
-  },
-  "devDependencies": {
-    "electron": "^43.1.1",
-    "electron-builder": "^26.0.12",
-    "i18n-iso-countries": "^7.14.0",
-    "prettier": "^3.6.2"
-  },
-  "build": {
-    "appId": "com.ikiforma.app",
-    "productName": "İki Forma",
-    "artifactName": "Iki-Forma.${ext}",
-    "compression": "normal",
-    "asar": true,
-    "files": [
-      "main.js",
-      "preload.js",
-      "src/**/*",
-      "data/football.db",
-      "data/clubs.json",
-      "package.json"
-    ],
-    "extraResources": [
-      {
-        "from": "data/football.db",
-        "to": "data/football.db"
-      }
-    ],
-    "directories": {
-      "output": "dist"
-    },
-    "win": {
-      "target": "portable"
-    }
-  }
+    "name":  "formax",
+    "version":  "2.0.0",
+    "description":  "FormaX futbol oyunlari ve futbolcu veri platformu",
+    "author":  "FormaX",
+    "main":  "main.js",
+    "private":  true,
+    "scripts":  {
+                    "start":  "node scripts/launch-electron.js",
+                    "dev":  "node scripts/launch-electron.js",
+                    "test":  "node --test tests/*.test.js",
+                    "test:web":  "node --test tests/normalize.test.js tests/web-data.test.js tests/game-core.test.js tests/online-core.test.js tests/web-model.test.js tests/ipc.test.js tests/navigation-source.test.js tests/random-five-core.test.js tests/twin-core.test.js tests/fc26-ratings.test.js tests/hex-core.test.js tests/trumps-core.test.js tests/xi-draft-core.test.js",
+                    "lint":  "node scripts/lint.js",
+                    "data:build":  "node scripts/build-database.js",
+                    "data:update":  "node scripts/download-open-data.js && node scripts/import-open-data.js && node scripts/import-curated-careers.js",
+                    "data:update:wikidata":  "node scripts/update-data.js",
+                    "data:import-open":  "node scripts/import-open-data.js",
+                    "data:curated":  "node scripts/import-curated-careers.js",
+                    "data:verify":  "node scripts/verify-data.js",
+                    "data:audit":  "node scripts/audit-web-data.js",
+                    "web:export":  "node scripts/export-web-data.js && node scripts/enrich-career-statistics.js && node scripts/enrich-popularity.js",
+                    "data:popularity":  "node scripts/enrich-popularity.js",
+                    "ratings:fc26":  "node scripts/update-fc26-ratings.js",
+                    "assets:update":  "node scripts/update-assets.js",
+                    "assets:dry-run":  "node scripts/update-assets.js --dry-run",
+                    "web:smoke":  "node scripts/launch-smoke.js",
+                    "web:serve":  "npx serve .",
+                    "build":  "npm run build:portable",
+                    "build:portable":  "npm test && npm run lint && electron-builder --win portable",
+                    "data:current-stats":  "node scripts/refresh-current-player-stats.js",
+                    "data:chunks":  "node scripts/build-data-chunks.js",
+                    "data:refresh:formax":  "npm run data:update && npm run web:export && npm run data:current-stats && npm run data:chunks"
+                },
+    "devDependencies":  {
+                            "electron":  "^43.1.1",
+                            "electron-builder":  "^26.0.12",
+                            "i18n-iso-countries":  "^7.14.0",
+                            "prettier":  "^3.6.2"
+                        },
+    "build":  {
+                  "appId":  "com.formax.app",
+                  "productName":  "FormaX",
+                  "artifactName":  "FormaX.${ext}",
+                  "compression":  "normal",
+                  "asar":  true,
+                  "files":  [
+                                "main.js",
+                                "preload.js",
+                                "src/**/*",
+                                "data/football.db",
+                                "data/clubs.json",
+                                "package.json"
+                            ],
+                  "extraResources":  [
+                                         {
+                                             "from":  "data/football.db",
+                                             "to":  "data/football.db"
+                                         }
+                                     ],
+                  "directories":  {
+                                      "output":  "dist"
+                                  },
+                  "win":  {
+                              "target":  "portable"
+                          }
+              }
 }
