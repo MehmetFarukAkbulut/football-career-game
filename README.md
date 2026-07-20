@@ -1,4 +1,4 @@
-# İki Forma
+# FormaX
 
 ## FC 26 Reyting Düellosu
 
@@ -42,13 +42,13 @@ Kariyer Kozları, açık oyuncu kartındaki doğrulanmış kariyer maçı, gol, 
 
 Zor soru havuzu yetmezse normal, ardından kolay havuz tekrarsız biçimde kullanılır. Ülke × Kulüp çoktan seçmelide tüm seçenekler hedef vatandaşlıktandır. Izgara; Kulüp × Kulüp, Lig × Kulüp, Ülke × Kulüp ve Karışık kriterlerini serbest metin veya çoktan seçmeli destekler; lig kriterleri Premier League, LaLiga, Serie A, Bundesliga, Ligue 1 ve Süper Lig ile sınırlıdır.
 
-GitHub Pages üzerinde çalışan, 28 binden fazla doğrulanmış oyuncu kariyerini kullanan futbol bilgi oyunu. İki Forma ve Ülke × Forma oyunları serbest metin veya dört seçenekli oynanabilir; tek oyuncu, aynı cihazda iki oyuncu, bilgisayara karşı ve Supabase destekli beş kişiye kadar online oda biçimleri bulunur.
+GitHub Pages üzerinde çalışan, 28 binden fazla doğrulanmış oyuncu kariyerini kullanan futbol bilgi oyunu. FormaX ve Ülke × Forma oyunları serbest metin veya dört seçenekli oynanabilir; tek oyuncu, aynı cihazda iki oyuncu, bilgisayara karşı ve Supabase destekli beş kişiye kadar online oda biçimleri bulunur.
 
 Kulüp Izgarası, Kariyer İkizi ve Rastgele Beşler de aynı oda kodlu online altyapıyı kullanır. Kariyer İkizi ve Rastgele Beşler serbest metin veya dört seçenekli oynanabilir. Futbolcular farklı sorularda ve hücrelerde tekrar kullanılabilir; bunun için ayrıca bir ayar gösterilmez.
 
 ## Oyun ve soru kuralları
 
-- İki Forma doğru cevabı iki hedef kulübün de A takımında oynamıştır. Yanlış seçeneklerin her biri kulüplerden tam olarak birinde oynamıştır.
+- FormaX doğru cevabı iki hedef kulübün de A takımında oynamıştır. Yanlış seçeneklerin her biri kulüplerden tam olarak birinde oynamıştır.
 - Ülke × Forma doğru cevabı hedef vatandaşlık ve A takım kulübü koşullarının ikisini sağlar. Yanlış seçeneklerin her biri tam olarak bir koşulu sağlar.
 - Seçenekler isimle değil `playerId` ile doğrulanır. Duplicate ID, birden fazla doğru, eksik kariyer ve tekrar kullanım kontrollerinden geçmeyen soru gösterilmez.
 - Kolay seviye `elite`/`popular`, normal seviye `elite`/`popular`/`standard`, zor seviye tüm doğrulanmış kulüpleri kullanabilir. Galatasaray, Fenerbahçe, Beşiktaş ve Trabzonspor kolay/normal havuzundadır.
@@ -95,7 +95,7 @@ Her değişiklik `FOR UPDATE` kilidi ve `stateVersion` kontrolü kullanır. Eski
 
 Senkronize state; oda kodu, en fazla beş oyuncu, bağlantı/hazır durumu, kilitli ayarlar, soru kimliği, kulüp/ülke kimlikleri, seçenek kimlikleri, oyuncu bazlı kapalı cevaplar, sonuç, skor, soru sırası ve sürümü taşır. Her oyuncunun cevabı ayrı kaydedilir; doğru cevap ve tüm seçimler ancak herkes cevapladıktan sonra iki saniyelik sonuç aşamasında açılır. Oturum token'ı `localStorage` içinde tutulur; sayfa yenilendiğinde oda tekrar alınır. Realtime bildirimi kaçarsa sonraki RPC yine yetkili güncel state'i döndürür.
 
-Oda maçtan sonra kapanmaz. Son sıralama lobide gösterilir; oda sahibi aynı oyunu yeniden başlatabilir veya İki Forma, Ülke × Kulüp, Kulüp Izgarası, Kariyer İkizi ve Rastgele Beşler arasında yeni oyun/kurallar seçebilir. Her yeni maç öncesinde bütün oyuncular yeniden hazır olmalıdır.
+Oda maçtan sonra kapanmaz. Son sıralama lobide gösterilir; oda sahibi aynı oyunu yeniden başlatabilir veya FormaX, Ülke × Kulüp, Kulüp Izgarası, Kariyer İkizi ve Rastgele Beşler arasında yeni oyun/kurallar seçebilir. Her yeni maç öncesinde bütün oyuncular yeniden hazır olmalıdır.
 
 Gerçek cihazlar arası çalışma Supabase projesi ve public yapılandırma olmadan etkinleşmez. Disabled durumda arayüz kurulum gerektiğini açıkça söyler; sahte oda sistemini production online oyun olarak sunmaz.
 
@@ -125,3 +125,4 @@ npm run assets:dry-run
 ## GitHub Pages
 
 Pull request'lerde `.github/workflows/pages.yml` test ve lint çalıştırır. `main` push'u başarılı olursa aynı workflow statik siteyi GitHub Pages'e dağıtır. Supabase ayarları eklenmeden çevrimdışı oyunların tamamı çalışmaya devam eder; online giriş yapılandırma mesajı gösterir.
+

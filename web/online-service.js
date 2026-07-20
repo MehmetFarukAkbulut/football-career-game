@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 (function initOnlineService(global) {
   const config = global.IKI_FORMA_CONFIG || {};
   const effectiveMode = new URLSearchParams(location.search).get("onlineMock") === "1" ? "local" : config.onlineMode;
@@ -83,3 +83,4 @@
   }
   global.IkiFormaOnlineService = { createRoomService, configured: effectiveMode === "local" || Boolean(config.supabaseUrl && config.supabasePublishableKey), isLocal: effectiveMode === "local", randomToken, normalizeCode, encoder };
 })(window);
+

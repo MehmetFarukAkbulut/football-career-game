@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 document.head.insertAdjacentHTML(
   "beforeend",
   '<link rel="icon" type="image/svg+xml" href="favicon.svg">',
@@ -228,7 +228,7 @@ function progressiveViewReady(
 
 
   /*
-    Setup sayfalarÄ± metadata geldiÄŸi anda kullanÄ±labilir.
+    Setup sayfaları metadata geldiği anda kullanılabilir.
   */
 
   if (
@@ -244,7 +244,7 @@ function progressiveViewReady(
 
 
   /*
-    Listeleme ekranlarÄ± ilk oyuncu chunk'Ä± ile aÃ§Ä±lÄ±r.
+    Listeleme ekranları ilk oyuncu chunk'ı ile açılır.
   */
 
   if (
@@ -278,7 +278,7 @@ function progressiveViewReady(
 
 
   /*
-    FC26 oyunlarÄ± ilk kullanÄ±labilir havuz geldiÄŸinde baÅŸlar.
+    FC26 oyunları ilk kullanılabilir havuz geldiğinde başlar.
   */
 
   if (
@@ -295,8 +295,8 @@ function progressiveViewReady(
 
 
   /*
-    Kariyer oyunlarÄ± bÃ¼tÃ¼n 28 bin oyuncuyu beklemez.
-    YaklaÅŸÄ±k 2-3 chunk yeterli olduÄŸunda ilk deneme yapÄ±lÄ±r.
+    Kariyer oyunları bütün 28 bin oyuncuyu beklemez.
+    Yaklaşık 2-3 chunk yeterli olduğunda ilk deneme yapılır.
   */
 
   if (
@@ -4086,7 +4086,7 @@ function bootstrapSetupShell(data) {
 
   setupScreen(
     "#classicSetup",
-    "Iki Forma",
+    "FormaX",
     "Iki kulupte de A takim formasi giymis futbolcuyu bul.",
     "clubs",
   );
@@ -4255,7 +4255,7 @@ async function init() {
     );
     setupScreen(
       "#classicSetup",
-      "İki Forma",
+      "FormaX",
       "İki kulüpte de A takım forması giymiş futbolcuyu bul.",
       "clubs",
     );
@@ -4296,6 +4296,7 @@ async function init() {
   }
 }
 init();
+
 
 
 

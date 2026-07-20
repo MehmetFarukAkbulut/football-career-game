@@ -47,3 +47,4 @@ app.whenReady().then(()=>{
 }).catch(error=>{if(logger)logger.error('Başlatma hatası',error); app.quit();});
 app.on('window-all-closed',()=>{if(process.platform!=='darwin')app.quit();});
 app.on('before-quit',()=>{try{database?.close();}catch{}});
+

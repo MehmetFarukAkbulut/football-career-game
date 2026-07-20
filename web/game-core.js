@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 const DIFFICULTIES = {
   easy: { accuracy: 0.52, delay: [1800, 3500] },
@@ -796,5 +796,6 @@ const api = {
 };
 if (typeof module !== "undefined") module.exports = api;
 if (typeof window !== "undefined") window.IkiFormaCore = api;
+
 
 

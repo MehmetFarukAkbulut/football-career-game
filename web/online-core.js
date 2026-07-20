@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 const ROOM_TTL_MS = 2 * 60 * 60 * 1000;
 const MAX_ROOM_PLAYERS = 5;
 const ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -147,3 +147,4 @@ function isRoomExpired(state, now = Date.now()) { return !state || now >= state.
 const onlineApi = { ROOM_TTL_MS, MAX_ROOM_PLAYERS, generateRoomCode, createOnlineRoom, joinOnlineRoom, updateConnection, setOnlineReady, leaveOnlineMatch, startOnlineGame, publishOnlineQuestion, submitOnlineAnswer, timeoutOnlineQuestion, submitOnlineSpecialGuess, passOnlineTurn, finishOnlineGame, configureOnlineMatch, syncOnlineModeState, isRoomExpired };
 if (typeof module !== "undefined") module.exports = onlineApi;
 if (typeof window !== "undefined") window.IkiFormaOnlineCore = onlineApi;
+

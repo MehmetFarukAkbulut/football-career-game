@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 (() => {
   const STYLE_ID = "fc26-enhancements-style";
@@ -805,7 +805,7 @@ function buildFcCatalogSection() {
       grid.innerHTML = `
         <div class="surface fc26-catalog-empty">
           <h3>Sonuç bulunamadı</h3>
-          <p>Filtreleri deÄŸiÅŸtirerek tekrar deneyin.</p>
+          <p>Filtreleri değiştirerek tekrar deneyin.</p>
         </div>
       `;
 
@@ -854,7 +854,7 @@ function buildFcCatalogSection() {
                 </h3>
 
                 <p>
-                  ${esc(player.nation || "Ãœlke bilinmiyor")}
+                  ${esc(player.nation || "Ülke bilinmiyor")}
                   ·
                   ${esc(positions || "Mevki bilinmiyor")}
                 </p>
@@ -1072,10 +1072,10 @@ function buildFcCatalogSection() {
 
 
     /*
-      Ã–nceki clone yamalarının oluÅŸturduÄŸu
-      sahte Futbolcu KataloÄŸu kartlarını kaldır.
+      Önceki clone yamalarının oluşturduğu
+      sahte Futbolcu Kataloğu kartlarını kaldır.
 
-      Gerçek katalog kartı data-view="catalog" taÅŸıyor.
+      Gerçek katalog kartı data-view="catalog" taşıyor.
     */
 
     [...root.children]
@@ -1091,7 +1091,7 @@ function buildFcCatalogSection() {
 
 
           if (
-            /Futbolcu KataloÄŸu/i.test(text) &&
+            /Futbolcu Kataloğu/i.test(text) &&
             card.dataset.view !== "catalog" &&
             !card.hasAttribute(
               "data-real-fc26-catalog-card"
@@ -1147,7 +1147,7 @@ function buildFcCatalogSection() {
 
 
     /*
-      Hiç yoksa clone kullanmadan sıfırdan oluÅŸtur.
+      Hiç yoksa clone kullanmadan sıfırdan oluştur.
     */
 
     if (!fcCard) {
@@ -1204,15 +1204,15 @@ function buildFcCatalogSection() {
 
 
     /*
-      Listener çoÄŸalmasını engellemek için property kullan.
+      Listener çoğalmasını engellemek için property kullan.
     */
 
     fcCard.onclick = null;
 
 /*
       Araçlar son bölümde:
-      Kulüp KarÅŸılaÅŸtır
-      Futbolcu KataloÄŸu
+      Kulüp Karşılaştır
+      Futbolcu Kataloğu
       FC26 Katalog
     */
 
@@ -1272,7 +1272,7 @@ function buildFcCatalogSection() {
 
   /*
     Bayraklar dosyaya gerçek emoji olarak yazılmıyor.
-    Unicode escape kullanıldıÄŸı için encoding bozulamaz.
+    Unicode escape kullanıldığı için encoding bozulamaz.
   */
 
   const FLAGS = {
@@ -1333,7 +1333,7 @@ function buildFcCatalogSection() {
 
   /*
     Kesin ilk 6.
-    Bundesliga 2 gibi ligler Bundesliga ile eÅŸleÅŸmez.
+    Bundesliga 2 gibi ligler Bundesliga ile eşleşmez.
   */
 
   function topLeagueGroup(name) {
@@ -1558,7 +1558,7 @@ function buildFcCatalogSection() {
 
 
     /*
-      Bilinen ülke bayraÄŸını alt liglere de ver.
+      Bilinen ülke bayrağını alt liglere de ver.
     */
 
     let flag =
@@ -1603,7 +1603,7 @@ function buildFcCatalogSection() {
       */
       
       /*
-        SaÄŸlam emoji bayraÄŸı varsa da kaldırıp yeniden ekle.
+        Sağlam emoji bayrağı varsa da kaldırıp yeniden ekle.
       */
       .replace(
         /^\p{Regional_Indicator}{2}\s*/u,
@@ -1914,7 +1914,7 @@ function buildFcCatalogSection() {
 
 
   /*
-    Bu fonksiyon mevcut Ã–nceki/Sonraki butonlarının click
+    Bu fonksiyon mevcut Önceki/Sonraki butonlarının click
     eventlerini kullanıyor ancak butonlar kullanıcıdan gizleniyor.
   */
 
@@ -2007,8 +2007,8 @@ function buildFcCatalogSection() {
 
 
     /*
-      Eski Ã–nceki / Sonraki ve 1 / 745 tamamen görünmez.
-      Event listener'ları çalıÅŸmaya devam eder.
+      Eski Önceki / Sonraki ve 1 / 745 tamamen görünmez.
+      Event listener'ları çalışmaya devam eder.
     */
 
     prev.classList.add(

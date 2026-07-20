@@ -12,3 +12,4 @@ contextBridge.exposeInMainWorld('ikiForma',Object.freeze({
   dataStatus:()=>invoke('data:status'), updateData:()=>invoke('data:update'), clearCache:()=>invoke('cache:clear'),
   openExternal:url=>invoke('external:open',url)
 }));
+
