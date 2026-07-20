@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -103,3 +103,39 @@ test("Gizli Futbolcu sekiz tahmin ve lig filtresiyle ana menüde bulunur", async
   assert.match(source, /evaluateMysteryGuess/);
 });
 
+
+test("Gizli Futbolcu yalnÄ±zca asÄ±l mevkiyi doÄŸru kabul eder", () => {
+  const target = {
+    eaId: 100,
+    nation: "TÃ¼rkiye",
+    team: "FormaX FC",
+    position: "LB",
+    alternativePositions: ["LM", "LWB", "RB"],
+    age: 25,
+    overall: 82
+  };
+
+  const samePrimary = {
+    ...target,
+    eaId: 101,
+    position: "LB",
+    alternativePositions: []
+  };
+
+  const alternativeOnly = {
+    ...target,
+    eaId: 102,
+    position: "RB",
+    alternativePositions: ["LB", "RM"]
+  };
+
+  assert.equal(
+    core.evaluateMysteryGuess(target, samePrimary).position,
+    "exact"
+  );
+
+  assert.equal(
+    core.evaluateMysteryGuess(target, alternativeOnly).position,
+    "wrong"
+  );
+});

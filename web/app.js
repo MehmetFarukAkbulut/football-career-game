@@ -2173,13 +2173,43 @@ function nextMysteryPlayer() {
 }
 
 function finishMysteryPlayer(correct) {
+  const target = mysteryGame.target;
+
   $("#mysteryPhoto").classList.add("revealed");
-  $("#mysteryName").textContent = mysteryGame.target.name;
+  $("#mysteryName").textContent = target.name;
+
   $("#mysteryInput").disabled = true;
   $("#mysterySuggestions").innerHTML = "";
-  if (correct) mysteryGame.score++;
-  $("#mysteryMessage").textContent = correct ? `✓ Doğru! ${mysteryGame.guesses.length}. tahminde buldun.` : `Tahmin hakkı bitti. Doğru cevap: ${mysteryGame.target.name}`;
-  $("#mysteryNext").textContent = mysteryGame.round >= mysteryGame.rounds ? "Sonucu gör →" : "Sonraki futbolcu →";
+
+  if (correct) {
+    mysteryGame.score++;
+
+    $("#mysteryMessage").innerHTML =
+      `<strong class="mystery-correct-answer">âœ“ DoÄŸru!</strong> ` +
+      `${mysteryGame.guesses.length}. tahminde buldun.`;
+  } else {
+    $("#mysteryMessage").innerHTML = `
+      <span class="mystery-loss-title">
+        Tahmin hakkÄ±n bitti. DoÄŸru cevap:
+        <strong>${esc(target.name)}</strong>
+      </span>
+
+      <span class="mystery-answer-details">
+        <span><small>Ãœlke</small><b>${esc(target.nation || "Bilinmiyor")}</b></span>
+        <span><small>TakÄ±m</small><b>${esc(target.team || "Bilinmiyor")}</b></span>
+        <span><small>Lig</small><b>${esc(target.league || "Bilinmiyor")}</b></span>
+        <span><small>Mevki</small><b>${esc(target.position || "Bilinmiyor")}</b></span>
+        <span><small>YaÅŸ</small><b>${esc(target.age ?? "â€”")}</b></span>
+        <span><small>OVR</small><b>${esc(target.overall ?? "â€”")}</b></span>
+      </span>
+    `;
+  }
+
+  $("#mysteryNext").textContent =
+    mysteryGame.round >= mysteryGame.rounds
+      ? "Sonucu gÃ¶r â†’"
+      : "Sonraki futbolcu â†’";
+
   $("#mysteryNext").hidden = false;
 }
 

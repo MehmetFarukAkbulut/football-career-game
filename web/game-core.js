@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 const DIFFICULTIES = {
   easy: { accuracy: 0.52, delay: [1800, 3500] },
@@ -575,13 +575,13 @@ function compareRatingPlayers(left, right, selectedId) {
 function evaluateMysteryGuess(target, guess) {
   if (!target || !guess) return null;
   const direction = (targetValue, guessValue) => +targetValue === +guessValue ? "equal" : +targetValue > +guessValue ? "up" : "down";
-  const targetPositions = new Set([target.position, ...(target.alternativePositions || [])]);
-  const guessPositions = [guess.position, ...(guess.alternativePositions || [])];
+  const targetPrimaryPosition = String(target.position || "").trim().toUpperCase();
+  const guessPrimaryPosition = String(guess.position || "").trim().toUpperCase();
   return {
     correct: +target.eaId === +guess.eaId,
     nation: target.nation === guess.nation ? "exact" : "wrong",
     team: target.team === guess.team ? "exact" : "wrong",
-    position: guessPositions.some((position) => targetPositions.has(position)) ? "exact" : "wrong",
+    position: targetPrimaryPosition && targetPrimaryPosition === guessPrimaryPosition ? "exact" : "wrong",
     age: direction(target.age, guess.age),
     overall: direction(target.overall, guess.overall),
   };

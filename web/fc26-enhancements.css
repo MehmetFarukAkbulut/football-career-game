@@ -2801,3 +2801,69 @@
 
 /* END-MYSTERY-MOBILE-FINAL-V6 */
 
+
+/* MYSTERY-ANSWER-REVEAL-V8 */
+
+#mysteryMessage .mystery-loss-title {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#mysteryMessage .mystery-answer-details {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+#mysteryMessage .mystery-answer-details > span {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 7px 5px;
+  border: 1px solid rgba(82, 151, 194, .34);
+  border-radius: 9px;
+  background: rgba(7, 28, 45, .55);
+  text-align: center;
+}
+
+#mysteryMessage .mystery-answer-details small {
+  margin-bottom: 3px;
+  font-size: 9px;
+  opacity: .72;
+}
+
+#mysteryMessage .mystery-answer-details b {
+  min-width: 0;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#mysteryMessage .mystery-correct-answer {
+  color: #55e4b0;
+}
+
+@media (max-width: 760px) {
+  #mysteryMessage .mystery-answer-details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  #mysteryMessage .mystery-answer-details > span {
+    padding: 6px 3px;
+  }
+
+  #mysteryMessage .mystery-answer-details small {
+    font-size: 8px;
+  }
+
+  #mysteryMessage .mystery-answer-details b {
+    font-size: 9px;
+  }
+}
+
+/* END-MYSTERY-ANSWER-REVEAL-V8 */
