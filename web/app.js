@@ -2185,30 +2185,30 @@ function finishMysteryPlayer(correct) {
     mysteryGame.score++;
 
     $("#mysteryMessage").innerHTML =
-      `<strong class="mystery-correct-answer">âœ“ DoÄŸru!</strong> ` +
+      `<strong class="mystery-correct-answer">\u2713 Do\u011fru!</strong> ` +
       `${mysteryGame.guesses.length}. tahminde buldun.`;
   } else {
     $("#mysteryMessage").innerHTML = `
       <span class="mystery-loss-title">
-        Tahmin hakkÄ±n bitti. DoÄŸru cevap:
+        Tahmin hakk\u0131n bitti. Do\u011fru cevap:
         <strong>${esc(target.name)}</strong>
       </span>
 
       <span class="mystery-answer-details">
-        <span><small>Ãœlke</small><b>${esc(target.nation || "Bilinmiyor")}</b></span>
-        <span><small>TakÄ±m</small><b>${esc(target.team || "Bilinmiyor")}</b></span>
+        <span><small>\u00dclke</small><b>${esc(target.nation || "Bilinmiyor")}</b></span>
+        <span><small>Tak\u0131m</small><b>${esc(target.team || "Bilinmiyor")}</b></span>
         <span><small>Lig</small><b>${esc(target.league || "Bilinmiyor")}</b></span>
         <span><small>Mevki</small><b>${esc(target.position || "Bilinmiyor")}</b></span>
-        <span><small>YaÅŸ</small><b>${esc(target.age ?? "â€”")}</b></span>
-        <span><small>OVR</small><b>${esc(target.overall ?? "â€”")}</b></span>
+        <span><small>Ya\u015f</small><b>${esc(target.age ?? "\u2014")}</b></span>
+        <span><small>OVR</small><b>${esc(target.overall ?? "\u2014")}</b></span>
       </span>
     `;
   }
 
   $("#mysteryNext").textContent =
     mysteryGame.round >= mysteryGame.rounds
-      ? "Sonucu gÃ¶r â†’"
-      : "Sonraki futbolcu â†’";
+      ? "Sonucu g\u00f6r \u2192"
+      : "Sonraki futbolcu \u2192";
 
   $("#mysteryNext").hidden = false;
 }
