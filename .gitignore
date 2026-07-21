@@ -11,3 +11,4 @@ build-output.log
 Thumbs.db
 .env*
 !.env.example
+data/web-data-before-refresh.json
