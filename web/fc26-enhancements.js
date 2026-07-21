@@ -1031,7 +1031,21 @@ function buildFcCatalogSection() {
   // ANA MENU
   // ----------------------------------------------------------
 
+  let homeMenuNormalized = false;
+
   function normalizeHomeMenu() {
+
+    /*
+      Home menu siralamasi DOM MutationObserver tarafindan
+      tekrar tekrar calistirilmamali.
+
+      appendChild mevcut elementi DOM'dan sokup yeniden
+      yerlestirdigi icin hover/click state'ini bozuyordu.
+    */
+
+    if (homeMenuNormalized) {
+      return;
+    }
 
     const root =
       document.querySelector(
@@ -1245,6 +1259,12 @@ function buildFcCatalogSection() {
       fcCard
     );
 
+
+    /*
+      Bundan sonra MutationObserver bu fonksiyonu cagirsa
+      bile menu kartlarina tekrar dokunulmayacak.
+    */
+    homeMenuNormalized = true;
   }
 
 
@@ -2335,6 +2355,9 @@ function buildFcCatalogSection() {
   );
 
 })();
+
+
+
 
 
 
