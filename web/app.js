@@ -3179,6 +3179,44 @@ function tick() {
   $("#timebar").style.width =
     `${Math.max(0, (game.left / game.seconds) * 100)}%`;
 }
+function isCorrectFreeTextPlayer(player) {
+  if (!player || !game.current) return false;
+
+  const playerClubIds = new Set(
+    (player.clubIds || []).map(Number)
+  );
+
+  /*
+   * FormaX / iki kulup:
+   * Futbolcu her iki kulubun kariyerinde de bulunmali.
+   */
+  if (game.mode === "clubs") {
+    const firstClubId = Number(game.current.a?.id);
+    const secondClubId = Number(game.current.b?.id);
+
+    return (
+      Number.isFinite(firstClubId) &&
+      Number.isFinite(secondClubId) &&
+      playerClubIds.has(firstClubId) &&
+      playerClubIds.has(secondClubId)
+    );
+  }
+
+  /*
+   * Ulke x Kulup:
+   * Milliyet dogru olmali VE kulup kariyerinde bulunmali.
+   */
+  const requiredCountry = norm(game.current.a?.name || "");
+  const playerCountry = norm(player.nationality || "");
+  const requiredClubId = Number(game.current.b?.id);
+
+  return (
+    requiredCountry &&
+    playerCountry === requiredCountry &&
+    Number.isFinite(requiredClubId) &&
+    playerClubIds.has(requiredClubId)
+  );
+}
 function endRound(player, result) {
   clearInterval(timer);
   if (player) {
@@ -3211,64 +3249,78 @@ function finishGame() {
 }
 $("#answerInput").oninput = (e) => {
   const q = norm(e.target.value);
-  if (q.length < 2) return ($("#answerSuggestions").innerHTML = "");
+
+  if (q.length < 2) {
+    $("#answerSuggestions").innerHTML = "";
+    return;
+  }
+
+  /*
+   * Arama tum futbolcular arasinda yapilir.
+   * Dogruluk burada filtrelenmez.
+   */
   const hits = players
     .filter((p) => norm(p.name).includes(q))
     .slice(0, 10);
+
   $("#answerSuggestions").innerHTML = hits
     .map(
       (p) =>
         `<button class="player-suggestion" data-id="${p.id}">${person(p)}<span><b>${esc(p.name)}</b><small>${esc(p.nationality || "")}</small></span></button>`,
     )
     .join("");
-  $$("#answerSuggestions button").forEach(
-    (b) =>
-      (b.onclick = () => {
-        const p = players.find((x) => x.id === +b.dataset.id);
 
-        if (!p) return;
+  $$("#answerSuggestions button").forEach((button) => {
+    button.onclick = () => {
+      const player = players.find(
+        (item) => +item.id === +button.dataset.id
+      );
 
-        if (game.online) {
-          submitOnlinePlayer(p.id);
-        } else {
-          const correct = (game.current?.answers || []).find(
-            (answer) => +answer.id === +p.id,
-          );
+      if (!player) return;
 
-          if (correct) {
-            endRound(correct, "");
-          } else {
-            endRound(null, `Yanlış: ${p.name}`);
-          }
-        }
-      }),
-  );
+      if (game.online) {
+        submitOnlinePlayer(player.id);
+        return;
+      }
+
+      if (isCorrectFreeTextPlayer(player)) {
+        endRound(player, "");
+      } else {
+        endRound(
+          null,
+          `Yanlış: ${player.name}`
+        );
+      }
+    };
+  });
 };
 $("#answerInput").onkeydown = (e) => {
   if (e.key !== "Enter") return;
 
-  const p = players.find(
-    (x) => norm(x.name) === norm(e.target.value),
+  const player = players.find(
+    (item) =>
+      norm(item.name) ===
+      norm(e.target.value)
   );
 
-  if (!p) {
-    $("#gameMessage").textContent = "Listeden geçerli bir futbolcu seçin.";
+  if (!player) {
+    $("#gameMessage").textContent =
+      "Listeden geçerli bir futbolcu seçin.";
     return;
   }
 
   if (game.online) {
-    submitOnlinePlayer(p.id);
+    submitOnlinePlayer(player.id);
     return;
   }
 
-  const correct = (game.current?.answers || []).find(
-    (answer) => +answer.id === +p.id,
-  );
-
-  if (correct) {
-    endRound(correct, "");
+  if (isCorrectFreeTextPlayer(player)) {
+    endRound(player, "");
   } else {
-    endRound(null, `Yanlış: ${p.name}`);
+    endRound(
+      null,
+      `Yanlış: ${player.name}`
+    );
   }
 };
 $("#pass").onclick = async () => {
