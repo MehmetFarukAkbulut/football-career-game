@@ -409,7 +409,7 @@
 
             ${
               popular
-                ? '<em>Ã–ne Ã§Ä±kan lig</em>'
+                ? '<em>&Ouml;ne &ccedil;&#305;kan lig</em>'
                 : ""
             }
           </button>

@@ -2229,7 +2229,29 @@ function submitMysteryGuess(player) {
 
 function startMysteryGame() {
   const selectedLeagues = new Set([...$$("#mysteryLeagueOptions input:checked")].map((input) => input.value));
-  const pool = FC26_DATA.players.filter((player) => player.photoUrl && player.age && (!selectedLeagues.size || selectedLeagues.has(player.league)));
+  const hasRealMysteryPhoto = (player) => {
+    const url = String(player?.photoUrl || "").trim();
+    if (!url) return false;
+
+    const normalized = url.toLowerCase();
+
+    return !(
+      normalized.includes("default.jpg") ||
+      normalized.includes("default.png") ||
+      normalized.includes("placeholder") ||
+      normalized.includes("no-photo") ||
+      normalized.includes("no_photo") ||
+      normalized.includes("nophoto") ||
+      normalized.includes("silhouette")
+    );
+  };
+
+  const pool = FC26_DATA.players.filter(
+    (player) =>
+      hasRealMysteryPhoto(player) &&
+      player.age &&
+      (!selectedLeagues.size || selectedLeagues.has(player.league))
+  );
   const rounds = +$("#mysteryRounds").value;
   const difficulty = $("#mysteryDifficulty").value;
   const targetPool = IkiFormaCore.mysteryPlayersByRatingDifficulty(pool, difficulty);
@@ -3190,7 +3212,13 @@ function finishGame() {
 $("#answerInput").oninput = (e) => {
   const q = norm(e.target.value);
   if (q.length < 2) return ($("#answerSuggestions").innerHTML = "");
-  const hits = (game.current?.answers || []).filter((p) => norm(p.name).includes(q)).slice(0, 10);
+  const searchPool = game.online
+    ? players
+    : (game.current?.answers || []);
+
+  const hits = searchPool
+    .filter((p) => norm(p.name).includes(q))
+    .slice(0, 10);
   $("#answerSuggestions").innerHTML = hits
     .map(
       (p) =>
@@ -3214,7 +3242,11 @@ $("#answerInput").oninput = (e) => {
 };
 $("#answerInput").onkeydown = (e) => {
   if (e.key === "Enter") {
-    const p = game.current?.answers.find(
+    const answerPool = game.online
+      ? players
+      : (game.current?.answers || []);
+
+    const p = answerPool.find(
       (x) => norm(x.name) === norm(e.target.value),
     );
     if (p && game.online) submitOnlinePlayer(p.id);
