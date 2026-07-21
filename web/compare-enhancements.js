@@ -24,8 +24,8 @@
     "serie a",
     "bundesliga",
     "ligue 1",
-    "trendyol s\u00fcper lig",
-    "s\u00fcper lig"
+    "trendyol süper lig",
+    "süper lig"
   ];
 
   const state = {
@@ -44,7 +44,7 @@
     return String(value || "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\u0131/g, "i")
+      .replace(/ı/g, "i")
       .toLowerCase()
       .trim();
   }
@@ -133,7 +133,7 @@
       String(
         club.country ||
         club.countryName ||
-        "\u00dclke bilinmiyor"
+        "Ülke bilinmiyor"
       );
 
     if (!code) {
@@ -200,7 +200,7 @@
       if (name.includes("serie a")) return 2;
       if (name === "bundesliga") return 3;
       if (name.includes("ligue 1")) return 4;
-      if (name.includes("super lig") || name.includes("s\u00fcper lig")) return 5;
+      if (name.includes("super lig") || name.includes("süper lig")) return 5;
     }
 
     return 100;
@@ -314,7 +314,7 @@
     if (!club) {
       button.innerHTML = `
         <span class="compare-picker-placeholder">
-          Kul\u00fcp se\u00e7
+          Kulüp seç
         </span>
         <span class="compare-picker-chevron">&#8964;</span>
       `;
@@ -368,7 +368,7 @@
     if (!items.length) {
       list.innerHTML = `
         <p class="compare-picker-empty">
-          Bu filtrelerde kul\u00fcp bulunamad\u0131.
+          Bu filtrelerde kulüp bulunamadı.
         </p>
       `;
 
@@ -398,7 +398,7 @@
             </span>
 
             ${popular
-              ? '<em>\u00d6ne \u00e7\u0131kan lig</em>'
+              ? '<em>Öne çıkan lig</em>'
               : ""
             }
           </button>
@@ -549,7 +549,7 @@
     });
 
     country.innerHTML =
-      '<option value="">T\\u00fcm \\u00fclkeler</option>' +
+      '<option value="">Tüm ülkeler</option>' +
       countries
         .map(
           (value) =>
@@ -558,7 +558,7 @@
         .join("");
 
     league.innerHTML =
-      '<option value="">T\\u00fcm ligler</option>' +
+      '<option value="">Tüm ligler</option>' +
       leagues
         .map(
           (value) =>
@@ -580,7 +580,8 @@
     /*
       Deliberately do not modify selectedA or selectedB.
       Filters only affect the next opened result list.
-    */
+    */
+
   }
 
   function syncNativeSelectors() {
@@ -663,10 +664,10 @@
       <div class="compare-enhanced-filters">
 
         <label>
-          \\u00dclke
+          Ülke
           <select id="comparePickerCountry">
             <option value="">
-              T\\u00fcm \\u00fclkeler
+              Tüm ülkeler
             </option>
           </select>
         </label>
@@ -675,7 +676,7 @@
           Lig
           <select id="comparePickerLeague">
             <option value="">
-              T\\u00fcm ligler
+              Tüm ligler
             </option>
           </select>
         </label>
@@ -686,16 +687,16 @@
 
         ${pickerHtml(
           "A",
-          "Birinci kul\\u00fcp"
+          "Birinci kulüp"
         )}
 
         <span class="compare-picker-versus">
-          \\u2194
+          \↔
         </span>
 
         ${pickerHtml(
           "B",
-          "\\u0130kinci kul\\u00fcp"
+          "İkinci kulüp"
         )}
 
       </div>
@@ -732,7 +733,7 @@
             id="comparePicker${side}Search"
             type="search"
             autocomplete="off"
-            placeholder="Kul\\u00fcp ad\\u0131, lig veya \\u00fclke ara\\u2026"
+            placeholder="Kulüp adı, lig veya ülke ara…"
           >
 
           <div
@@ -814,7 +815,7 @@
             event.stopImmediatePropagation();
 
             byId("compareMessage").textContent =
-              "Kar\\u015f\\u0131la\\u015ft\\u0131rmak i\\u00e7in iki farkl\\u0131 kul\\u00fcp se\\u00e7.";
+              "Karşılaştırmak için iki farklı kulüp seç.";
             return;
           }
 
@@ -826,7 +827,7 @@
             event.stopImmediatePropagation();
 
             byId("compareMessage").textContent =
-              "Ayn\\u0131 kul\\u00fcp iki kez se\\u00e7ilemez.";
+              "Aynı kulüp iki kez seçilemez.";
             return;
           }
 
@@ -835,7 +836,7 @@
             event.stopImmediatePropagation();
 
             byId("compareMessage").textContent =
-              "Kul\\u00fcp listesi haz\\u0131rlan\\u0131yor. Birka\\u00e7 saniye sonra tekrar dene.";
+              "Kulüp listesi hazırlanıyor. Birkaç saniye sonra tekrar dene.";
           }
         },
         true
