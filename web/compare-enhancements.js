@@ -24,10 +24,8 @@
     "serie a",
     "bundesliga",
     "ligue 1",
-    "trendyol super lig",
-    "trendyol sÃ¼per lig",
-    "super lig",
-    "sÃ¼per lig"
+    "trendyol s\u00fcper lig",
+    "s\u00fcper lig"
   ];
 
   const state = {
@@ -46,36 +44,127 @@
     return String(value || "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .replace(/Ä±/g, "i")
+      .replace(/\u0131/g, "i")
       .toLowerCase()
       .trim();
   }
 
-  function flagEmoji(code) {
-    const normalized = String(code || "")
-      .trim()
-      .toUpperCase();
+  const COUNTRY_CODE_BY_NAME = new Map([
+    ["almanya", "de"],
+    ["germany", "de"],
+    ["ingiltere", "gb"],
+    ["england", "gb"],
+    ["ispanya", "es"],
+    ["spain", "es"],
+    ["italya", "it"],
+    ["italy", "it"],
+    ["fransa", "fr"],
+    ["france", "fr"],
+    ["turkiye", "tr"],
+    ["turkey", "tr"],
+    ["portekiz", "pt"],
+    ["portugal", "pt"],
+    ["hollanda", "nl"],
+    ["netherlands", "nl"],
+    ["belcika", "be"],
+    ["belgium", "be"],
+    ["avusturya", "at"],
+    ["austria", "at"],
+    ["isvicre", "ch"],
+    ["switzerland", "ch"],
+    ["yunanistan", "gr"],
+    ["greece", "gr"],
+    ["danimarka", "dk"],
+    ["denmark", "dk"],
+    ["norvec", "no"],
+    ["norway", "no"],
+    ["isvec", "se"],
+    ["sweden", "se"],
+    ["polonya", "pl"],
+    ["poland", "pl"],
+    ["amerika", "us"],
+    ["united states", "us"],
+    ["usa", "us"],
+    ["brezilya", "br"],
+    ["brazil", "br"],
+    ["arjantin", "ar"],
+    ["argentina", "ar"],
+    ["meksika", "mx"],
+    ["mexico", "mx"],
+    ["japonya", "jp"],
+    ["japan", "jp"],
+    ["south korea", "kr"],
+    ["guney kore", "kr"]
+  ]);
 
-    if (!/^[A-Z]{2}$/.test(normalized)) {
-      return "ğŸŒ";
+  function resolveCountryCode(club) {
+    const direct =
+      String(
+        club.countryCode ||
+        club.country_code ||
+        club.countryIso2 ||
+        club.iso2 ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+    if (/^[a-z]{2}$/.test(direct)) {
+      return direct;
     }
 
-    return [...normalized]
-      .map((letter) =>
-        String.fromCodePoint(
-          127397 + letter.charCodeAt(0)
+    return (
+      COUNTRY_CODE_BY_NAME.get(
+        normalize(
+          club.country ||
+          club.countryName ||
+          ""
         )
-      )
-      .join("");
+      ) ||
+      ""
+    );
+  }
+
+  function flagImage(club) {
+    const code =
+      resolveCountryCode(club);
+
+    const countryName =
+      String(
+        club.country ||
+        club.countryName ||
+        "\u00dclke bilinmiyor"
+      );
+
+    if (!code) {
+      return `
+        <span
+          class="compare-club-flag compare-club-flag-fallback"
+          title="${esc(countryName)}"
+        >&#127760;</span>
+      `;
+    }
+
+    return `
+      <span
+        class="compare-club-flag"
+        title="${esc(countryName)}"
+      >
+        <img
+          src="https://flagcdn.com/24x18/${code}.png"
+          srcset="https://flagcdn.com/48x36/${code}.png 2x"
+          width="24"
+          height="18"
+          loading="lazy"
+          decoding="async"
+          alt="${esc(countryName)}"
+        >
+      </span>
+    `;
   }
 
   function clubFlag(club) {
-    return flagEmoji(
-      club.countryCode ||
-      club.country_code ||
-      club.iso2 ||
-      ""
-    );
+    return flagImage(club);
   }
 
   function leagueRank(club) {
@@ -111,7 +200,7 @@
       if (name.includes("serie a")) return 2;
       if (name === "bundesliga") return 3;
       if (name.includes("ligue 1")) return 4;
-      if (name.includes("super lig") || name.includes("sÃ¼per lig")) return 5;
+      if (name.includes("super lig") || name.includes("s\u00fcper lig")) return 5;
     }
 
     return 100;
@@ -225,9 +314,9 @@
     if (!club) {
       button.innerHTML = `
         <span class="compare-picker-placeholder">
-          KulÃ¼p seÃ§
+          Kul\u00fcp se\u00e7
         </span>
-        <span class="compare-picker-chevron">âŒ„</span>
+        <span class="compare-picker-chevron">&#8964;</span>
       `;
 
       return;
@@ -235,16 +324,16 @@
 
     button.innerHTML = `
       <span class="compare-picker-selected">
-        <i class="compare-club-flag">${clubFlag(club)}</i>
+        ${clubFlag(club)}
         <span>
           <b>${esc(club.name)}</b>
           <small>
             ${esc(club.league || "")}
-            ${club.country ? ` Â· ${esc(club.country)}` : ""}
+            ${club.country ? ` &middot; ${esc(club.country)}` : ""}
           </small>
         </span>
       </span>
-      <span class="compare-picker-chevron">âŒ„</span>
+      <span class="compare-picker-chevron">&#8964;</span>
     `;
   }
 
@@ -279,7 +368,7 @@
     if (!items.length) {
       list.innerHTML = `
         <p class="compare-picker-empty">
-          Bu filtrelerde kulÃ¼p bulunamadÄ±.
+          Bu filtrelerde kul\u00fcp bulunamad\u0131.
         </p>
       `;
 
@@ -298,18 +387,18 @@
             data-compare-side="${side}"
             data-compare-club="${club.id}"
           >
-            <i class="compare-club-flag">${clubFlag(club)}</i>
+            ${clubFlag(club)}
 
             <span>
               <b>${esc(club.name)}</b>
               <small>
                 ${esc(club.league || "Lig bilinmiyor")}
-                ${club.country ? ` Â· ${esc(club.country)}` : ""}
+                ${club.country ? ` &middot; ${esc(club.country)}` : ""}
               </small>
             </span>
 
             ${popular
-              ? '<em>Ã–ne Ã§Ä±kan lig</em>'
+              ? '<em>\u00d6ne \u00e7\u0131kan lig</em>'
               : ""
             }
           </button>
@@ -460,7 +549,7 @@
     });
 
     country.innerHTML =
-      '<option value="">TÃ¼m Ã¼lkeler</option>' +
+      '<option value="">T\\u00fcm \\u00fclkeler</option>' +
       countries
         .map(
           (value) =>
@@ -469,7 +558,7 @@
         .join("");
 
     league.innerHTML =
-      '<option value="">TÃ¼m ligler</option>' +
+      '<option value="">T\\u00fcm ligler</option>' +
       leagues
         .map(
           (value) =>
@@ -491,10 +580,7 @@
     /*
       Deliberately do not modify selectedA or selectedB.
       Filters only affect the next opened result list.
-    */
-
-    renderClubList("A");
-    renderClubList("B");
+    */
   }
 
   function syncNativeSelectors() {
@@ -575,27 +661,43 @@
 
     wrapper.innerHTML = `
       <div class="compare-enhanced-filters">
+
         <label>
-          Ãœlke
+          \\u00dclke
           <select id="comparePickerCountry">
-            <option value="">TÃ¼m Ã¼lkeler</option>
+            <option value="">
+              T\\u00fcm \\u00fclkeler
+            </option>
           </select>
         </label>
 
         <label>
           Lig
           <select id="comparePickerLeague">
-            <option value="">TÃ¼m ligler</option>
+            <option value="">
+              T\\u00fcm ligler
+            </option>
           </select>
         </label>
+
       </div>
 
       <div class="compare-enhanced-pickers">
-        ${pickerHtml("A", "Birinci kulÃ¼p")}
 
-        <span class="compare-picker-versus">â†”</span>
+        ${pickerHtml(
+          "A",
+          "Birinci kul\\u00fcp"
+        )}
 
-        ${pickerHtml("B", "Ä°kinci kulÃ¼p")}
+        <span class="compare-picker-versus">
+          \\u2194
+        </span>
+
+        ${pickerHtml(
+          "B",
+          "\\u0130kinci kul\\u00fcp"
+        )}
+
       </div>
     `;
 
@@ -610,6 +712,7 @@
   function pickerHtml(side, label) {
     return `
       <div class="compare-club-picker">
+
         <label>${label}</label>
 
         <button
@@ -624,11 +727,12 @@
           class="compare-picker-panel"
           hidden
         >
+
           <input
             id="comparePicker${side}Search"
             type="search"
             autocomplete="off"
-            placeholder="KulÃ¼p adÄ±, lig veya Ã¼lke araâ€¦"
+            placeholder="Kul\\u00fcp ad\\u0131, lig veya \\u00fclke ara\\u2026"
           >
 
           <div
@@ -636,10 +740,13 @@
             class="compare-picker-list"
             role="listbox"
           ></div>
+
         </div>
+
       </div>
     `;
   }
+
 
   function bindEvents() {
     for (const side of ["A", "B"]) {
@@ -707,7 +814,7 @@
             event.stopImmediatePropagation();
 
             byId("compareMessage").textContent =
-              "KarÅŸÄ±laÅŸtÄ±rmak iÃ§in iki farklÄ± kulÃ¼p seÃ§.";
+              "Kar\\u015f\\u0131la\\u015ft\\u0131rmak i\\u00e7in iki farkl\\u0131 kul\\u00fcp se\\u00e7.";
             return;
           }
 
@@ -719,7 +826,7 @@
             event.stopImmediatePropagation();
 
             byId("compareMessage").textContent =
-              "AynÄ± kulÃ¼p iki kez seÃ§ilemez.";
+              "Ayn\\u0131 kul\\u00fcp iki kez se\\u00e7ilemez.";
             return;
           }
 
@@ -728,7 +835,7 @@
             event.stopImmediatePropagation();
 
             byId("compareMessage").textContent =
-              "KulÃ¼p listesi hazÄ±rlanÄ±yor. BirkaÃ§ saniye sonra tekrar dene.";
+              "Kul\\u00fcp listesi haz\\u0131rlan\\u0131yor. Birka\\u00e7 saniye sonra tekrar dene.";
           }
         },
         true
@@ -772,7 +879,25 @@
     }
   }
 
+
+  function removeTravellerCards() {
+    document
+      .querySelectorAll(".mode-card, [data-view]")
+      .forEach((element) => {
+        const text = normalize(element.textContent || "");
+
+        if (
+          text.includes("gezgin futbolcu") ||
+          text.includes("gezgin futbolcular")
+        ) {
+          element.remove();
+        }
+      });
+  }
   function initialize() {
+    removeTravellerCards();
+
+removeTravellerCards();
     if (
       !Array.isArray(clubs) ||
       !clubs.length
@@ -794,8 +919,6 @@
 
     renderSelected("A");
     renderSelected("B");
-    renderClubList("A");
-    renderClubList("B");
     updateCompareButton();
 
     return true;
@@ -813,13 +936,19 @@
 
   function scheduleInitialize() {
     if (initializationTimer) {
-      return;
+      clearTimeout(
+        initializationTimer
+      );
     }
 
-    initializationTimer = setTimeout(() => {
-      initializationTimer = null;
-      initialize();
-    }, 40);
+    initializationTimer =
+      setTimeout(() => {
+
+        initializationTimer = null;
+
+        initialize();
+
+      }, 180);
   }
 
   function startInitializationRetry() {
@@ -861,6 +990,8 @@
     "iki-forma-ui-ready",
     scheduleInitialize
   );
+
+  removeTravellerCards();
 
   if (document.readyState === "loading") {
     document.addEventListener(

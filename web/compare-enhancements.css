@@ -226,3 +226,187 @@
     display: none;
   }
 }
+/* COMPARE-UI-STABILITY-V2 */
+
+.compare-club-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  min-width: 28px;
+  height: 22px;
+  overflow: hidden;
+  font-style: normal;
+  line-height: 1;
+}
+
+.compare-club-flag img {
+  display: block;
+  width: 24px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .16);
+}
+
+.compare-club-flag-fallback {
+  font-family:
+    "Segoe UI Emoji",
+    "Apple Color Emoji",
+    sans-serif;
+  font-size: 18px;
+}
+
+.compare-picker-button,
+.compare-club-option {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.compare-picker-button {
+  pointer-events: auto;
+  user-select: none;
+}
+
+.compare-picker-panel[hidden] {
+  display: none !important;
+}
+
+/*
+  Eski Gezgin Futbolcular karti JavaScript yuklenmeden once
+  gÃ¶rÃ¼nÃ¼rse ilk paint sÄ±rasÄ±nda gizle.
+*/
+.mode-card[data-view*="trav"],
+.mode-card[data-view*="journey"],
+.mode-card[data-view*="wander"],
+.mode-card[data-view*="nomad"] {
+  display: none !important;
+}
+
+/* END-COMPARE-UI-STABILITY-V2 */
+
+/* COMPARE-FLAG-STABILITY-V3 */
+
+.compare-club-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 30px;
+  width: 30px;
+  min-width: 30px;
+  height: 22px;
+  overflow: hidden;
+  font-style: normal;
+  line-height: 1;
+}
+
+.compare-club-flag img {
+  display: block;
+  width: 24px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .18);
+}
+
+.compare-club-flag-fallback {
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+  font-size: 18px;
+}
+
+.compare-picker-button,
+.compare-club-option {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.compare-picker-panel[hidden] {
+  display: none !important;
+}
+
+.mode-card[data-view*="trav"],
+.mode-card[data-view*="journey"],
+.mode-card[data-view*="wander"],
+.mode-card[data-view*="nomad"] {
+  display: none !important;
+}
+
+/* END-COMPARE-FLAG-STABILITY-V3 */
+
+
+/* COMPARE-SAFE-UI-V6 */
+
+/*
+  Travelers must not flash during first paint.
+*/
+
+[data-view="travelers"] {
+  display: none !important;
+}
+
+
+/*
+  Real flag images work consistently on Windows,
+  Android and iOS.
+*/
+
+.compare-club-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 30px;
+
+  width: 30px;
+  min-width: 30px;
+  height: 22px;
+
+  overflow: hidden;
+
+  font-style: normal;
+  line-height: 1;
+}
+
+.compare-club-flag img {
+  display: block;
+
+  width: 24px;
+  height: 18px;
+
+  object-fit: cover;
+
+  border-radius: 2px;
+
+  box-shadow:
+    0 0 0 1px
+    rgba(255, 255, 255, .18);
+}
+
+.compare-club-flag-fallback {
+  font-family:
+    "Segoe UI Emoji",
+    "Apple Color Emoji",
+    sans-serif;
+
+  font-size: 18px;
+}
+
+
+/*
+  Improve touch/click response.
+*/
+
+.compare-picker-button,
+.compare-club-option {
+  touch-action: manipulation;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+.compare-picker-panel[hidden] {
+  display: none !important;
+}
+
+/* END-COMPARE-SAFE-UI-V6 */

@@ -40,7 +40,7 @@ test("kulup karsilastirma bagimsiz aranabilir iki kulup secici kullanir", () => 
 
   assert.match(
     source,
-    /KulÃ¼p adÄ±, lig veya Ã¼lke ara/
+    /Kul\\\\u00fcp ad\\\\u0131, lig veya \\\\u00fclke ara/
   );
 
   assert.match(
