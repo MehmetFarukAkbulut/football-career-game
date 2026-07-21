@@ -36,6 +36,16 @@
     ready: false
   };
 
+  const clubListCache = {
+    A: new Map(),
+    B: new Map()
+  };
+
+  function clearClubListCache() {
+    clubListCache.A.clear();
+    clubListCache.B.clear();
+  }
+
   function byId(id) {
     return document.getElementById(id);
   }
@@ -348,34 +358,34 @@
     }
   }
 
-  function renderClubList(side) {
-    const input =
-      byId(`comparePicker${side}Search`);
+  function clubListCacheKey(side, query = "") {
+    return [
+      state.country || "",
+      state.league || "",
+      normalize(query),
+      side === "A"
+        ? state.selectedB || ""
+        : state.selectedA || ""
+    ].join("|");
+  }
 
-    const list =
-      byId(`comparePicker${side}List`);
 
-    if (!list) {
-      return;
-    }
-
+  function buildClubListHtml(side, query = "") {
     const items =
       availableClubs(
         side,
-        input?.value || ""
+        query
       );
 
     if (!items.length) {
-      list.innerHTML = `
+      return `
         <p class="compare-picker-empty">
-          Bu filtrelerde kulüp bulunamadı.
+          Bu filtrelerde kulÃ¼p bulunamadÄ±.
         </p>
       `;
-
-      return;
     }
 
-    list.innerHTML = items
+    return items
       .map((club) => {
         const popular =
           leagueRank(club) < 100;
@@ -397,21 +407,34 @@
               </small>
             </span>
 
-            ${popular
-              ? '<em>Öne çıkan lig</em>'
-              : ""
+            ${
+              popular
+                ? '<em>Ã–ne Ã§Ä±kan lig</em>'
+                : ""
             }
           </button>
         `;
       })
       .join("");
+  }
+
+
+  function bindClubListButtons(side) {
+    const list =
+      byId(`comparePicker${side}List`);
+
+    if (!list) {
+      return;
+    }
 
     list
       .querySelectorAll(
         "[data-compare-club]"
       )
       .forEach((button) => {
+
         button.onclick = () => {
+
           const selectedId =
             Number(
               button.dataset.compareClub
@@ -424,11 +447,16 @@
             state.selectedB = selectedId;
           }
 
+          clearClubListCache();
+
           renderSelected("A");
           renderSelected("B");
 
           byId(`comparePicker${side}Panel`)
-            ?.setAttribute("hidden", "");
+            ?.setAttribute(
+              "hidden",
+              ""
+            );
 
           const search =
             byId(`comparePicker${side}Search`);
@@ -437,15 +465,91 @@
             search.value = "";
           }
 
-          renderClubList(
-            side === "A"
-              ? "B"
-              : "A"
-          );
-
           updateCompareButton();
         };
       });
+  }
+
+
+  function renderClubList(side) {
+    const input =
+      byId(`comparePicker${side}Search`);
+
+    const list =
+      byId(`comparePicker${side}List`);
+
+    if (!list) {
+      return;
+    }
+
+    const query =
+      input?.value || "";
+
+    const key =
+      clubListCacheKey(
+        side,
+        query
+      );
+
+    let html =
+      clubListCache[side]
+        .get(key);
+
+    if (!html) {
+      html =
+        buildClubListHtml(
+          side,
+          query
+        );
+
+      clubListCache[side]
+        .set(
+          key,
+          html
+        );
+    }
+
+    list.innerHTML =
+      html;
+
+    bindClubListButtons(side);
+  }
+
+
+  function warmClubLists() {
+    if (
+      !Array.isArray(clubs) ||
+      !clubs.length
+    ) {
+      return;
+    }
+
+    for (const side of ["A", "B"]) {
+      const key =
+        clubListCacheKey(
+          side,
+          ""
+        );
+
+      if (
+        clubListCache[side]
+          .has(key)
+      ) {
+        continue;
+      }
+
+      const html =
+        buildClubListHtml(
+          side,
+          ""
+        );
+
+      clubListCache[side]
+        .set(
+          key,
+          html
+        );
+    }
   }
 
   function togglePanel(side) {
@@ -578,10 +682,12 @@
       byId("comparePickerLeague")?.value || "";
 
     /*
-      Deliberately do not modify selectedA or selectedB.
-      Filters only affect the next opened result list.
+      Existing selections stay unchanged.
+      Only cached available lists must be rebuilt.
     */
+    clearClubListCache();
 
+    warmClubLists();
   }
 
   function syncNativeSelectors() {
@@ -883,17 +989,13 @@
 
   function removeTravellerCards() {
     document
-      .querySelectorAll(".mode-card, [data-view]")
-      .forEach((element) => {
-        const text = normalize(element.textContent || "");
-
-        if (
-          text.includes("gezgin futbolcu") ||
-          text.includes("gezgin futbolcular")
-        ) {
-          element.remove();
-        }
-      });
+      .querySelectorAll(
+        '.mode-card[data-view="travelers"]'
+      )
+      .forEach(
+        (element) =>
+          element.remove()
+      );
   }
   function initialize() {
     removeTravellerCards();
@@ -921,6 +1023,27 @@ removeTravellerCards();
     renderSelected("A");
     renderSelected("B");
     updateCompareButton();
+
+    /*
+      Prepare default lists outside the user's click.
+      This makes the first picker open immediately.
+    */
+    if (
+      "requestIdleCallback" in window
+    ) {
+      requestIdleCallback(
+        warmClubLists,
+        {
+          timeout: 800
+        }
+      );
+    }
+    else {
+      setTimeout(
+        warmClubLists,
+        0
+      );
+    }
 
     return true;
   }
