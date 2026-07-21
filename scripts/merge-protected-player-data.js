@@ -117,7 +117,10 @@ for (const player of fresh.players || []) {
    */
   const protectedFields = [
     "nationality",
+    "nationalityCode",
     "birthDate",
+    "photo",
+    "imageUrl",
     "photoUrl",
   ];
 
@@ -258,7 +261,27 @@ for (const player of fresh.players || []) {
     }
   }
 }
+const freshPlayerIds = new Set(
+  (fresh.players || []).map((player) => String(player.id))
+);
 
+let restoredMissingPlayers = 0;
+
+for (const oldPlayer of previous.players || []) {
+  const oldId = String(oldPlayer.id);
+
+  if (freshPlayerIds.has(oldId)) {
+    continue;
+  }
+
+  fresh.players.push(structuredClone(oldPlayer));
+  freshPlayerIds.add(oldId);
+  restoredMissingPlayers++;
+}
+
+console.log(
+  `Yeni kaynakta kaybolup geri getirilen oyuncu: ${restoredMissingPlayers}`
+);
 fs.writeFileSync(
   currentFile,
   JSON.stringify(fresh),
