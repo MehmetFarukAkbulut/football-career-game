@@ -3212,11 +3212,7 @@ function finishGame() {
 $("#answerInput").oninput = (e) => {
   const q = norm(e.target.value);
   if (q.length < 2) return ($("#answerSuggestions").innerHTML = "");
-  const searchPool = game.online
-    ? players
-    : (game.current?.answers || []);
-
-  const hits = searchPool
+  const hits = players
     .filter((p) => norm(p.name).includes(q))
     .slice(0, 10);
   $("#answerSuggestions").innerHTML = hits
@@ -3228,25 +3224,21 @@ $("#answerInput").oninput = (e) => {
   $$("#answerSuggestions button").forEach(
     (b) =>
       (b.onclick = () => {
-        const p = players.find((x) => x.id === +b.dataset.id),
-          valid = game.current.answers.some((x) => x.id === p.id);
-        if (game.online) submitOnlinePlayer(p.id);
-        else if (valid) endRound(p, "");
-        else {
-          $("#gameMessage").textContent =
-            "Bu oyuncu eşleşme için geçerli değil.";
-          $("#answerSuggestions").innerHTML = "";
+        const p = players.find((x) => x.id === +b.dataset.id);
+
+        if (!p) return;
+
+        if (game.online) {
+          submitOnlinePlayer(p.id);
+        } else {
+          endRound(p, "");
         }
       }),
   );
 };
 $("#answerInput").onkeydown = (e) => {
   if (e.key === "Enter") {
-    const answerPool = game.online
-      ? players
-      : (game.current?.answers || []);
-
-    const p = answerPool.find(
+    const p = players.find(
       (x) => norm(x.name) === norm(e.target.value),
     );
     if (p && game.online) submitOnlinePlayer(p.id);
@@ -3946,11 +3938,13 @@ function hydrateOnlineRandomFive(value) {
 $("#randomFiveInput").oninput = (event) => {
   const q = norm(event.target.value), ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [];
   if (q.length < 2) return ($("#randomFiveSuggestions").innerHTML = "");
-  const hits = (randomFive.pool || []).filter((player) => IkiFormaCore.randomFiveScore(player, ids) > 0 && norm(player.name).includes(q)).slice(0, 10);
-  $("#randomFiveSuggestions").innerHTML = hits.map((player) => `<button class="player-suggestion" data-random-five-player="${player.id}">${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")}</small></span></button>`).join("") || "<button disabled>Eşleşen geçerli futbolcu yok</button>";
+  const hits = players
+    .filter((player) => norm(player.name).includes(q))
+    .slice(0, 10);
+  $("#randomFiveSuggestions").innerHTML = hits.map((player) => `<button class="player-suggestion" data-random-five-player="${player.id}">${person(player)}<span><b>${esc(player.name)}</b><small>${esc(player.nationality || "")}</small></span></button>`).join("") || "<button disabled>Eşleşen futbolcu yok</button>";
   $$('[data-random-five-player]').forEach((button) => button.onclick = () => submitRandomFiveGuess(indexes.playerById.get(+button.dataset.randomFivePlayer)));
 };
-$("#randomFiveInput").onkeydown = (event) => { if (event.key === "Enter") { const ids = randomFive.sets?.[randomFive.round]?.map((club) => club.id) || [], player = (randomFive.pool || []).find((item) => norm(item.name) === norm(event.target.value) && IkiFormaCore.randomFiveScore(item, ids) > 0); if (player) submitRandomFiveGuess(player); else toast("Gösterilen kulüplerden en az birinde oynamış bir futbolcu seç."); } };
+$("#randomFiveInput").onkeydown = (event) => { if (event.key === "Enter") { const player = players.find((item) => norm(item.name) === norm(event.target.value)); if (player) submitRandomFiveGuess(player); else toast("Listeden geçerli bir futbolcu seç."); } };
 $("#randomFiveNext").onclick = nextRandomFiveRound;
 $("#startRandomFive").onclick = startRandomFiveGame;
 $$('input[name="randomFiveMode"]').forEach((radio) => radio.onchange = () => { const duo = $('input[name="randomFiveMode"]:checked').value === "duo"; $("#randomFiveDifficultyWrap").hidden = duo; $("#randomFiveNameTwoWrap").hidden = !duo; });
