@@ -2867,3 +2867,41 @@
 }
 
 /* END-MYSTERY-ANSWER-REVEAL-V8 */
+
+
+/* HOME-CARD-HOVER-HITBOX-FIX-V1 */
+
+/*
+  mode-card hover sırasında 5px yukarı taşınıyor.
+  Özellikle kartın alt tarafında mouse varsa element mouse'un
+  altından kaçıp hover -> no-hover döngüsüne girebiliyor.
+
+  Bu görünmez alt hit-area kartla birlikte hareket eder ancak
+  orijinal kart sınırını kapatmaya devam eder.
+*/
+
+#home .mode-card {
+  position: relative;
+}
+
+#home .mode-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 9px;
+  background: transparent;
+  pointer-events: auto;
+}
+
+/*
+  İç elemanların mouse hedefini bölmesini engelle.
+  Tıklama yine button'a gider.
+*/
+
+#home .mode-card > * {
+  pointer-events: none;
+}
+
+/* END-HOME-CARD-HOVER-HITBOX-FIX-V1 */
