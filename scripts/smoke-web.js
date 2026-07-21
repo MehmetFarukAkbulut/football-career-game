@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 const { app, BrowserWindow } = require("electron"),
   http = require("node:http"),
   fs = require("node:fs"),
@@ -48,24 +48,39 @@ app.whenReady().then(() =>
       failed = true;
     });
     await win.loadURL(process.env.SMOKE_URL || `http://127.0.0.1:${server.address().port}/`);
+    /*
+      The application uses progressive chunk loading.
+
+      This smoke scenario only exercises career-data screens, so it must
+      not wait for all career and FC26 chunks to finish downloading.
+      Continue as soon as the initial career pool and league UI are ready.
+    */
     await win.webContents.executeJavaScript(`
       new Promise((resolve, reject) => {
         const started = Date.now();
 
         const check = () => {
+          const loader = window.IkiFormaDataLoader;
+          const careerPlayers =
+            loader?.state?.career?.players?.length || 0;
+
+          const interfaceReady =
+            Boolean(document.querySelector(".league-list")) &&
+            Boolean(document.querySelector('[data-view="classicSetup"]')) &&
+            Boolean(document.querySelector("#startGrid"));
+
           if (
-            window.IKI_FORMA_DATA_READY === true &&
-            window.IKI_FORMA_FC26_READY === true &&
-            document.querySelector(".league-list")
+            interfaceReady &&
+            careerPlayers >= 1000
           ) {
             resolve(true);
             return;
           }
 
-          if (Date.now() - started > 60000) {
+          if (Date.now() - started > 45000) {
             reject(
               new Error(
-                "Smoke timeout: progressive datasets were not ready within 60 seconds"
+                "Smoke timeout: initial career dataset was not ready within 45 seconds"
               )
             );
             return;
@@ -117,8 +132,26 @@ app.whenReady().then(() =>
     )
       failed = true;
     win.destroy();
-    server.close(() => app.exit(failed ? 1 : 0));
+
+    server.close(() => {
+      app.exit(failed ? 1 : 0);
+    });
   }),
-);
+).catch((error) => {
+  failed = true;
 
+  console.error(
+    error?.stack ||
+    error?.message ||
+    error
+  );
 
+  if (server.listening) {
+    server.close(() => {
+      app.exit(1);
+    });
+  }
+  else {
+    app.exit(1);
+  }
+});
