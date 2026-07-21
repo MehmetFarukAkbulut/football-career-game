@@ -7,3 +7,62 @@
 .xi-draft-setup .setup-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.xi-draft-setup .setup-grid small{font-size:11px;line-height:1.25}.xi-candidates .xi-rating[hidden]{display:none}.xi-candidates button em{grid-column:1/-1;justify-self:center;color:var(--mint);font-size:11px;font-style:normal;font-weight:900}.xi-candidates button.selected{border-color:var(--mint);background:#123e45}.xi-candidates button.best{box-shadow:inset 0 0 0 2px #ffc85755}.xi-candidates button.best em{color:var(--gold)}.xi-candidates.luck-mode{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.xi-candidates.luck-mode button{min-height:92px;padding:9px;grid-template-columns:44px minmax(0,1fr) auto;gap:7px}.xi-candidates.luck-mode img{width:44px;height:44px}.xi-luck-box{display:flex!important;flex-direction:column;justify-content:center;text-align:center!important;background:linear-gradient(145deg,#1b4565,#0a2137)!important}.xi-luck-box .box-lid{width:42px;height:42px;display:grid!important;place-items:center;border-radius:10px;background:var(--gold);color:#172334;font-size:25px;font-weight:900}.xi-luck-box b{font-size:13px}.xi-luck-box small{font-size:10px}#xiNextPick{width:100%;margin-top:14px}
 @media(max-width:950px){.xi-draft-setup .setup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.xi-candidates.luck-mode{grid-template-columns:repeat(5,minmax(0,1fr))}.xi-candidates.luck-mode button{grid-template-columns:1fr;min-height:120px;text-align:center;justify-items:center}}
 @media(max-width:620px){.xi-draft-setup .setup-grid{grid-template-columns:1fr}.xi-candidates.luck-mode{grid-template-columns:repeat(2,minmax(0,1fr))}.xi-candidates.luck-mode button{grid-template-columns:38px minmax(0,1fr) auto;min-height:80px;text-align:left;justify-items:stretch}.xi-candidates.luck-mode img{width:38px;height:38px}.xi-luck-box{grid-template-columns:1fr!important;text-align:center!important;justify-items:center!important}}
+
+/* STABLE-HOME-CARDS-V1 */
+
+/*
+  These cards must behave exactly like the other menu cards.
+  Do not allow child elements to steal pointer hover state.
+*/
+
+[data-view="compare"],
+[data-view="catalog"],
+[data-view="fc26"],
+[data-view="fc26Catalog"],
+[data-view="clubCompare"] {
+    position: relative;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+    pointer-events: auto !important;
+}
+
+/*
+  Child icons/text must not interrupt parent hover/click tracking.
+*/
+[data-view="compare"] *,
+[data-view="catalog"] *,
+[data-view="fc26"] *,
+[data-view="fc26Catalog"] *,
+[data-view="clubCompare"] * {
+    pointer-events: none !important;
+}
+
+/*
+  Use same stable hover transition as normal cards.
+*/
+[data-view="compare"]:hover,
+[data-view="catalog"]:hover,
+[data-view="fc26"]:hover,
+[data-view="fc26Catalog"]:hover,
+[data-view="clubCompare"]:hover {
+    transform: translateY(-2px);
+}
+
+/*
+  Prevent accidental hover enter/leave loops caused by pseudo elements.
+*/
+[data-view="compare"]::before,
+[data-view="compare"]::after,
+[data-view="catalog"]::before,
+[data-view="catalog"]::after,
+[data-view="fc26"]::before,
+[data-view="fc26"]::after,
+[data-view="fc26Catalog"]::before,
+[data-view="fc26Catalog"]::after,
+[data-view="clubCompare"]::before,
+[data-view="clubCompare"]::after {
+    pointer-events: none !important;
+}
+
+/* END-STABLE-HOME-CARDS-V1 */

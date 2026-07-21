@@ -35,6 +35,17 @@
     selectedB: null,
     ready: false
   };
+  const compareListCache = {
+    A: {
+      key: "",
+      html: ""
+    },
+    B: {
+      key: "",
+      html: ""
+    }
+  };
+
 
   function byId(id) {
     return document.getElementById(id);
@@ -348,7 +359,7 @@
     }
   }
 
-  function renderClubList(side) {
+  function renderClubList(side, force = false) {
     const input =
       byId(`comparePicker${side}Search`);
 
@@ -359,89 +370,162 @@
       return;
     }
 
-    const items =
-      availableClubs(
-        side,
-        input?.value || ""
-      );
+    const query =
+      input?.value || "";
 
-    if (!items.length) {
-      list.innerHTML = `
-        <p class="compare-picker-empty">
-          Bu filtrelerde kulüp bulunamadı.
-        </p>
-      `;
+    const cacheKey = [
+      state.country || "",
+      state.league || "",
+      query,
+      side === "A"
+        ? state.selectedB ?? ""
+        : state.selectedA ?? ""
+    ].join("|");
+
+    const cached =
+      compareListCache[side];
+
+    if (
+      !force &&
+      cached.key === cacheKey &&
+      cached.html
+    ) {
+      list.innerHTML =
+        cached.html;
+
+      bindClubListButtons(side);
 
       return;
     }
 
-    list.innerHTML = items
-      .map((club) => {
-        const popular =
-          leagueRank(club) < 100;
+    const items =
+      availableClubs(
+        side,
+        query
+      );
 
-        return `
-          <button
-            type="button"
-            class="compare-club-option ${popular ? "is-priority" : ""}"
-            data-compare-side="${side}"
-            data-compare-club="${club.id}"
-          >
-            ${clubFlag(club)}
+    if (!items.length) {
+      const emptyHtml = `
+        <p class="compare-picker-empty">
+          Bu filtrelerde kulÃ¼p bulunamadÄ±.
+        </p>
+      `;
 
-            <span>
-              <b>${esc(club.name)}</b>
-              <small>
-                ${esc(club.league || "Lig bilinmiyor")}
-                ${club.country ? ` &middot; ${esc(club.country)}` : ""}
-              </small>
-            </span>
+      cached.key =
+        cacheKey;
 
-            ${popular
-              ? '<em>Öne çıkan lig</em>'
-              : ""
-            }
-          </button>
-        `;
-      })
-      .join("");
+      cached.html =
+        emptyHtml;
+
+      list.innerHTML =
+        emptyHtml;
+
+      return;
+    }
+
+    const html =
+      items
+        .map((club) => {
+          const popular =
+            leagueRank(club) < 100;
+
+          return `
+            <button
+              type="button"
+              class="compare-club-option ${popular ? "is-priority" : ""}"
+              data-compare-side="${side}"
+              data-compare-club="${club.id}"
+            >
+              ${clubFlag(club)}
+
+              <span>
+                <b>${esc(club.name)}</b>
+
+                <small>
+                  ${esc(club.league || "Lig bilinmiyor")}
+                  ${club.country ? ` &middot; ${esc(club.country)}` : ""}
+                </small>
+              </span>
+
+              ${
+                popular
+                  ? '<em>Ã–ne Ã§Ä±kan lig</em>'
+                  : ""
+              }
+            </button>
+          `;
+        })
+        .join("");
+
+    cached.key =
+      cacheKey;
+
+    cached.html =
+      html;
+
+    list.innerHTML =
+      html;
+
+    bindClubListButtons(side);
+  }
+
+
+  function bindClubListButtons(side) {
+    const list =
+      byId(`comparePicker${side}List`);
+
+    if (!list) {
+      return;
+    }
 
     list
       .querySelectorAll(
         "[data-compare-club]"
       )
       .forEach((button) => {
+
         button.onclick = () => {
+
           const selectedId =
             Number(
               button.dataset.compareClub
             );
 
           if (side === "A") {
-            state.selectedA = selectedId;
+            state.selectedA =
+              selectedId;
           }
           else {
-            state.selectedB = selectedId;
+            state.selectedB =
+              selectedId;
           }
+
+          compareListCache.A.key = "";
+          compareListCache.A.html = "";
+
+          compareListCache.B.key = "";
+          compareListCache.B.html = "";
 
           renderSelected("A");
           renderSelected("B");
 
-          byId(`comparePicker${side}Panel`)
-            ?.setAttribute("hidden", "");
+          byId(
+            `comparePicker${side}Panel`
+          )
+            ?.setAttribute(
+              "hidden",
+              ""
+            );
 
           const search =
-            byId(`comparePicker${side}Search`);
+            byId(
+              `comparePicker${side}Search`
+            );
 
           if (search) {
-            search.value = "";
+            search.value =
+              "";
           }
-
-          renderClubList(
-            side === "A"
-              ? "B"
-              : "A"
-          );
 
           updateCompareButton();
         };
@@ -470,118 +554,70 @@
       !willOpen
     );
 
-    if (willOpen) {
+    if (!willOpen) {
+      return;
+    }
+
+    /*
+      Open immediately.
+      Heavy list preparation happens on the next frame so
+      the click itself is never blocked.
+    */
+    requestAnimationFrame(() => {
       renderClubList(side);
 
-      setTimeout(() => {
-        byId(`comparePicker${side}Search`)
-          ?.focus();
-      }, 0);
-    }
-  }
-
-  function updateCompareButton() {
-    const button =
-      byId("compareButton");
-
-    if (!button) {
-      return;
-    }
-
-    button.disabled =
-      !state.selectedA ||
-      !state.selectedB ||
-      Number(state.selectedA) ===
-        Number(state.selectedB);
-  }
-
-  function buildFilterOptions() {
-    const country =
-      byId("comparePickerCountry");
-
-    const league =
-      byId("comparePickerLeague");
-
-    if (!country || !league) {
-      return;
-    }
-
-    const countries = [
-      ...new Set(
-        clubs
-          .map((club) => club.country)
-          .filter(Boolean)
-      )
-    ].sort((a, b) =>
-      String(a).localeCompare(
-        String(b),
-        "tr"
-      )
-    );
-
-    const leagues = [
-      ...new Set(
-        clubs
-          .map((club) => club.league)
-          .filter(Boolean)
-      )
-    ].sort((a, b) => {
-      const fakeA = {
-        league: a
-      };
-
-      const fakeB = {
-        league: b
-      };
-
-      const rankDifference =
-        leagueRank(fakeA) -
-        leagueRank(fakeB);
-
-      if (rankDifference !== 0) {
-        return rankDifference;
-      }
-
-      return String(a).localeCompare(
-        String(b),
-        "tr"
-      );
+      requestAnimationFrame(() => {
+        byId(
+          `comparePicker${side}Search`
+        )?.focus({
+          preventScroll: true
+        });
+      });
     });
-
-    country.innerHTML =
-      '<option value="">Tüm ülkeler</option>' +
-      countries
-        .map(
-          (value) =>
-            `<option value="${esc(value)}">${esc(value)}</option>`
-        )
-        .join("");
-
-    league.innerHTML =
-      '<option value="">Tüm ligler</option>' +
-      leagues
-        .map(
-          (value) =>
-            `<option value="${esc(value)}">${esc(value)}</option>`
-        )
-        .join("");
-
-    country.value = state.country;
-    league.value = state.league;
   }
 
   function updateFilters() {
     state.country =
-      byId("comparePickerCountry")?.value || "";
+      byId("comparePickerCountry")
+        ?.value || "";
 
     state.league =
-      byId("comparePickerLeague")?.value || "";
+      byId("comparePickerLeague")
+        ?.value || "";
 
     /*
-      Deliberately do not modify selectedA or selectedB.
-      Filters only affect the next opened result list.
+      Existing selected clubs stay untouched.
+      Only invalidate the available-list cache.
     */
+    compareListCache.A.key = "";
+    compareListCache.A.html = "";
 
+    compareListCache.B.key = "";
+    compareListCache.B.html = "";
+
+    if (
+      !byId("comparePickerAPanel")
+        ?.hasAttribute("hidden")
+    ) {
+      requestAnimationFrame(() => {
+        renderClubList(
+          "A",
+          true
+        );
+      });
+    }
+
+    if (
+      !byId("comparePickerBPanel")
+        ?.hasAttribute("hidden")
+    ) {
+      requestAnimationFrame(() => {
+        renderClubList(
+          "B",
+          true
+        );
+      });
+    }
   }
 
   function syncNativeSelectors() {
@@ -895,6 +931,42 @@
         }
       });
   }
+  function warmCompareLists() {
+    const warm = () => {
+      /*
+        Build the dropdown HTML before the user clicks.
+        The panels stay hidden; only their cached HTML is prepared.
+      */
+      try {
+        renderClubList("A", true);
+        renderClubList("B", true);
+      }
+      catch (error) {
+        console.debug(
+          "[FormaX compare] warm list skipped",
+          error
+        );
+      }
+    };
+
+    if (
+      "requestIdleCallback" in window
+    ) {
+      requestIdleCallback(
+        warm,
+        {
+          timeout: 1200
+        }
+      );
+    }
+    else {
+      setTimeout(
+        warm,
+        250
+      );
+    }
+  }
+
   function initialize() {
     removeTravellerCards();
 
@@ -921,6 +993,7 @@ removeTravellerCards();
     renderSelected("A");
     renderSelected("B");
     updateCompareButton();
+    warmCompareLists();
 
     return true;
   }

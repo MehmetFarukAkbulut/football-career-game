@@ -410,3 +410,25 @@
 }
 
 /* END-COMPARE-SAFE-UI-V6 */
+
+/* COMPARE-INSTANT-OPEN-V1 */
+
+.compare-picker-button {
+    cursor: pointer;
+    contain: layout paint;
+}
+
+.compare-picker-panel {
+    contain: layout paint;
+}
+
+.compare-picker-list {
+    content-visibility: auto;
+    contain-intrinsic-size: 600px;
+}
+
+.compare-club-option {
+    cursor: pointer;
+}
+
+/* END-COMPARE-INSTANT-OPEN-V1 */
