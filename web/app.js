@@ -3231,19 +3231,44 @@ $("#answerInput").oninput = (e) => {
         if (game.online) {
           submitOnlinePlayer(p.id);
         } else {
-          endRound(p, "");
+          const correct = (game.current?.answers || []).find(
+            (answer) => +answer.id === +p.id,
+          );
+
+          if (correct) {
+            endRound(correct, "");
+          } else {
+            endRound(null, `Yanlış: ${p.name}`);
+          }
         }
       }),
   );
 };
 $("#answerInput").onkeydown = (e) => {
-  if (e.key === "Enter") {
-    const p = players.find(
-      (x) => norm(x.name) === norm(e.target.value),
-    );
-    if (p && game.online) submitOnlinePlayer(p.id);
-    else if (p) endRound(p, "");
-    else $("#gameMessage").textContent = "Listeden geçerli bir futbolcu seçin.";
+  if (e.key !== "Enter") return;
+
+  const p = players.find(
+    (x) => norm(x.name) === norm(e.target.value),
+  );
+
+  if (!p) {
+    $("#gameMessage").textContent = "Listeden geçerli bir futbolcu seçin.";
+    return;
+  }
+
+  if (game.online) {
+    submitOnlinePlayer(p.id);
+    return;
+  }
+
+  const correct = (game.current?.answers || []).find(
+    (answer) => +answer.id === +p.id,
+  );
+
+  if (correct) {
+    endRound(correct, "");
+  } else {
+    endRound(null, `Yanlış: ${p.name}`);
   }
 };
 $("#pass").onclick = async () => {
