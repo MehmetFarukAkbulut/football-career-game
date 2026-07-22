@@ -184,7 +184,16 @@ async function main() {
     unavailableFields: ["nationalAssists", "completeCareerMinutes"],
   };
   fs.writeFileSync(webFile, JSON.stringify(data));
-  const sorted = [...data.players].sort((a, b) => b.careerGoals - a.careerGoals || a.name.localeCompare(b.name, "tr"));
+  const sorted = [...data.players].sort(
+  (a, b) =>
+    (Number(b.careerGoals) || 0) -
+      (Number(a.careerGoals) || 0) ||
+    String(a.name || a.playerName || "")
+      .localeCompare(
+        String(b.name || b.playerName || ""),
+        "tr"
+      )
+);
   const header = "transfermarkt_id\tfutbolcu\tgol\tmac\tistatistik_durumu\tkulup_sayisi\taciklama";
   const line = (p) => [p.id, p.name, p.careerGoals, p.appearances,
     p.statisticsComplete ? "GUNCEL" : "EKSIK",

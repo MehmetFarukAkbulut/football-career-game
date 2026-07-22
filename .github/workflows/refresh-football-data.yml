@@ -3,8 +3,6 @@ name: Refresh FormaX Football Data
 on:
   workflow_dispatch:
 
-  schedule:
-    - cron: "30 4 * * 1"
       timezone: "Europe/Istanbul"
 
 permissions:
@@ -50,6 +48,11 @@ jobs:
       - name: Protect existing curated data
         run: node scripts/merge-protected-player-data.js
 
+
+      - name: Discover historical players
+        run: node scripts/discover-historical-players.js
+        env:
+          WIKIDATA_MAX_PAGES: "50"
       - name: Rebuild progressive chunks
         run: npm run data:chunks
 

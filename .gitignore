@@ -12,3 +12,9 @@ Thumbs.db
 .env*
 !.env.example
 data/web-data-before-refresh.json
+data/wikidata-football-checkpoint.ndjson
+data/wikidata-honours-checkpoint.ndjson
+data/wikidata-new-player-checkpoint.ndjson
+data/web-data.before-wikidata-*.json
+data/career-bootstrap.before-wikidata-*.json
+data/web-data.wikidata-complete-local-*.json

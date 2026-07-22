@@ -1,0 +1,126 @@
+name: Refresh authoritative Wikidata football data
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Refresh active or all cached players"
+        required: false
+        default: "active"
+
+  schedule:
+    - cron: "27 3 * * 3"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wikidata-football-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Discover new Transfermarkt player IDs
+        env:
+          WIKIDATA_NEW_PAGE_SIZE: "500"
+          WIKIDATA_API_DELAY_MS: "800"
+        run: node scripts/discover-new-wikidata-players.js
+
+      - name: Enrich only newly discovered players
+        env:
+          WIKIDATA_ENTITY_BATCH: "50"
+          WIKIDATA_API_DELAY_MS: "600"
+        run: node scripts/wikidata-enrich-new-players.js
+
+      - name: Refresh active cached players
+        env:
+          WIKIDATA_REFRESH_MODE: ${{ github.event.inputs.mode || 'active' }}
+          WIKIDATA_ENTITY_BATCH: "50"
+          WIKIDATA_API_DELAY_MS: "600"
+        run: node scripts/wikidata-periodic-refresh.js
+
+      - name: Merge authoritative Wikidata data
+        run: node scripts/merge-wikidata-football-data.js
+
+      - name: Deduplicate repeated Wikidata team statistics
+        run: node scripts/deduplicate-wikidata-team-statistics.js
+
+      - name: Sanitize anomalous Wikidata statistics
+        run: node scripts/sanitize-wikidata-statistics.js
+
+      - name: Filter players to supported leagues
+        run: node scripts/filter-target-league-players.js
+
+      - name: Fix missing player names
+        run: node scripts/fix-null-player-names.js
+
+      - name: Normalize required fields
+        run: node scripts/finalize-wikidata-web-data.js
+
+      - name: Apply career statistics and overrides
+        run: node scripts/enrich-career-statistics.js
+
+      - name: Rebuild popularity model
+        run: node scripts/enrich-popularity.js
+
+      - name: Rebuild progressive chunks
+        run: npm run data:chunks
+
+      - name: Build compact game indexes
+        run: node scripts/build-game-indexes.js
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Commit refreshed data
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No data changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/historical-player-index.json
+          git add data/historical-missing-players.json
+          git add data/wikidata-football-cache.json.gz
+          git add data/career-bootstrap.json
+          git add data/career-manifest.json
+          git add data/chunks
+          git add data/game-index
+          git add data/players-current.txt
+          git add data/players-needs-review.txt
+
+          if [ -f data/web-data.json ]; then
+            SIZE=$(stat -c%s data/web-data.json)
+            if [ "$SIZE" -lt 99614720 ]; then
+              git add data/web-data.json
+            fi
+          fi
+
+          if [ -f data/wikidata-honours-catalog.json.gz ]; then
+            git add data/wikidata-honours-catalog.json.gz
+          fi
+
+          git commit -m "data: refresh authoritative Wikidata player data"
+          git push
