@@ -3,8 +3,6 @@ name: Refresh FormaX Football Data
 on:
   workflow_dispatch:
 
-      timezone: "Europe/Istanbul"
-
 permissions:
   contents: write
 

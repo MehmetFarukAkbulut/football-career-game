@@ -1,29 +1,44 @@
 name: GitHub Pages
+
 on:
   pull_request:
     branches: [main]
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+
       - run: npm ci
+
+      - name: Reconstruct test-only web-data
+        run: node scripts/reconstruct-web-data-from-chunks.js
+
+      - name: Validate deploy datasets
+        run: node scripts/validate-deploy-data.js
+
       - run: npm run test:web
       - run: npm run lint
+
   deploy:
     if: github.event_name != 'pull_request'
     needs: validate
@@ -31,11 +46,39 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+
+      - name: Build minimal Pages artifact
+        shell: bash
+        run: |
+          rm -rf site-dist
+          mkdir -p site-dist
+
+          rsync -a ./ site-dist/ \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude 'node_modules/' \
+            --exclude 'tests/' \
+            --exclude 'scripts/' \
+            --exclude 'coverage/' \
+            --exclude 'data/import-cache/' \
+            --exclude 'data/web-data.json' \
+            --exclude 'data/master-player-data.json.gz' \
+            --exclude 'data/wikidata-football-cache.json.gz' \
+            --exclude 'data/historical-player-index.json' \
+            --exclude 'data/historical-missing-players.json' \
+            --exclude '*.backup-*' \
+            --exclude '*.ps1' \
+            --exclude '*.txt' \
+            --exclude 'package-lock.json' \
+            --exclude 'package.json'
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site-dist
+
       - id: deployment
         uses: actions/deploy-pages@v4

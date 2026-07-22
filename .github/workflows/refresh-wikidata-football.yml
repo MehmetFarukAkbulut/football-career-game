@@ -24,16 +24,17 @@ jobs:
     timeout-minutes: 330
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 22
+          cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
+
+      - name: Restore build database
+        run: node scripts/unpack-master-player-data.js
 
       - name: Discover new Transfermarkt player IDs
         env:
@@ -41,7 +42,7 @@ jobs:
           WIKIDATA_API_DELAY_MS: "800"
         run: node scripts/discover-new-wikidata-players.js
 
-      - name: Enrich only newly discovered players
+      - name: Enrich newly discovered players
         env:
           WIKIDATA_ENTITY_BATCH: "50"
           WIKIDATA_API_DELAY_MS: "600"
@@ -54,43 +55,27 @@ jobs:
           WIKIDATA_API_DELAY_MS: "600"
         run: node scripts/wikidata-periodic-refresh.js
 
-      - name: Merge authoritative Wikidata data
-        run: node scripts/merge-wikidata-football-data.js
+      - run: node scripts/merge-wikidata-football-data.js
+      - run: node scripts/deduplicate-wikidata-team-statistics.js
+      - run: node scripts/sanitize-wikidata-statistics.js
+      - run: node scripts/filter-target-league-players.js
+      - run: node scripts/fix-null-player-names.js
+      - run: node scripts/finalize-wikidata-web-data.js
+      - run: node scripts/enrich-career-statistics.js
+      - run: node scripts/enrich-popularity.js
+      - run: npm run data:chunks
+      - run: node scripts/build-game-indexes.js
+      - run: node scripts/validate-deploy-data.js
+      - run: npm run test:web
+      - run: npm run lint
 
-      - name: Deduplicate repeated Wikidata team statistics
-        run: node scripts/deduplicate-wikidata-team-statistics.js
+      - name: Repack build database
+        run: node scripts/pack-master-player-data.js
 
-      - name: Sanitize anomalous Wikidata statistics
-        run: node scripts/sanitize-wikidata-statistics.js
+      - name: Remove unpublishable build artifact
+        run: rm -f data/web-data.json
 
-      - name: Filter players to supported leagues
-        run: node scripts/filter-target-league-players.js
-
-      - name: Fix missing player names
-        run: node scripts/fix-null-player-names.js
-
-      - name: Normalize required fields
-        run: node scripts/finalize-wikidata-web-data.js
-
-      - name: Apply career statistics and overrides
-        run: node scripts/enrich-career-statistics.js
-
-      - name: Rebuild popularity model
-        run: node scripts/enrich-popularity.js
-
-      - name: Rebuild progressive chunks
-        run: npm run data:chunks
-
-      - name: Build compact game indexes
-        run: node scripts/build-game-indexes.js
-
-      - name: Run tests
-        run: npm test
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Commit refreshed data
+      - name: Commit refreshed datasets
         shell: bash
         run: |
           if git diff --quiet; then
@@ -101,26 +86,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/historical-player-index.json
-          git add data/historical-missing-players.json
+          git add data/master-player-data.json.gz
           git add data/wikidata-football-cache.json.gz
           git add data/career-bootstrap.json
           git add data/career-manifest.json
+          git add data/fc26-bootstrap.json
+          git add data/fc26-manifest.json
           git add data/chunks
           git add data/game-index
           git add data/players-current.txt
           git add data/players-needs-review.txt
 
-          if [ -f data/web-data.json ]; then
-            SIZE=$(stat -c%s data/web-data.json)
-            if [ "$SIZE" -lt 99614720 ]; then
-              git add data/web-data.json
-            fi
-          fi
-
-          if [ -f data/wikidata-honours-catalog.json.gz ]; then
-            git add data/wikidata-honours-catalog.json.gz
-          fi
-
-          git commit -m "data: refresh authoritative Wikidata player data"
+          git commit -m "data: refresh optimized football datasets"
           git push

@@ -1,10 +1,10 @@
-﻿(() => {
+(() => {
 
   "use strict";
 
 
   const CACHE_NAME =
-    "iki-forma-data-chunks-v3";
+    "formax-data-89062d31c0a2";
 
 
   const state = {

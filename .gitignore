@@ -18,3 +18,7 @@ data/wikidata-new-player-checkpoint.ndjson
 data/web-data.before-wikidata-*.json
 data/career-bootstrap.before-wikidata-*.json
 data/web-data.wikidata-complete-local-*.json
+data/web-data.json
+site-dist/
+*.backup-*
+*.ps1
