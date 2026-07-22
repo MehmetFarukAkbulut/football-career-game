@@ -61,6 +61,7 @@ jobs:
       - run: node scripts/filter-target-league-players.js
       - run: node scripts/fix-null-player-names.js
       - run: node scripts/finalize-wikidata-web-data.js
+      - run: node scripts/normalize-player-dataset.js
       - run: node scripts/enrich-career-statistics.js
       - run: node scripts/enrich-popularity.js
       - run: npm run data:chunks
@@ -87,6 +88,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add data/master-player-data.json.gz
+          git add data/player-stat-overrides.json
           git add data/wikidata-football-cache.json.gz
           git add data/career-bootstrap.json
           git add data/career-manifest.json

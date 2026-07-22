@@ -1,0 +1,13 @@
+{
+    "description":  "Kaynak veride eksik veya hatali kalan, dogrulanmis kalici oyuncu istatistikleri.",
+    "players":  [
+                    {
+                        "nationalCaps":  77,
+                        "nationalGoals":  31,
+                        "transfermarktPlayerId":  34987,
+                        "name":  "Burak YÄ±lmaz",
+                        "source":  "verified-career-record"
+                    }
+                ],
+    "version":  1
+}
