@@ -55,6 +55,16 @@ jobs:
           WIKIDATA_API_DELAY_MS: "600"
         run: node scripts/wikidata-periodic-refresh.js
 
+      - name: Resume Wikidata honours catalogue
+
+        env:
+
+          WIKIDATA_ENTITY_BATCH: "50"
+
+          WIKIDATA_API_DELAY_MS: "600"
+
+        run: node scripts/backfill-wikidata-honours.js
+
       - run: node scripts/merge-wikidata-football-data.js
       - run: node scripts/deduplicate-wikidata-team-statistics.js
       - run: node scripts/sanitize-wikidata-statistics.js
@@ -88,8 +98,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add data/master-player-data.json.gz
+
+          git add scripts/backfill-wikidata-honours.js
           git add data/player-stat-overrides.json
           git add data/wikidata-football-cache.json.gz
+          if [ -f data/wikidata-honours-catalog.json.gz ]; then git add data/wikidata-honours-catalog.json.gz; fi
           git add data/career-bootstrap.json
           git add data/career-manifest.json
           git add data/fc26-bootstrap.json

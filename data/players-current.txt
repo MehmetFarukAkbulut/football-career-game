@@ -19,7 +19,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 3522	Andriy Şevçenko	396	704	GUNCEL	4	Transfermarkt club career; current season reconciled
 3144	Robbie Keane	392	737	GUNCEL	12	Transfermarkt club career; current season reconciled
 3140	Ronaldo	388	481	GUNCEL	7	Transfermarkt club career; current season reconciled
-3363	Hakan Şükür	386	715	GUNCEL	7	Transfermarkt club career; current season reconciled
+3363	Hakan Şükür	386	715	GUNCEL	8	Transfermarkt club career; current season reconciled
 26399	Sergio Agüero	385	685	GUNCEL	4	Transfermarkt club career; current season reconciled
 85093	Eran Zahavi	380	655	GUNCEL	6	Transfermarkt club career; current season reconciled
 3514	Henrik Larsson	372	601	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -300,7 +300,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 137576	Hans Vanaken	203	741	GUNCEL	3	Transfermarkt club career; current season reconciled
 3094	John Hartson	203	440	GUNCEL	8	Transfermarkt club career; current season reconciled
 15821	Mert Nobre	203	581	GUNCEL	10	Transfermarkt club career; current season reconciled
-5876	Adriano Leite Ribeiro	202	364	GUNCEL	8	Transfermarkt club career; current season reconciled
+5876	Adriano Leite Ribeiro	202	364	GUNCEL	9	Transfermarkt club career; current season reconciled
 84765	Francesco Caputo	202	555	GUNCEL	8	Transfermarkt club career; current season reconciled
 34572	Mario Mandzukic	202	518	GUNCEL	8	Transfermarkt club career; current season reconciled
 206050	Paulo Dybala	202	566	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -591,7 +591,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 45219	Morten ‘Duncan’ Rasmussen	167	407	GUNCEL	10	Transfermarkt club career; current season reconciled
 22382	Moussa Sow	167	476	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T13:32:25.869Z
 25742	Nikica Jelavic	167	425	GUNCEL	10	Transfermarkt club career; current season reconciled
-4752	Oktay Derelioğlu	167	321	GUNCEL	13	Transfermarkt club career; current season reconciled
+4752	Oktay Derelioğlu	167	321	GUNCEL	14	Transfermarkt club career; current season reconciled
 107577	Roope Riski	167	418	GUNCEL	14	Transfermarkt club career; current season reconciled
 129554	Steven Berghuis	167	553	GUNCEL	10	Transfermarkt club career; current season reconciled
 76326	Tjaronn Chery	167	679	GUNCEL	13	Transfermarkt club career; current season reconciled
@@ -1506,7 +1506,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 191631	Wilmar Jordán Gil	123	320	GUNCEL	19	Live Transfermarkt game audit 2026-07-17T14:30:37.806Z
 70784	Ytalo	123	443	GUNCEL	20	Transfermarkt club career; current season reconciled
 67639	Andrey Galabinov	122	425	GUNCEL	14	Transfermarkt club career; current season reconciled
-43877	Andy Selva	122	397	GUNCEL	12	Transfermarkt club career; current season reconciled
+43877	Andy Selva	122	397	GUNCEL	13	Transfermarkt club career; current season reconciled
 68037	Cléber Schwenck Tiene	122	388	GUNCEL	20	Transfermarkt club career; current season reconciled
 3975	Domi Kumbela	122	416	GUNCEL	9	Transfermarkt club career; current season reconciled
 242638	Efthymios Koulouris	122	327	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -1603,7 +1603,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 38000	Joseph Akpala	119	420	GUNCEL	7	Transfermarkt club career; current season reconciled
 382528	Kerem Aktürkoğlu	119	372	GUNCEL	6	Transfermarkt club career; current season reconciled
 17420	Lilian Compan	119	399	GUNCEL	7	Transfermarkt club career; current season reconciled
-1914	Miguel Coulibaly	119	365	GUNCEL	5	Transfermarkt club career; current season reconciled
+1914	Miguel Coulibaly	119	365	GUNCEL	7	Transfermarkt club career; current season reconciled
 19729	Nikola Žigić	119	291	GUNCEL	4	Transfermarkt club career; current season reconciled
 131694	Olarenwaju Kayode	119	378	GUNCEL	12	Transfermarkt club career; current season reconciled
 96089	Pedro Conde	119	332	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -1695,7 +1695,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 16893	Antonio Floro Flores	116	572	GUNCEL	11	Transfermarkt club career; current season reconciled
 100485	Arkadiusz Piech	116	377	GUNCEL	11	Transfermarkt club career; current season reconciled
 17955	Arnar Gunnlaugsson	116	333	GUNCEL	13	Transfermarkt club career; current season reconciled
-1336	Babacar N'Diaye	116	368	GUNCEL	13	Transfermarkt club career; current season reconciled
+1336	Babacar N'Diaye	116	368	GUNCEL	14	Transfermarkt club career; current season reconciled
 14009	Bruce Dyer	116	445	GUNCEL	11	Transfermarkt club career; current season reconciled
 21366	Cafercan Aksu	116	420	GUNCEL	19	Transfermarkt club career; current season reconciled
 284000	Carlos Júnior	116	352	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -1730,18 +1730,18 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 432982	Andreas Skov Olsen	115	311	GUNCEL	7	Transfermarkt club career; current season reconciled
 189740	Ángelo Henríquez	115	404	GUNCEL	13	Transfermarkt club career; current season reconciled
 288952	Callum Roberts	115	302	GUNCEL	11	Live Transfermarkt game audit 2026-07-17T14:28:56.079Z
-57916	Carlos Luna	115	403	GUNCEL	8	Transfermarkt club career; current season reconciled
+57916	Carlos Luna	115	403	GUNCEL	9	Transfermarkt club career; current season reconciled
 7742	Carlos Ochoa	115	460	GUNCEL	17	Transfermarkt club career; current season reconciled
 16675	César Santin	115	308	GUNCEL	7	Transfermarkt club career; current season reconciled
 114282	Cristian López	115	408	GUNCEL	19	Transfermarkt club career; current season reconciled
-15698	Dave Kitson	115	407	GUNCEL	8	Transfermarkt club career; current season reconciled
+15698	Dave Kitson	115	407	GUNCEL	9	Transfermarkt club career; current season reconciled
 34753	Deniz Yilmaz	115	338	GUNCEL	11	Transfermarkt club career; current season reconciled
 243541	Deyverson	115	461	GUNCEL	10	Transfermarkt club career; current season reconciled
 7868	Diego Alonso	115	353	GUNCEL	11	Transfermarkt club career; current season reconciled
 167316	Djordje Despotovic	115	377	GUNCEL	13	Live Transfermarkt game audit 2026-07-17T14:20:32.781Z
 51791	Fabian Bäcker	115	325	GUNCEL	9	Transfermarkt club career; current season reconciled
 360519	Ferdy Druijf	115	269	GUNCEL	9	Transfermarkt club career; current season reconciled
-37560	Ferhat Bıkmaz	115	400	GUNCEL	9	Transfermarkt club career; current season reconciled
+37560	Ferhat Bıkmaz	115	400	GUNCEL	10	Transfermarkt club career; current season reconciled
 398184	Ferran Torres	115	359	GUNCEL	4	Transfermarkt club career; current season reconciled
 75612	Fidel Martínez	115	399	GUNCEL	14	Transfermarkt club career; current season reconciled
 409553	Franco Ferrari	115	310	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -2035,7 +2035,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 179308	Diego Rubio	107	383	GUNCEL	11	Transfermarkt club career; current season reconciled
 55317	Edno	107	470	GUNCEL	21	Transfermarkt club career; current season reconciled
 71433	Elías Hernández	107	651	GUNCEL	7	Transfermarkt club career; current season reconciled
-1394	Ermin Melunović	107	372	GUNCEL	11	Transfermarkt club career; current season reconciled
+1394	Ermin Melunović	107	372	GUNCEL	12	Transfermarkt club career; current season reconciled
 61887	Federico Macheda	107	439	GUNCEL	14	Transfermarkt club career; current season reconciled
 592377	Felipe de Sousa Silva	107	232	GUNCEL	6	Transfermarkt club career; current season reconciled
 42411	Fraizer Campbell	107	450	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -2057,7 +2057,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 13437	Sambégou Bangoura	107	302	GUNCEL	7	Transfermarkt club career; current season reconciled
 214096	Samuel Rosa Gonçalves	107	404	GUNCEL	13	Transfermarkt club career; current season reconciled
 66106	Sergio Canales	107	600	GUNCEL	7	Transfermarkt club career; current season reconciled
-7823	Sergio Pachón	107	467	GUNCEL	7	Transfermarkt club career; current season reconciled
+7823	Sergio Pachón	107	467	GUNCEL	8	Transfermarkt club career; current season reconciled
 93827	Steven Skrzybski	107	395	GUNCEL	7	Transfermarkt club career; current season reconciled
 185400	Sven Braken	107	376	GUNCEL	9	Transfermarkt club career; current season reconciled
 27621	Sylvan Ebanks-Blake	107	372	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -2137,7 +2137,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 116088	Marius Bülter	105	442	GUNCEL	9	Transfermarkt club career; current season reconciled
 210363	Mariusz Stępiński	105	417	GUNCEL	11	Transfermarkt club career; current season reconciled
 405568	Maurice Malone	105	262	GUNCEL	10	Transfermarkt club career; current season reconciled
-6245	Nicolas Goussé	105	397	GUNCEL	8	Transfermarkt club career; current season reconciled
+6245	Nicolas Goussé	105	397	GUNCEL	9	Transfermarkt club career; current season reconciled
 35252	Özgür Can Özcan	105	432	GUNCEL	21	Transfermarkt club career; current season reconciled
 122028	Pascal Schmidt	105	371	GUNCEL	11	Transfermarkt club career; current season reconciled
 804	Peter Van Houdt	105	433	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -2217,7 +2217,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 97013	Marlon de Jesús	103	418	GUNCEL	15	Live Transfermarkt game audit 2026-07-17T14:28:27.716Z
 13639	Martin Butler	103	351	GUNCEL	6	Transfermarkt club career; current season reconciled
 165895	Matteo Politano	103	620	GUNCEL	6	Transfermarkt club career; current season reconciled
-101345	Pasquale Maiorino	103	439	GUNCEL	13	Transfermarkt club career; current season reconciled
+101345	Pasquale Maiorino	103	439	GUNCEL	14	Transfermarkt club career; current season reconciled
 58692	Patrick Vouho	103	394	GUNCEL	12	Transfermarkt club career; current season reconciled
 3218	Patrik Berger	103	438	GUNCEL	7	Transfermarkt club career; current season reconciled
 13322	Paul Kpaka	103	292	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -2314,7 +2314,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 340700	Ivan Prtajin	100	265	GUNCEL	12	Transfermarkt club career; current season reconciled
 178322	Jean Evrard Kouassi	100	334	GUNCEL	7	Transfermarkt club career; current season reconciled
 207043	Joey Sleegers	100	346	GUNCEL	11	Transfermarkt club career; current season reconciled
-58618	Juan Belencoso	100	284	GUNCEL	13	Transfermarkt club career; current season reconciled
+58618	Juan Belencoso	100	284	GUNCEL	14	Transfermarkt club career; current season reconciled
 123252	Junya Tanaka	100	424	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:27:40.519Z
 73951	Kehinde Fatai	100	418	GUNCEL	12	Live Transfermarkt game audit 2026-07-17T14:27:38.194Z
 131951	Kevin Lasagna	100	452	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -2376,7 +2376,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 164389	Rory Donnelly	99	409	GUNCEL	7	Transfermarkt club career; current season reconciled
 424885	Sam Smith	99	322	GUNCEL	9	Transfermarkt club career; current season reconciled
 85667	Serdar Eylik	99	461	GUNCEL	20	Transfermarkt club career; current season reconciled
-57906	Sergio Suárez	99	345	GUNCEL	5	Transfermarkt club career; current season reconciled
+57906	Sergio Suárez	99	345	GUNCEL	6	Transfermarkt club career; current season reconciled
 48069	Steve Fletcher	99	594	GUNCEL	5	Transfermarkt club career; current season reconciled
 439292	Sydney van Hooijdonk	99	271	GUNCEL	9	Transfermarkt club career; current season reconciled
 56643	Wanderson	99	364	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -2434,7 +2434,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 290532	Saïd Benrahma	98	408	GUNCEL	9	Transfermarkt club career; current season reconciled
 54576	Sebastián Blanco	98	563	GUNCEL	8	Transfermarkt club career; current season reconciled
 144449	Sinan Uzun	98	324	GUNCEL	13	Transfermarkt club career; current season reconciled
-29435	Steve Claridge	98	385	GUNCEL	15	Transfermarkt club career; current season reconciled
+29435	Steve Claridge	98	385	GUNCEL	16	Transfermarkt club career; current season reconciled
 440493	Tim Freriks	98	259	GUNCEL	12	Transfermarkt club career; current season reconciled
 228966	Timm Golley	98	316	GUNCEL	10	Transfermarkt club career; current season reconciled
 96621	Wes Thomas	98	377	GUNCEL	15	Transfermarkt club career; current season reconciled
@@ -2444,7 +2444,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 61682	Amine Chermiti	97	337	GUNCEL	8	Transfermarkt club career; current season reconciled
 28990	Charlie Adam	97	536	GUNCEL	11	Transfermarkt club career; current season reconciled
 18412	Christophe Lauwers	97	339	GUNCEL	7	Transfermarkt club career; current season reconciled
-22620	Claudio De Sousa	97	389	GUNCEL	17	Transfermarkt club career; current season reconciled
+22620	Claudio De Sousa	97	389	GUNCEL	18	Transfermarkt club career; current season reconciled
 416809	Daniel Hanslik	97	298	GUNCEL	8	Transfermarkt club career; current season reconciled
 48119	Danijel Aleksic	97	441	GUNCEL	12	Transfermarkt club career; current season reconciled
 46	Darko Pivaljević	97	310	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -2587,7 +2587,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 217593	Todor Nedelev	95	366	GUNCEL	5	Transfermarkt club career; current season reconciled
 132764	Tony Watt	95	462	GUNCEL	16	Transfermarkt club career; current season reconciled
 259025	Umut Bozok	95	299	GUNCEL	9	Transfermarkt club career; current season reconciled
-8558	Vladimir Manchev	95	264	GUNCEL	6	Transfermarkt club career; current season reconciled
+8558	Vladimir Manchev	95	264	GUNCEL	7	Transfermarkt club career; current season reconciled
 230541	Yoshinori Muto	95	330	GUNCEL	5	Transfermarkt club career; current season reconciled
 264429	Yuning Zhang	95	254	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:27:49.907Z
 56607	Anco Jansen	94	418	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -2759,7 +2759,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 52317	Deniz Naki	91	286	GUNCEL	9	Transfermarkt club career; current season reconciled
 120610	Diafra Sakho	91	276	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:20:48.072Z
 45646	Diego Buonanotte	91	543	GUNCEL	11	Transfermarkt club career; current season reconciled
-12031	Éric Hassli	91	371	GUNCEL	14	Transfermarkt club career; current season reconciled
+12031	Éric Hassli	91	371	GUNCEL	15	Transfermarkt club career; current season reconciled
 23674	Erkan Zengin	91	434	GUNCEL	9	Transfermarkt club career; current season reconciled
 123497	Facundo Pereyra	91	390	GUNCEL	15	Transfermarkt club career; current season reconciled
 352017	Faïz Selemani	91	319	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -3016,7 +3016,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 31351	Sinha	87	683	GUNCEL	4	Transfermarkt club career; current season reconciled
 124774	Srdjan Spiridonovic	87	333	GUNCEL	14	Transfermarkt club career; current season reconciled
 35183	Stefan Aigner	87	436	GUNCEL	10	Live Transfermarkt game audit 2026-07-17T14:20:40.925Z
-154386	Stefan Langemann	87	242	GUNCEL	8	Transfermarkt club career; current season reconciled
+154386	Stefan Langemann	87	242	GUNCEL	9	Transfermarkt club career; current season reconciled
 394033	Stefan Schimmer	87	314	GUNCEL	4	Transfermarkt club career; current season reconciled
 42417	Takayuki Morimoto	87	395	GUNCEL	10	Transfermarkt club career; current season reconciled
 149632	Yasin Ozan	87	388	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -3240,7 +3240,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 3137	Jesper Grønkjær	83	434	GUNCEL	7	Transfermarkt club career; current season reconciled
 178389	Jonatas Belusso	83	274	GUNCEL	17	Transfermarkt club career; current season reconciled
 28328	Julien Féret	83	563	GUNCEL	8	Transfermarkt club career; current season reconciled
-6074	julio tronco de león	83	353	GUNCEL	20	Transfermarkt club career; current season reconciled
+6074	julio tronco de león	83	353	GUNCEL	21	Transfermarkt club career; current season reconciled
 405397	Keito Nakamura	83	236	GUNCEL	8	Transfermarkt club career; current season reconciled
 243714	Kingsley Coman	83	390	GUNCEL	6	Transfermarkt club career; current season reconciled
 56657	Maor Buzaglo	83	400	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:28:27.144Z
@@ -3269,7 +3269,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 108820	Ulises Dávila	83	377	GUNCEL	14	Transfermarkt club career; current season reconciled
 199472	William Pottker	83	374	GUNCEL	14	Transfermarkt club career; current season reconciled
 56022	Ádám Hrepka	82	351	GUNCEL	9	Transfermarkt club career; current season reconciled
-7176	Alban Bushi	82	270	GUNCEL	8	Transfermarkt club career; current season reconciled
+7176	Alban Bushi	82	270	GUNCEL	9	Transfermarkt club career; current season reconciled
 197751	Alberto Cerri	82	316	GUNCEL	10	Transfermarkt club career; current season reconciled
 2923	Andreas Ivanschitz	82	524	GUNCEL	8	Transfermarkt club career; current season reconciled
 126461	Antonio López Ojedo	82	374	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -3369,7 +3369,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 48669	Élton Arábia	81	370	GUNCEL	11	Transfermarkt club career; current season reconciled
 293325	Emil Riis	81	307	GUNCEL	6	Transfermarkt club career; current season reconciled
 177031	Emrah Başsan	81	452	GUNCEL	10	Transfermarkt club career; current season reconciled
-56715	Emrah Bozkurt	81	302	GUNCEL	8	Transfermarkt club career; current season reconciled
+56715	Emrah Bozkurt	81	302	GUNCEL	9	Transfermarkt club career; current season reconciled
 439294	Enzo Stroo	81	234	GUNCEL	5	Transfermarkt club career; current season reconciled
 192043	Fabian Serrarens	81	381	GUNCEL	10	Transfermarkt club career; current season reconciled
 22289	Fabio Alteri	81	397	GUNCEL	15	Transfermarkt club career; current season reconciled
@@ -3404,7 +3404,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 126542	Mohamed Yattara	81	331	GUNCEL	12	Transfermarkt club career; current season reconciled
 42399	Mustapha Alasan Jarju	81	292	GUNCEL	4	Live Transfermarkt game audit 2026-07-17T14:25:40.537Z
 5033	Newton Ben Katanha	81	270	GUNCEL	11	Transfermarkt club career; current season reconciled
-1824	Nico Beigang	81	316	GUNCEL	7	Transfermarkt club career; current season reconciled
+1824	Nico Beigang	81	316	GUNCEL	8	Transfermarkt club career; current season reconciled
 8491	Olcan Adin	81	429	GUNCEL	8	Transfermarkt club career; current season reconciled
 84282	Pablo Velázquez	81	297	GUNCEL	15	Transfermarkt club career; current season reconciled
 73846	Paul-José Mpoku	81	463	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -4008,7 +4008,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 29387	Hasan Kabze	73	351	GUNCEL	11	Transfermarkt club career; current season reconciled
 484888	Ibrahim Sissoko	73	226	GUNCEL	11	Transfermarkt club career; current season reconciled
 339839	Ibson Melo	73	291	GUNCEL	13	Live Transfermarkt game audit 2026-07-17T14:28:22.928Z
-765	Jacek Krzynówek	73	355	GUNCEL	6	Transfermarkt club career; current season reconciled
+765	Jacek Krzynówek	73	355	GUNCEL	7	Transfermarkt club career; current season reconciled
 239949	Jamal Lowe	73	370	GUNCEL	8	Transfermarkt club career; current season reconciled
 9956	James McFadden	73	399	GUNCEL	8	Transfermarkt club career; current season reconciled
 543302	Jeppe Erenbjerg	73	256	GUNCEL	3	Transfermarkt club career; current season reconciled
@@ -4033,7 +4033,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 33831	Modou Sougou	73	374	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:24:32.651Z
 2703	Morten Skoubo	73	293	GUNCEL	10	Transfermarkt club career; current season reconciled
 460655	Moussa Sylla	73	247	GUNCEL	9	Transfermarkt club career; current season reconciled
-57872	Nacho Casanova	73	284	GUNCEL	9	Transfermarkt club career; current season reconciled
+57872	Nacho Casanova	73	284	GUNCEL	10	Transfermarkt club career; current season reconciled
 32213	Naldo	73	542	GUNCEL	5	Transfermarkt club career; current season reconciled
 125409	Nathaniel Méndez-Laing	73	506	GUNCEL	13	Transfermarkt club career; current season reconciled
 390177	Nedim Bajrami	73	386	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -4053,7 +4053,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 24232	Ronny Garbuschewski	73	394	GUNCEL	13	Live Transfermarkt game audit 2026-07-17T14:30:12.953Z
 62919	Rubén Ramos Martínez	73	394	GUNCEL	12	Transfermarkt club career; current season reconciled
 18935	Samir Nasri	73	520	GUNCEL	8	Transfermarkt club career; current season reconciled
-2287	Sead Mehić	73	496	GUNCEL	8	Transfermarkt club career; current season reconciled
+2287	Sead Mehić	73	496	GUNCEL	9	Transfermarkt club career; current season reconciled
 64952	Sebastián Pinto	73	223	GUNCEL	13	Live Transfermarkt game audit 2026-07-17T14:23:22.077Z
 56518	Sefa Yilmaz	73	511	GUNCEL	14	Transfermarkt club career; current season reconciled
 7912	Sérgio Conceição	73	440	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -4225,7 +4225,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 207578	Max Besuschkow	71	358	GUNCEL	11	Transfermarkt club career; current season reconciled
 65331	Míchel Herrero	71	537	GUNCEL	12	Transfermarkt club career; current season reconciled
 54774	Miguel de las Cuevas	71	500	GUNCEL	7	Transfermarkt club career; current season reconciled
-7229	Murat Sözkesen	71	243	GUNCEL	6	Transfermarkt club career; current season reconciled
+7229	Murat Sözkesen	71	243	GUNCEL	7	Transfermarkt club career; current season reconciled
 51488	Néstor Susaeta	71	519	GUNCEL	12	Transfermarkt club career; current season reconciled
 392085	Nicolò Zaniolo	71	339	GUNCEL	12	Transfermarkt club career; current season reconciled
 44742	Nikolay Dimitrov	71	387	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:24:37.751Z
@@ -4349,7 +4349,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 18429	Denis Epstein	69	451	GUNCEL	13	Live Transfermarkt game audit 2026-07-17T14:22:33.732Z
 52787	Dentinho	69	383	GUNCEL	6	Transfermarkt club career; current season reconciled
 70754	Denys Garmash	69	457	GUNCEL	7	Transfermarkt club career; current season reconciled
-29118	Diego Torres Rodríguez	69	302	GUNCEL	14	Transfermarkt club career; current season reconciled
+29118	Diego Torres Rodríguez	69	302	GUNCEL	15	Transfermarkt club career; current season reconciled
 51191	Djalma	69	409	GUNCEL	9	Transfermarkt club career; current season reconciled
 16506	Dursun Karatay	69	322	GUNCEL	11	Transfermarkt club career; current season reconciled
 67474	Emilio Mora	69	311	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -4495,7 +4495,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 395522	Samuel Essende	68	268	GUNCEL	11	Transfermarkt club career; current season reconciled
 124517	Sebastian Kerk	68	372	GUNCEL	11	Transfermarkt club career; current season reconciled
 208552	Siebe Schrijvers	68	428	GUNCEL	4	Transfermarkt club career; current season reconciled
-5487	Stéphane Pédron	68	429	GUNCEL	5	Transfermarkt club career; current season reconciled
+5487	Stéphane Pédron	68	429	GUNCEL	6	Transfermarkt club career; current season reconciled
 17890	Stephen Elliott	68	320	GUNCEL	10	Transfermarkt club career; current season reconciled
 343184	Sylla Sow	68	300	GUNCEL	11	Transfermarkt club career; current season reconciled
 184440	Tayfur Bingöl	68	442	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -4601,7 +4601,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 273669	Adrian Beck	66	342	GUNCEL	8	Transfermarkt club career; current season reconciled
 263918	Aleksandr Golovin	66	423	GUNCEL	4	Transfermarkt club career; current season reconciled
 443338	Alisson Safira	66	313	GUNCEL	11	Transfermarkt club career; current season reconciled
-50962	András Simon	66	330	GUNCEL	12	Transfermarkt club career; current season reconciled
+50962	András Simon	66	330	GUNCEL	13	Transfermarkt club career; current season reconciled
 39828	Antonino Barillà	66	526	GUNCEL	10	Transfermarkt club career; current season reconciled
 320826	Ayodele Adetula	66	270	GUNCEL	10	Transfermarkt club career; current season reconciled
 19340	Bastian Schulz	66	373	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -4650,7 +4650,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 214104	James Wilson	66	302	GUNCEL	11	Transfermarkt club career; current season reconciled
 3266	Jérémie Aliadière	66	302	GUNCEL	9	Transfermarkt club career; current season reconciled
 910	Jiří Kaufman	66	263	GUNCEL	10	Transfermarkt club career; current season reconciled
-188989	Joe Nagbe	66	311	GUNCEL	7	Transfermarkt club career; current season reconciled
+188989	Joe Nagbe	66	311	GUNCEL	8	Transfermarkt club career; current season reconciled
 31108	John Jairo Mosquera	66	268	GUNCEL	16	Transfermarkt club career; current season reconciled
 20758	Jorge Valdivia	66	402	GUNCEL	12	Transfermarkt club career; current season reconciled
 20417	Julian Loose	66	366	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -5074,7 +5074,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 231289	Otávio	62	475	GUNCEL	6	Transfermarkt club career; current season reconciled
 368582	Pablo Fernández	62	335	GUNCEL	5	Transfermarkt club career; current season reconciled
 3183	Patrick Vieira	62	650	GUNCEL	6	Transfermarkt club career; current season reconciled
-32891	Patrik Ingelsten	62	220	GUNCEL	9	Transfermarkt club career; current season reconciled
+32891	Patrik Ingelsten	62	220	GUNCEL	10	Transfermarkt club career; current season reconciled
 51530	Philip Haglund	62	329	GUNCEL	7	Transfermarkt club career; current season reconciled
 175377	Pio	62	388	GUNCEL	20	Transfermarkt club career; current season reconciled
 1274	Radosław Kałużny	62	348	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -5793,7 +5793,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 371256	Tetê	56	273	GUNCEL	5	Transfermarkt club career; current season reconciled
 743951	Thiago Borbas	56	232	GUNCEL	3	Transfermarkt club career; current season reconciled
 139337	Tiago Rodrigues	56	387	GUNCEL	10	Transfermarkt club career; current season reconciled
-113536	Tomaš Heřman	56	209	GUNCEL	5	Transfermarkt club career; current season reconciled
+113536	Tomaš Heřman	56	209	GUNCEL	6	Transfermarkt club career; current season reconciled
 354114	Urho Nissilä	56	287	GUNCEL	6	Transfermarkt club career; current season reconciled
 4333	Victor Sikora	56	300	GUNCEL	7	Transfermarkt club career; current season reconciled
 167472	Youssouf M'Changama	56	429	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -6233,7 +6233,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 519226	Jabez Makanda	52	157	GUNCEL	10	Transfermarkt club career; current season reconciled
 360517	Jay-Roy Grot	52	245	GUNCEL	13	Transfermarkt club career; current season reconciled
 166666	Jean Marie Dongou	52	251	GUNCEL	10	Transfermarkt club career; current season reconciled
-177381	Jenison de Jesus Brito e Brito	52	311	GUNCEL	13	Transfermarkt club career; current season reconciled
+177381	Jenison de Jesus Brito e Brito	52	311	GUNCEL	14	Transfermarkt club career; current season reconciled
 15956	Jesús Navas	52	888	GUNCEL	2	Transfermarkt club career; current season reconciled
 80205	Jimmy Durmaz	52	451	GUNCEL	8	Transfermarkt club career; current season reconciled
 44687	Johan Cavalli	52	491	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -6329,7 +6329,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 71905	Coke	51	471	GUNCEL	6	Transfermarkt club career; current season reconciled
 1400	Cristiano Pereira de Souza	51	291	GUNCEL	19	Transfermarkt club career; current season reconciled
 369653	Daleho Irandust	51	274	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:27:58.315Z
-25462	David López Moreno	51	437	GUNCEL	10	Transfermarkt club career; current season reconciled
+25462	David López Moreno	51	437	GUNCEL	11	Transfermarkt club career; current season reconciled
 3272	David Unsworth	51	508	GUNCEL	8	Transfermarkt club career; current season reconciled
 238951	Davide Di Molfetta	51	376	GUNCEL	12	Transfermarkt club career; current season reconciled
 241701	Devrim Taşkaya	51	248	GUNCEL	13	Transfermarkt club career; current season reconciled
@@ -6573,7 +6573,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 193584	Abdoulaye Sané	49	226	GUNCEL	9	Transfermarkt club career; current season reconciled
 121402	Ahmad Benali	49	395	GUNCEL	11	Transfermarkt club career; current season reconciled
 63724	Álex Quillo	49	271	GUNCEL	7	Transfermarkt club career; current season reconciled
-35838	Ali Gerba	49	111	GUNCEL	9	Transfermarkt club career; current season reconciled
+35838	Ali Gerba	49	111	GUNCEL	10	Transfermarkt club career; current season reconciled
 253839	Álvaro Medrán	49	340	GUNCEL	10	Transfermarkt club career; current season reconciled
 96167	Amin Younes	49	341	GUNCEL	13	Transfermarkt club career; current season reconciled
 58981	André Carvalhas	49	342	GUNCEL	13	Transfermarkt club career; current season reconciled
@@ -6673,7 +6673,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 332913	Patrick Huth	49	169	GUNCEL	7	Transfermarkt club career; current season reconciled
 97263	Per Pedersen	49	125	GUNCEL	5	Transfermarkt club career; current season reconciled
 284870	Peu	49	140	GUNCEL	11	Live Transfermarkt game audit 2026-07-17T14:28:31.185Z
-226820	Quim Araújo	49	433	GUNCEL	11	Transfermarkt club career; current season reconciled
+226820	Quim Araújo	49	433	GUNCEL	12	Transfermarkt club career; current season reconciled
 188734	Renato César	49	280	GUNCEL	9	Transfermarkt club career; current season reconciled
 191830	Renato Ibarra	49	473	GUNCEL	7	Transfermarkt club career; current season reconciled
 800995	Ro-Zangelo Daal	49	185	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -7155,7 +7155,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 188905	Stanley Elbers	46	260	GUNCEL	11	Transfermarkt club career; current season reconciled
 4321	Steven Pienaar	46	441	GUNCEL	8	Transfermarkt club career; current season reconciled
 283140	Tarsis Bonga	46	273	GUNCEL	13	Transfermarkt club career; current season reconciled
-31688	Taylan Uzunoğlu	46	237	GUNCEL	17	Transfermarkt club career; current season reconciled
+31688	Taylan Uzunoğlu	46	237	GUNCEL	18	Transfermarkt club career; current season reconciled
 151350	Thierry Moreau	46	543	GUNCEL	4	Transfermarkt club career; current season reconciled
 1573	Thomas Hitzlsperger	46	333	GUNCEL	10	Transfermarkt club career; current season reconciled
 95377	Tom Pettersson	46	473	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -7446,7 +7446,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 179635	Philipp Förster	44	361	GUNCEL	13	Transfermarkt club career; current season reconciled
 39489	Ramón Ramírez (futbolcu)	44	287	GUNCEL	7	Transfermarkt club career; current season reconciled
 139395	Ricardo Esgaio	44	500	GUNCEL	5	Transfermarkt club career; current season reconciled
-20902	Richard Offiong	44	163	GUNCEL	12	Transfermarkt club career; current season reconciled
+20902	Richard Offiong	44	163	GUNCEL	13	Transfermarkt club career; current season reconciled
 371008	Roko Baturina	44	178	GUNCEL	12	Transfermarkt club career; current season reconciled
 346853	Romano Schmid	44	320	GUNCEL	9	Transfermarkt club career; current season reconciled
 225161	Rúben Neves	44	438	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -7872,7 +7872,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 285020	Gabriel Xavier	41	315	GUNCEL	8	Transfermarkt club career; current season reconciled
 218140	George Honeyman	41	425	GUNCEL	6	Transfermarkt club career; current season reconciled
 1004834	George Ilenikhena	41	133	GUNCEL	5	Transfermarkt club career; current season reconciled
-73204	Gerard Bordas	41	199	GUNCEL	7	Transfermarkt club career; current season reconciled
+73204	Gerard Bordas	41	199	GUNCEL	8	Transfermarkt club career; current season reconciled
 707295	Giuseppe Ambrosino	41	150	GUNCEL	7	Transfermarkt club career; current season reconciled
 13495	Gonzague Vandooren	41	380	GUNCEL	4	Transfermarkt club career; current season reconciled
 7813	Gonzalo Colsa	41	429	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -8046,7 +8046,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 259917	Jhonatan Candia	40	223	GUNCEL	9	Transfermarkt club career; current season reconciled
 148734	Jiri Skalak	40	389	GUNCEL	12	Transfermarkt club career; current season reconciled
 35527	John Goossens	40	254	GUNCEL	8	Transfermarkt club career; current season reconciled
-517859	Jon Ander Pérez Ruiz de Garibay	40	169	GUNCEL	6	Transfermarkt club career; current season reconciled
+517859	Jon Ander Pérez Ruiz de Garibay	40	169	GUNCEL	7	Transfermarkt club career; current season reconciled
 537467	Joseph Efford	40	164	GUNCEL	4	Transfermarkt club career; current season reconciled
 5399	Kamel Chafni	40	354	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:28:03.832Z
 46552	Kamil Glik	40	522	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -8056,7 +8056,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 696655	Kibe	40	101	GUNCEL	7	Transfermarkt club career; current season reconciled
 243188	László Bénes	40	279	GUNCEL	10	Transfermarkt club career; current season reconciled
 796303	Leo Castledine	40	138	GUNCEL	6	Transfermarkt club career; current season reconciled
-4288	Lorenzo Amoruso	40	423	GUNCEL	7	Transfermarkt club career; current season reconciled
+4288	Lorenzo Amoruso	40	423	GUNCEL	8	Transfermarkt club career; current season reconciled
 329814	Luca Horn	40	246	GUNCEL	9	Transfermarkt club career; current season reconciled
 22210	Luca Rigoni	40	506	GUNCEL	7	Transfermarkt club career; current season reconciled
 26721	Lucas Biglia	40	686	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:20:53.754Z
@@ -8095,7 +8095,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 245537	Nabil Bentaleb	40	347	GUNCEL	7	Transfermarkt club career; current season reconciled
 366729	Nazariy Rusyn	40	158	GUNCEL	9	Transfermarkt club career; current season reconciled
 2997	Neil Kilkenny	40	577	GUNCEL	9	Transfermarkt club career; current season reconciled
-30927	Nicolás Esteban Medina Ríos	40	137	GUNCEL	10	Transfermarkt club career; current season reconciled
+30927	Nicolás Esteban Medina Ríos	40	137	GUNCEL	11	Transfermarkt club career; current season reconciled
 1139	Nikolce Noveski	40	528	GUNCEL	5	Transfermarkt club career; current season reconciled
 335924	Noah Awuku	40	167	GUNCEL	7	Transfermarkt club career; current season reconciled
 741238	Omari Hutchinson	40	196	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -8454,7 +8454,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 118413	Jean Barrientos	38	415	GUNCEL	10	Transfermarkt club career; current season reconciled
 290872	Jérémie Porsan-Clémente	38	177	GUNCEL	10	Live Transfermarkt game audit 2026-07-17T14:29:25.423Z
 182712	João Cancelo	38	486	GUNCEL	9	Transfermarkt club career; current season reconciled
-43470	Johan Wigger	38	304	GUNCEL	4	Transfermarkt club career; current season reconciled
+43470	Johan Wigger	38	304	GUNCEL	5	Transfermarkt club career; current season reconciled
 231039	Johnath Marlone	38	380	GUNCEL	12	Transfermarkt club career; current season reconciled
 628621	Jonathan Dubasin	38	185	GUNCEL	8	Transfermarkt club career; current season reconciled
 55800	Jorge Andrés Martínez	38	207	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -8558,7 +8558,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 90885	Uros Matic	38	454	GUNCEL	12	Transfermarkt club career; current season reconciled
 165472	Valmir Nafiu	38	330	GUNCEL	12	Live Transfermarkt game audit 2026-07-17T14:30:33.204Z
 157373	Vladlen Yurchenko	38	207	GUNCEL	9	Transfermarkt club career; current season reconciled
-35646	Vojtěch Schulmeister	38	183	GUNCEL	9	Transfermarkt club career; current season reconciled
+35646	Vojtěch Schulmeister	38	183	GUNCEL	10	Transfermarkt club career; current season reconciled
 5938	Walter Samuel	38	554	GUNCEL	5	Transfermarkt club career; current season reconciled
 743498	Wilson Odobert	38	152	GUNCEL	5	Transfermarkt club career; current season reconciled
 13763	Yacine Bezzaz	38	334	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -9121,7 +9121,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 61446	Guus Joppen	35	575	GUNCEL	7	Transfermarkt club career; current season reconciled
 9963	Guylain Ndumbu-Nsungu	35	172	GUNCEL	9	Transfermarkt club career; current season reconciled
 134539	Habib Uzun	35	148	GUNCEL	13	Transfermarkt club career; current season reconciled
-33026	Hendrik Hahne	35	221	GUNCEL	6	Transfermarkt club career; current season reconciled
+33026	Hendrik Hahne	35	221	GUNCEL	7	Transfermarkt club career; current season reconciled
 508642	Ibrahim El Kadiri	35	196	GUNCEL	5	Transfermarkt club career; current season reconciled
 4618	Ivan Vicelich	35	333	GUNCEL	4	Transfermarkt club career; current season reconciled
 7434	Ívar Ingimarsson	35	527	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -9172,7 +9172,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 55269	Marcos Antônio de Lima	35	457	GUNCEL	6	Transfermarkt club career; current season reconciled
 124936	Mario La Canna	35	335	GUNCEL	11	Transfermarkt club career; current season reconciled
 256000	Marko Jevtovic	35	403	GUNCEL	8	Transfermarkt club career; current season reconciled
-37	Markus Dworrak	35	155	GUNCEL	12	Transfermarkt club career; current season reconciled
+37	Markus Dworrak	35	155	GUNCEL	13	Transfermarkt club career; current season reconciled
 49292	Martin Kayongo-Mutumba	35	312	GUNCEL	13	Transfermarkt club career; current season reconciled
 289272	Martín Merquelanz	35	187	GUNCEL	6	Transfermarkt club career; current season reconciled
 24180	Martin Skrtel	35	622	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -9458,7 +9458,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 425902	Ryan Yates	34	358	GUNCEL	6	Transfermarkt club career; current season reconciled
 13340	Sam Morrow	34	218	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:27:55.722Z
 94005	Sead Kolasinac	34	520	GUNCEL	9	Transfermarkt club career; current season reconciled
-6797	Sebastian Hofmann	34	204	GUNCEL	7	Transfermarkt club career; current season reconciled
+6797	Sebastian Hofmann	34	204	GUNCEL	8	Transfermarkt club career; current season reconciled
 91942	Sefer Sever	34	215	GUNCEL	11	Transfermarkt club career; current season reconciled
 38763	Segundo Castillo	34	308	GUNCEL	12	Transfermarkt club career; current season reconciled
 185915	Serdar Deniz	34	198	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -9646,7 +9646,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 43248	Ludovic Sylvestre	33	374	GUNCEL	10	Live Transfermarkt game audit 2026-07-17T14:28:04.214Z
 511534	Lukas Engel	33	278	GUNCEL	6	Transfermarkt club career; current season reconciled
 167552	Manfred Osei Kwadwo	33	205	GUNCEL	12	Transfermarkt club career; current season reconciled
-26839	Manny Lagos	33	192	GUNCEL	7	Transfermarkt club career; current season reconciled
+26839	Manny Lagos	33	192	GUNCEL	8	Transfermarkt club career; current season reconciled
 586	Marcelo Bordon	33	461	GUNCEL	3	Transfermarkt club career; current season reconciled
 99232	Marco D'Alessandro	33	475	GUNCEL	15	Transfermarkt club career; current season reconciled
 16520	Marco Russ	33	426	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -9689,7 +9689,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 7739	Patxi Puñal	33	506	GUNCEL	2	Transfermarkt club career; current season reconciled
 39322	Paul Cook	33	422	GUNCEL	8	Transfermarkt club career; current season reconciled
 810108	Paul Hennrich	33	94	GUNCEL	4	Transfermarkt club career; current season reconciled
-536	Paul Stalteri	33	358	GUNCEL	5	Transfermarkt club career; current season reconciled
+536	Paul Stalteri	33	358	GUNCEL	6	Transfermarkt club career; current season reconciled
 18021	Paul Verhaegh	33	484	GUNCEL	6	Transfermarkt club career; current season reconciled
 842718	Paulinho	33	130	GUNCEL	8	Transfermarkt club career; current season reconciled
 853529	Paulo Baya	33	156	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -10184,7 +10184,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 112022	Maxime Barthelmé	31	364	GUNCEL	6	Transfermarkt club career; current season reconciled
 583046	Medon Berisha	31	149	GUNCEL	6	Transfermarkt club career; current season reconciled
 52791	Michael Gardawski	31	440	GUNCEL	18	Transfermarkt club career; current season reconciled
-84650	Michael König	31	228	GUNCEL	5	Transfermarkt club career; current season reconciled
+84650	Michael König	31	228	GUNCEL	6	Transfermarkt club career; current season reconciled
 189640	Michal Travnik	31	399	GUNCEL	4	Transfermarkt club career; current season reconciled
 187105	Mike van der Hoorn	31	454	GUNCEL	7	Transfermarkt club career; current season reconciled
 391278	Muammer Sarıkaya	31	250	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -10228,7 +10228,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 936684	Saad El Haddad	31	80	GUNCEL	5	Transfermarkt club career; current season reconciled
 670851	Sam Mather	31	96	GUNCEL	6	Transfermarkt club career; current season reconciled
 268429	Sandi Lovrić	31	353	GUNCEL	6	Transfermarkt club career; current season reconciled
-380277	Santiago Samanes Bonito	31	239	GUNCEL	10	Transfermarkt club career; current season reconciled
+380277	Santiago Samanes Bonito	31	239	GUNCEL	11	Transfermarkt club career; current season reconciled
 4020	Sebastian Radtke	31	151	GUNCEL	9	Transfermarkt club career; current season reconciled
 220976	Sebastian Steblecki	31	373	GUNCEL	10	Transfermarkt club career; current season reconciled
 557612	Sékou Mara	31	170	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -10504,7 +10504,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 496601	Tyrone Tormin	30	119	GUNCEL	8	Transfermarkt club career; current season reconciled
 603348	Valmir Veliu	30	197	GUNCEL	5	Transfermarkt club career; current season reconciled
 23874	Vincent Rüfli	30	465	GUNCEL	8	Transfermarkt club career; current season reconciled
-96402	Volkan Kabadayı	30	133	GUNCEL	12	Transfermarkt club career; current season reconciled
+96402	Volkan Kabadayı	30	133	GUNCEL	13	Transfermarkt club career; current season reconciled
 131553	Vyacheslav Churko	30	289	GUNCEL	10	Transfermarkt club career; current season reconciled
 75437	Werley	30	458	GUNCEL	8	Transfermarkt club career; current season reconciled
 166483	Wescley Gomes dos Santos	30	350	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -10604,7 +10604,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 271335	Fabiano	29	444	GUNCEL	7	Transfermarkt club career; current season reconciled
 7277	Fábio Luciano	29	316	GUNCEL	6	Transfermarkt club career; current season reconciled
 54140	Fabrício dos Santos Silva	29	372	GUNCEL	10	Transfermarkt club career; current season reconciled
-68307	Fabrizio Romondini	29	450	GUNCEL	19	Transfermarkt club career; current season reconciled
+68307	Fabrizio Romondini	29	450	GUNCEL	20	Transfermarkt club career; current season reconciled
 162079	Fede Vico	29	348	GUNCEL	11	Transfermarkt club career; current season reconciled
 238809	Florent Hadergjonaj	29	449	GUNCEL	7	Transfermarkt club career; current season reconciled
 127108	Florian Lejeune	29	502	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -10751,7 +10751,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 357745	Recep Gül	29	143	GUNCEL	8	Transfermarkt club career; current season reconciled
 247	René Schneider	29	196	GUNCEL	6	Transfermarkt club career; current season reconciled
 359537	Ricardo Rodrigues	29	95	GUNCEL	9	Transfermarkt club career; current season reconciled
-13730	Richard Pacquette	29	129	GUNCEL	12	Transfermarkt club career; current season reconciled
+13730	Richard Pacquette	29	129	GUNCEL	13	Transfermarkt club career; current season reconciled
 22261	Robert Scannewin	29	302	GUNCEL	10	Transfermarkt club career; current season reconciled
 52807	Robin Henkens	29	379	GUNCEL	5	Transfermarkt club career; current season reconciled
 250030	Robin Maulun	29	227	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -10932,7 +10932,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 314241	Josh Laurent	28	421	GUNCEL	10	Transfermarkt club career; current season reconciled
 432694	Joshua Kitolano	28	274	GUNCEL	3	Transfermarkt club career; current season reconciled
 662332	Juan	28	144	GUNCEL	3	Transfermarkt club career; current season reconciled
-21716	Juan José Carricondo	28	242	GUNCEL	8	Transfermarkt club career; current season reconciled
+21716	Juan José Carricondo	28	242	GUNCEL	9	Transfermarkt club career; current season reconciled
 496767	Juan José Perea	28	177	GUNCEL	7	Transfermarkt club career; current season reconciled
 625654	Julen Lobete	28	201	GUNCEL	5	Transfermarkt club career; current season reconciled
 36294	Julien Quercia	28	165	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:28:25.168Z
@@ -11011,7 +11011,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 189882	Rayan Frikeche	28	366	GUNCEL	8	Transfermarkt club career; current season reconciled
 126203	Ricardo Nascimento	28	371	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:30:10.474Z
 215876	Ricardo Pereira	28	375	GUNCEL	7	Transfermarkt club career; current season reconciled
-71889	Ricardo Sánchez	28	161	GUNCEL	13	Transfermarkt club career; current season reconciled
+71889	Ricardo Sánchez	28	161	GUNCEL	14	Transfermarkt club career; current season reconciled
 67668	Richard Ruiz	28	435	GUNCEL	11	Transfermarkt club career; current season reconciled
 30667	Robbert Schilder	28	463	GUNCEL	10	Transfermarkt club career; current season reconciled
 2998	Robert Huth	28	412	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -11074,7 +11074,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 21282	Youssef Mohamad	28	257	GUNCEL	3	Transfermarkt club career; current season reconciled
 667903	Youssuf Sylla	28	110	GUNCEL	8	Transfermarkt club career; current season reconciled
 61812	Yuri Berchiche	28	533	GUNCEL	8	Transfermarkt club career; current season reconciled
-5108	Yusuf Adewunmi	28	238	GUNCEL	9	Transfermarkt club career; current season reconciled
+5108	Yusuf Adewunmi	28	238	GUNCEL	10	Transfermarkt club career; current season reconciled
 820474	Zakaria El Ouahdi	28	169	GUNCEL	3	Transfermarkt club career; current season reconciled
 666547	Zito Luvumbo	28	174	GUNCEL	5	Transfermarkt club career; current season reconciled
 258353	Abdelhak Nouri	27	115	GUNCEL	4	Live Transfermarkt game audit 2026-07-17T14:28:08.731Z
@@ -11269,7 +11269,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 14331	Manú	27	267	GUNCEL	11	Transfermarkt club career; current season reconciled
 101670	Marcelinho	27	254	GUNCEL	13	Live Transfermarkt game audit 2026-07-17T14:29:43.764Z
 439782	Marcelinho	27	182	GUNCEL	13	Transfermarkt club career; current season reconciled
-227473	Marco Giandebiaggi	27	404	GUNCEL	6	Transfermarkt club career; current season reconciled
+227473	Marco Giandebiaggi	27	404	GUNCEL	7	Transfermarkt club career; current season reconciled
 184350	Marcos Sequeiros	27	125	GUNCEL	9	Transfermarkt club career; current season reconciled
 42903	Marcus Hoffmann	27	425	GUNCEL	13	Transfermarkt club career; current season reconciled
 167507	Mariano Armentano	27	140	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -11856,7 +11856,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 798929	Gvidas Gineitis	25	142	GUNCEL	6	Transfermarkt club career; current season reconciled
 107703	Hamadi Ayari	25	292	GUNCEL	4	Transfermarkt club career; current season reconciled
 62634	Hélder Castro	25	240	GUNCEL	10	Transfermarkt club career; current season reconciled
-8524	Herbert Obele	25	180	GUNCEL	7	Transfermarkt club career; current season reconciled
+8524	Herbert Obele	25	180	GUNCEL	9	Transfermarkt club career; current season reconciled
 7448	Hossam Ghaly	25	461	GUNCEL	6	Transfermarkt club career; current season reconciled
 186176	Ibra Sekajja	25	122	GUNCEL	14	Transfermarkt club career; current season reconciled
 741292	Iker Bravo	25	96	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -12811,7 +12811,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 199941	Andrea Beghetto	22	329	GUNCEL	13	Transfermarkt club career; current season reconciled
 102777	Andrea Lisuzzo	22	537	GUNCEL	9	Transfermarkt club career; current season reconciled
 44327	Andrea Ranocchia	22	373	GUNCEL	8	Transfermarkt club career; current season reconciled
-3	Andreas Buck	22	395	GUNCEL	6	Transfermarkt club career; current season reconciled
+3	Andreas Buck	22	395	GUNCEL	8	Transfermarkt club career; current season reconciled
 196948	Andreas Christensen	22	407	GUNCEL	6	Transfermarkt club career; current season reconciled
 14856	Andreas Ottl	22	315	GUNCEL	7	Transfermarkt club career; current season reconciled
 719694	Andu Kelati	22	125	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -12942,7 +12942,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 58874	Ignacio Camacho	22	282	GUNCEL	4	Transfermarkt club career; current season reconciled
 97335	Igor Plastun	22	475	GUNCEL	7	Transfermarkt club career; current season reconciled
 338817	Indy Boonen	22	162	GUNCEL	6	Transfermarkt club career; current season reconciled
-43717	Ismael Rodríguez	22	298	GUNCEL	6	Transfermarkt club career; current season reconciled
+43717	Ismael Rodríguez	22	298	GUNCEL	7	Transfermarkt club career; current season reconciled
 611075	Iván Gil	22	164	GUNCEL	4	Transfermarkt club career; current season reconciled
 38305	Ivan Ivanov	22	309	GUNCEL	11	Live Transfermarkt game audit 2026-07-17T14:28:23.416Z
 45213	İlkay Demir	22	160	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -13119,7 +13119,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 574671	Strahinja Pavlović	22	244	GUNCEL	7	Transfermarkt club career; current season reconciled
 1047621	Taha Osman Özmert	22	70	GUNCEL	4	Live Transfermarkt game audit 2026-07-17T14:30:25.733Z
 204176	Taylan Antalyalı	22	376	GUNCEL	10	Transfermarkt club career; current season reconciled
-79269	Taylan Eliaçık	22	82	GUNCEL	7	Transfermarkt club career; current season reconciled
+79269	Taylan Eliaçık	22	82	GUNCEL	8	Transfermarkt club career; current season reconciled
 858719	Telasco Segovia	22	151	GUNCEL	5	Transfermarkt club career; current season reconciled
 13404	Terry Cooke	22	273	GUNCEL	11	Transfermarkt club career; current season reconciled
 524033	Thijs van Leeuwen	22	186	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -13263,7 +13263,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 217169	Emre Nefiz	21	252	GUNCEL	12	Transfermarkt club career; current season reconciled
 297731	Enrico Bearzotti	21	274	GUNCEL	13	Transfermarkt club career; current season reconciled
 298583	Eray Cömert	21	331	GUNCEL	10	Transfermarkt club career; current season reconciled
-6323	Éric Obinna Chukwunyelu	21	129	GUNCEL	15	Transfermarkt club career; current season reconciled
+6323	Éric Obinna Chukwunyelu	21	129	GUNCEL	16	Transfermarkt club career; current season reconciled
 626962	Ewan Urain	21	117	GUNCEL	7	Transfermarkt club career; current season reconciled
 865682	Ezechiel Banzuzi	21	175	GUNCEL	5	Transfermarkt club career; current season reconciled
 155025	Fábio Cardoso	21	352	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -13280,7 +13280,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 242040	Florian Loshaj	21	258	GUNCEL	8	Transfermarkt club career; current season reconciled
 93731	Florian Makhedjouf	21	212	GUNCEL	6	Transfermarkt club career; current season reconciled
 324891	Francois-Xavier Fumu Tamuzo	21	174	GUNCEL	8	Transfermarkt club career; current season reconciled
-8635	Frank Schön	21	367	GUNCEL	13	Transfermarkt club career; current season reconciled
+8635	Frank Schön	21	367	GUNCEL	14	Transfermarkt club career; current season reconciled
 1179130	Gabin Capuano	21	48	GUNCEL	4	Transfermarkt club career; current season reconciled
 6893	Gabriel Tamas	21	565	GUNCEL	18	Transfermarkt club career; current season reconciled
 268670	Gerard Gumbau	21	412	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -13297,7 +13297,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1023	Godfried Aduobe	21	434	GUNCEL	7	Transfermarkt club career; current season reconciled
 176905	Gonzalo Espinoza	21	387	GUNCEL	10	Live Transfermarkt game audit 2026-07-17T14:29:17.784Z
 12386	Grégory Bourillon	21	459	GUNCEL	11	Live Transfermarkt game audit 2026-07-17T14:27:42.721Z
-52268	Güven Güneri	21	118	GUNCEL	13	Transfermarkt club career; current season reconciled
+52268	Güven Güneri	21	118	GUNCEL	14	Transfermarkt club career; current season reconciled
 1237306	Hafiz Umar Ibrahim	21	33	GUNCEL	3	Transfermarkt club career; current season reconciled
 405313	Hampus Finndell	21	215	GUNCEL	11	Transfermarkt club career; current season reconciled
 727152	Hamza Akman	21	92	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -13622,7 +13622,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1063338	Carlos Espí	20	66	GUNCEL	1	Transfermarkt club career; current season reconciled
 659459	Carney Chukwuemeka	20	160	GUNCEL	6	Transfermarkt club career; current season reconciled
 3153	Celestine Babayaro	20	364	GUNCEL	4	Transfermarkt club career; current season reconciled
-51682	César Caneda	20	728	GUNCEL	12	Transfermarkt club career; current season reconciled
+51682	César Caneda	20	728	GUNCEL	13	Transfermarkt club career; current season reconciled
 197443	César de la Peña	20	281	GUNCEL	12	Transfermarkt club career; current season reconciled
 538966	Chardi Landu	20	87	GUNCEL	4	Transfermarkt club career; current season reconciled
 486078	Charles	20	326	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -13773,7 +13773,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 867700	Josh Duffus	20	87	GUNCEL	4	Transfermarkt club career; current season reconciled
 743629	Josimar Alcócer	20	147	GUNCEL	2	Transfermarkt club career; current season reconciled
 38040	Josip Landeka	20	344	GUNCEL	12	Transfermarkt club career; current season reconciled
-16584	Juan Ángel Seguro	20	217	GUNCEL	7	Transfermarkt club career; current season reconciled
+16584	Juan Ángel Seguro	20	217	GUNCEL	8	Transfermarkt club career; current season reconciled
 262092	Juan David Castro	20	360	GUNCEL	4	Transfermarkt club career; current season reconciled
 118292	Julian Michel	20	193	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:27:43.140Z
 374139	Junior Firpo	20	267	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -14588,7 +14588,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 30264	Giuseppe Baronchelli	18	457	GUNCEL	12	Transfermarkt club career; current season reconciled
 85043	Giuseppe Figliomeni	18	259	GUNCEL	17	Transfermarkt club career; current season reconciled
 163187	Giuseppe Prestia	18	430	GUNCEL	12	Transfermarkt club career; current season reconciled
-128651	Golo	18	81	GUNCEL	9	Transfermarkt club career; current season reconciled
+128651	Golo	18	81	GUNCEL	10	Transfermarkt club career; current season reconciled
 380521	Gonçalo Agrelos	18	145	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:29:17.620Z
 479649	Gonçalo Borges	18	196	GUNCEL	4	Transfermarkt club career; current season reconciled
 131305	Goran Milovic	18	353	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:28:01.172Z
@@ -14605,13 +14605,13 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 83002	Hiroki Sakai	18	483	GUNCEL	6	Transfermarkt club career; current season reconciled
 392179	Hjalmar Ekdal	18	233	GUNCEL	10	Transfermarkt club career; current season reconciled
 130353	Hördur Magnússon	18	319	GUNCEL	8	Transfermarkt club career; current season reconciled
-24546	Hugo Enyinnaya	18	103	GUNCEL	7	Transfermarkt club career; current season reconciled
+24546	Hugo Enyinnaya	18	103	GUNCEL	8	Transfermarkt club career; current season reconciled
 5562	Hugo Leal	18	365	GUNCEL	11	Transfermarkt club career; current season reconciled
 13902	Hussein Yasser	18	231	GUNCEL	12	Live Transfermarkt game audit 2026-07-17T14:29:20.185Z
 485585	Ian Maatsen	18	324	GUNCEL	10	Transfermarkt club career; current season reconciled
 575693	Ibrahim Cissoko	18	106	GUNCEL	8	Transfermarkt club career; current season reconciled
 928323	Ibrahim Salah	18	100	GUNCEL	6	Transfermarkt club career; current season reconciled
-7621	Iñigo Larrainzar	18	411	GUNCEL	3	Transfermarkt club career; current season reconciled
+7621	Iñigo Larrainzar	18	411	GUNCEL	4	Transfermarkt club career; current season reconciled
 45771	Ione Cabrera	18	322	GUNCEL	11	Transfermarkt club career; current season reconciled
 736034	Isaías Delpupo	18	122	GUNCEL	6	Transfermarkt club career; current season reconciled
 272622	Issa Diop	18	315	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -14786,7 +14786,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 710004	Peter Federico	18	163	GUNCEL	6	Transfermarkt club career; current season reconciled
 164902	Pierre Bourdin	18	344	GUNCEL	7	Transfermarkt club career; current season reconciled
 98273	Pierre Planus	18	158	GUNCEL	5	Transfermarkt club career; current season reconciled
-13033	Prince Asubonteng	18	202	GUNCEL	4	Transfermarkt club career; current season reconciled
+13033	Prince Asubonteng	18	202	GUNCEL	5	Transfermarkt club career; current season reconciled
 220969	Radosław Murawski	18	414	GUNCEL	5	Transfermarkt club career; current season reconciled
 54305	Rafael Ramos de Lima	18	380	GUNCEL	10	Transfermarkt club career; current season reconciled
 292152	Rafael Thyere	18	348	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -15038,7 +15038,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 3881	Glen Johnson	17	459	GUNCEL	6	Transfermarkt club career; current season reconciled
 15567	Grégory Lorenzi	17	330	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:28:01.292Z
 45548	Gregory van der Wiel	17	381	GUNCEL	6	Transfermarkt club career; current season reconciled
-458	Guido Gorges	17	232	GUNCEL	9	Transfermarkt club career; current season reconciled
+458	Guido Gorges	17	232	GUNCEL	10	Transfermarkt club career; current season reconciled
 44373	Guilherme Siqueira	17	274	GUNCEL	9	Transfermarkt club career; current season reconciled
 12515	Guirane N'Daw	17	373	GUNCEL	10	Transfermarkt club career; current season reconciled
 1368	Guy Demel	17	397	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -15481,7 +15481,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 47310	Emre Özkan	16	282	GUNCEL	14	Transfermarkt club career; current season reconciled
 314215	Enes Durmus	16	214	GUNCEL	11	Transfermarkt club career; current season reconciled
 633992	Enzo Le Fée	16	266	GUNCEL	5	Transfermarkt club career; current season reconciled
-71100	Eric Avila	16	303	GUNCEL	11	Transfermarkt club career; current season reconciled
+71100	Eric Avila	16	303	GUNCEL	12	Transfermarkt club career; current season reconciled
 54517	Eric Odhiambo	16	165	GUNCEL	9	Transfermarkt club career; current season reconciled
 414680	Erol Can Akdag	16	192	GUNCEL	7	Transfermarkt club career; current season reconciled
 258199	Ethan Robson	16	246	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -15585,7 +15585,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 23955	Joris Marveaux	16	407	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:28:03.561Z
 73244	José Carlos	16	202	GUNCEL	10	Transfermarkt club career; current season reconciled
 125020	José Luis Palomino	16	417	GUNCEL	10	Transfermarkt club career; current season reconciled
-98193	José Manuel Rojas Olmedo	16	251	GUNCEL	10	Transfermarkt club career; current season reconciled
+98193	José Manuel Rojas Olmedo	16	251	GUNCEL	11	Transfermarkt club career; current season reconciled
 7763	José María Movilla	16	538	GUNCEL	7	Transfermarkt club career; current season reconciled
 57852	Joseba del Olmo	16	175	GUNCEL	7	Transfermarkt club career; current season reconciled
 362977	Josip Juranovic	16	332	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -15620,7 +15620,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 670858	Lewis Hall	16	189	GUNCEL	6	Transfermarkt club career; current season reconciled
 410477	Lewis Montsma	16	195	GUNCEL	6	Transfermarkt club career; current season reconciled
 244040	Lloyd Jones	16	322	GUNCEL	12	Transfermarkt club career; current season reconciled
-93083	Lokman Akyıldız	16	194	GUNCEL	7	Transfermarkt club career; current season reconciled
+93083	Lokman Akyıldız	16	194	GUNCEL	8	Transfermarkt club career; current season reconciled
 412951	Lorenzo van Kleef	16	214	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:29:40.199Z
 88680	Luca Caldirola	16	409	GUNCEL	10	Transfermarkt club career; current season reconciled
 398027	Luca Mosti	16	216	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -15707,7 +15707,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 179350	Nii Plange	16	166	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:27:48.211Z
 422932	Niklas Vesterlund	16	239	GUNCEL	8	Transfermarkt club career; current season reconciled
 258475	Nikola Maras	16	320	GUNCEL	7	Transfermarkt club career; current season reconciled
-72451	Nino Paraíba	16	593	GUNCEL	9	Transfermarkt club career; current season reconciled
+72451	Nino Paraíba	16	593	GUNCEL	10	Transfermarkt club career; current season reconciled
 376588	Njegos Petrovic	16	274	GUNCEL	4	Transfermarkt club career; current season reconciled
 691958	Noah Cadiou	16	224	GUNCEL	7	Transfermarkt club career; current season reconciled
 557611	Noam Emeran	16	96	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -15866,7 +15866,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 73120	Ahmed Kashi	15	420	GUNCEL	7	Transfermarkt club career; current season reconciled
 138139	Alan Henrique	15	232	GUNCEL	15	Live Transfermarkt game audit 2026-07-17T14:28:38.908Z
 146699	Alberto Joshimar Acosta	15	327	GUNCEL	10	Transfermarkt club career; current season reconciled
-77848	Alberto Malagón Amate	15	203	GUNCEL	13	Transfermarkt club career; current season reconciled
+77848	Alberto Malagón Amate	15	203	GUNCEL	14	Transfermarkt club career; current season reconciled
 103302	Alberto Nocerino	15	447	GUNCEL	9	Transfermarkt club career; current season reconciled
 49275	Albin Ekdal	15	471	GUNCEL	10	Transfermarkt club career; current season reconciled
 137174	Alejandro Arribas	15	428	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -15905,7 +15905,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 974374	Anthony Valencia	15	93	GUNCEL	4	Transfermarkt club career; current season reconciled
 107882	Antonio Magli	15	385	GUNCEL	14	Transfermarkt club career; current season reconciled
 650568	António Silva	15	229	GUNCEL	4	Transfermarkt club career; current season reconciled
-34475	Antun Dunković	15	172	GUNCEL	7	Transfermarkt club career; current season reconciled
+34475	Antun Dunković	15	172	GUNCEL	8	Transfermarkt club career; current season reconciled
 462868	Anwar Bensabouh	15	185	GUNCEL	6	Transfermarkt club career; current season reconciled
 13221	Argélico Fucks	15	243	GUNCEL	9	Transfermarkt club career; current season reconciled
 37899	Aydin Karabulut	15	245	GUNCEL	13	Transfermarkt club career; current season reconciled
@@ -16113,7 +16113,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 18278	Jonathan Zydko	15	322	GUNCEL	7	Transfermarkt club career; current season reconciled
 7973	Jordi Ferrón	15	464	GUNCEL	6	Transfermarkt club career; current season reconciled
 51563	Jorge Luque	15	265	GUNCEL	7	Transfermarkt club career; current season reconciled
-37325	Jorge Pina Roldán	15	218	GUNCEL	16	Transfermarkt club career; current season reconciled
+37325	Jorge Pina Roldán	15	218	GUNCEL	17	Transfermarkt club career; current season reconciled
 205004	Jorrit Hendrix	15	408	GUNCEL	8	Transfermarkt club career; current season reconciled
 461858	José Alonso Lara	15	198	GUNCEL	8	Transfermarkt club career; current season reconciled
 37397	José Crespo	15	450	GUNCEL	13	Transfermarkt club career; current season reconciled
@@ -16264,7 +16264,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 930571	Oscar Gloukh	15	42	GUNCEL	2	Transfermarkt club career; current season reconciled
 104946	Ouka	15	308	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:28:06.335Z
 528470	Ousmane Kanté	15	251	GUNCEL	7	Transfermarkt club career; current season reconciled
-1940	Ousseynou Dione	15	262	GUNCEL	12	Transfermarkt club career; current season reconciled
+1940	Ousseynou Dione	15	262	GUNCEL	13	Transfermarkt club career; current season reconciled
 7013	Özgür Yıldırım	15	345	GUNCEL	9	Transfermarkt club career; current season reconciled
 7633	Pablo Orbaiz	15	411	GUNCEL	4	Transfermarkt club career; current season reconciled
 816308	Panos Katseris	15	142	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -16484,7 +16484,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 578539	Chris Richards	14	223	GUNCEL	8	Transfermarkt club career; current season reconciled
 4591	Chris van der Weerden	14	336	GUNCEL	6	Transfermarkt club career; current season reconciled
 165	Christian Beeck	14	275	GUNCEL	8	Transfermarkt club career; current season reconciled
-15013	Christian Endler	14	273	GUNCEL	9	Transfermarkt club career; current season reconciled
+15013	Christian Endler	14	273	GUNCEL	10	Transfermarkt club career; current season reconciled
 130396	Christian Monacizzo	14	327	GUNCEL	10	Transfermarkt club career; current season reconciled
 48081	Christian Strohdiek	14	378	GUNCEL	5	Transfermarkt club career; current season reconciled
 346849	Christoph Klarer	14	261	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -16575,7 +16575,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 60567	Francesco Migliore	14	355	GUNCEL	7	Transfermarkt club career; current season reconciled
 22320	Francesco Modesto	14	383	GUNCEL	11	Transfermarkt club career; current season reconciled
 273812	Francis Koné	14	87	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:29:13.553Z
-88734	Francisco Pérez Caso	14	256	GUNCEL	5	Transfermarkt club career; current season reconciled
+88734	Francisco Pérez Caso	14	256	GUNCEL	6	Transfermarkt club career; current season reconciled
 218233	Fredrik Oldrup Jensen	14	387	GUNCEL	6	Transfermarkt club career; current season reconciled
 41990	Gabriel Zakuani	14	493	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:28:21.864Z
 84546	Gabriele Puccio	14	245	GUNCEL	15	Transfermarkt club career; current season reconciled
@@ -17014,7 +17014,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 111058	Arnaud Souquet	13	438	GUNCEL	13	Transfermarkt club career; current season reconciled
 141207	Arthur Maia	13	142	GUNCEL	6	Transfermarkt club career; current season reconciled
 39556	Ashour El Teki	13	86	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:28:51.934Z
-194152	Asier Barahona	13	195	GUNCEL	9	Transfermarkt club career; current season reconciled
+194152	Asier Barahona	13	195	GUNCEL	10	Transfermarkt club career; current season reconciled
 633398	Assil Jaziri	13	91	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:28:51.970Z
 635645	Aurèle Amenda	13	178	GUNCEL	6	Transfermarkt club career; current season reconciled
 24956	Barge	13	349	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -17307,7 +17307,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 463751	Marc Leonard	13	239	GUNCEL	6	Transfermarkt club career; current season reconciled
 195765	Marco Hober	13	319	GUNCEL	7	Transfermarkt club career; current season reconciled
 22088	Marco Padalino	13	329	GUNCEL	7	Transfermarkt club career; current season reconciled
-1244	Marco Villa	13	100	GUNCEL	9	Transfermarkt club career; current season reconciled
+1244	Marco Villa	13	100	GUNCEL	10	Transfermarkt club career; current season reconciled
 468301	Marcos Antônio	13	192	GUNCEL	6	Transfermarkt club career; current season reconciled
 56621	Marcus Diniz	13	439	GUNCEL	17	Transfermarkt club career; current season reconciled
 26453	Mariano Uglessich	13	289	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -17356,7 +17356,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 605558	Mikail Maden	13	112	GUNCEL	7	Transfermarkt club career; current season reconciled
 7474	Mikel Alonso	13	320	GUNCEL	8	Transfermarkt club career; current season reconciled
 76276	Mikel Iribas	13	377	GUNCEL	5	Transfermarkt club career; current season reconciled
-71184	Mikel Martins	13	357	GUNCEL	10	Transfermarkt club career; current season reconciled
+71184	Mikel Martins	13	357	GUNCEL	11	Transfermarkt club career; current season reconciled
 34531	Milan Cerny	13	275	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:29:50.506Z
 1125610	Moctar Diop	13	71	GUNCEL	5	Transfermarkt club career; current season reconciled
 524925	Modibo Sagnan	13	214	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -17742,7 +17742,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 23206	Félix Dja Ettien	12	195	GUNCEL	2	Transfermarkt club career; current season reconciled
 278343	Felix Uduokhai	12	307	GUNCEL	8	Transfermarkt club career; current season reconciled
 250682	Femi Balogun	12	273	GUNCEL	11	Transfermarkt club career; current season reconciled
-1383	Ferdinand Chi Fon	12	162	GUNCEL	9	Transfermarkt club career; current season reconciled
+1383	Ferdinand Chi Fon	12	162	GUNCEL	10	Transfermarkt club career; current season reconciled
 291417	Ferland Mendy	12	396	GUNCEL	4	Transfermarkt club career; current season reconciled
 38954	Fernando Gago	12	396	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:29:12.541Z
 127192	Ferris N'Goma	12	180	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -18271,7 +18271,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 376856	Charlie Goode	11	216	GUNCEL	7	Transfermarkt club career; current season reconciled
 581674	Charlie Patino	11	133	GUNCEL	6	Transfermarkt club career; current season reconciled
 434660	Chema	11	208	GUNCEL	7	Transfermarkt club career; current season reconciled
-13369	Chérif Touré Mamam	11	93	GUNCEL	8	Transfermarkt club career; current season reconciled
+13369	Chérif Touré Mamam	11	93	GUNCEL	9	Transfermarkt club career; current season reconciled
 1213	Chibuike Okeke	11	149	GUNCEL	3	Transfermarkt club career; current season reconciled
 744186	Chico Lamba	11	100	GUNCEL	6	Transfermarkt club career; current season reconciled
 407577	Chima Akas	11	245	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -18349,7 +18349,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 655902	Emin Bayram	11	163	GUNCEL	6	Transfermarkt club career; current season reconciled
 108484	Emmanuel Badu	11	238	GUNCEL	5	Transfermarkt club career; current season reconciled
 28321	Emmanuel Duchemin	11	291	GUNCEL	2	Transfermarkt club career; current season reconciled
-65305	Enric Vallès	11	153	GUNCEL	7	Transfermarkt club career; current season reconciled
+65305	Enric Vallès	11	153	GUNCEL	9	Transfermarkt club career; current season reconciled
 291816	Eric Björkander	11	295	GUNCEL	8	Transfermarkt club career; current season reconciled
 43937	Éric Chelle	11	331	GUNCEL	5	Transfermarkt club career; current season reconciled
 5509	Eric Djemba Djemba	11	345	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -18364,7 +18364,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 32806	Etto	11	296	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:29:10.629Z
 153184	Fabian Kalig	11	268	GUNCEL	5	Transfermarkt club career; current season reconciled
 1093843	Fabiano	11	48	GUNCEL	4	Transfermarkt club career; current season reconciled
-111215	Fabien Valéri	11	295	GUNCEL	5	Transfermarkt club career; current season reconciled
+111215	Fabien Valéri	11	295	GUNCEL	6	Transfermarkt club career; current season reconciled
 22083	Fabio Firmani	11	272	GUNCEL	11	Transfermarkt club career; current season reconciled
 1070645	Fabrício Garcia	11	74	GUNCEL	4	Transfermarkt club career; current season reconciled
 30625	Fabrizio Caracciolo	11	345	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -18930,7 +18930,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 22293	Carlo Gervasoni	10	298	GUNCEL	8	Transfermarkt club career; current season reconciled
 99854	Carlos Alberto de Oliveira Capone	10	195	GUNCEL	9	Transfermarkt club career; current season reconciled
 55932	Carlos Matheu	10	254	GUNCEL	11	Transfermarkt club career; current season reconciled
-238872	Carlos Pomares	10	342	GUNCEL	10	Transfermarkt club career; current season reconciled
+238872	Carlos Pomares	10	342	GUNCEL	11	Transfermarkt club career; current season reconciled
 5614	Cédric Kanté	10	440	GUNCEL	7	Transfermarkt club career; current season reconciled
 382478	Cédric Zesiger	10	340	GUNCEL	8	Transfermarkt club career; current season reconciled
 125250	Celso Ortiz	10	482	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -19015,7 +19015,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 663189	Eniss Shabani	10	153	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:29:08.692Z
 1119881	Enzo Koffi	10	50	GUNCEL	3	Transfermarkt club career; current season reconciled
 700119	Eren Erdoğan	10	117	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:29:09.070Z
-12770	Éric Deloumeaux	10	237	GUNCEL	7	Transfermarkt club career; current season reconciled
+12770	Éric Deloumeaux	10	237	GUNCEL	8	Transfermarkt club career; current season reconciled
 61575	Eric Lichaj	10	369	GUNCEL	8	Transfermarkt club career; current season reconciled
 510960	Erik Ruiz	10	200	GUNCEL	8	Transfermarkt club career; current season reconciled
 25497	Esley Leite do Nascimento	10	233	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -19442,7 +19442,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 167859	Stefano Sturaro	10	306	GUNCEL	8	Transfermarkt club career; current season reconciled
 109728	Steffen Lang	10	360	GUNCEL	9	Transfermarkt club career; current season reconciled
 4038	Steve Finnan	10	480	GUNCEL	7	Transfermarkt club career; current season reconciled
-230344	Steve Slade	10	95	GUNCEL	4	Transfermarkt club career; current season reconciled
+230344	Steve Slade	10	95	GUNCEL	5	Transfermarkt club career; current season reconciled
 87299	Strahil Popov	10	433	GUNCEL	7	Transfermarkt club career; current season reconciled
 339151	Sven Sonnenberg	10	297	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:28:33.993Z
 150663	Sylian Mokono	10	127	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -19589,7 +19589,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 27800	Atsuto Uchida	9	374	GUNCEL	4	Transfermarkt club career; current season reconciled
 151505	Auremir	9	433	GUNCEL	14	Transfermarkt club career; current season reconciled
 44994	Aytaç Ak	9	197	GUNCEL	7	Transfermarkt club career; current season reconciled
-7165	Aytekin Viduşlu	9	345	GUNCEL	8	Transfermarkt club career; current season reconciled
+7165	Aytekin Viduşlu	9	345	GUNCEL	9	Transfermarkt club career; current season reconciled
 678100	Aziz Ouattara	9	142	GUNCEL	5	Transfermarkt club career; current season reconciled
 120372	Azur Velagić	9	324	GUNCEL	11	Transfermarkt club career; current season reconciled
 796895	Baptiste Roux	9	167	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -19690,7 +19690,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 700053	Edoardo Iannoni	9	175	GUNCEL	6	Transfermarkt club career; current season reconciled
 436084	Edson Alvarado	9	136	GUNCEL	6	Transfermarkt club career; current season reconciled
 85365	Edu Ramos	9	299	GUNCEL	8	Transfermarkt club career; current season reconciled
-70913	Edu Roldán	9	178	GUNCEL	7	Transfermarkt club career; current season reconciled
+70913	Edu Roldán	9	178	GUNCEL	8	Transfermarkt club career; current season reconciled
 216118	Eduardo Henrique	9	189	GUNCEL	10	Transfermarkt club career; current season reconciled
 115387	Eduardo José Diniz Costa	9	286	GUNCEL	16	Transfermarkt club career; current season reconciled
 13905	Edwin Ouon	9	331	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:27:59.051Z
@@ -20073,7 +20073,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 288844	Richard Lugo	9	132	GUNCEL	10	Transfermarkt club career; current season reconciled
 23953	Richard Martini	9	273	GUNCEL	5	Transfermarkt club career; current season reconciled
 299121	Rick Dekker	9	288	GUNCEL	7	Transfermarkt club career; current season reconciled
-248245	Rob Zegers	9	99	GUNCEL	3	Transfermarkt club career; current season reconciled
+248245	Rob Zegers	9	99	GUNCEL	4	Transfermarkt club career; current season reconciled
 353826	Robert Gumny	9	241	GUNCEL	6	Transfermarkt club career; current season reconciled
 50008	Roberto Martínez	9	290	GUNCEL	6	Transfermarkt club career; current season reconciled
 5874	Roberto Massaro	9	90	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -20268,7 +20268,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 26471	Ariel Rosada	8	413	GUNCEL	8	Transfermarkt club career; current season reconciled
 113359	Aristote Lusinga	8	159	GUNCEL	8	Transfermarkt club career; current season reconciled
 13001	Arnar Vidarsson	8	534	GUNCEL	7	Transfermarkt club career; current season reconciled
-7919	Arnau Riera	8	206	GUNCEL	8	Transfermarkt club career; current season reconciled
+7919	Arnau Riera	8	206	GUNCEL	9	Transfermarkt club career; current season reconciled
 282006	Arona Sané	8	125	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:28:48.925Z
 768380	Arouna Sangante	8	177	GUNCEL	3	Transfermarkt club career; current season reconciled
 647701	Artemijus Tutyškinas	8	136	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -20452,7 +20452,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 133396	Francesco Checcucci	8	147	GUNCEL	10	Transfermarkt club career; current season reconciled
 925838	Francesco Coppola	8	95	GUNCEL	5	Transfermarkt club career; current season reconciled
 37431	Francesco Pambianchi	8	344	GUNCEL	14	Transfermarkt club career; current season reconciled
-57905	Francis Suárez	8	140	GUNCEL	4	Transfermarkt club career; current season reconciled
+57905	Francis Suárez	8	140	GUNCEL	5	Transfermarkt club career; current season reconciled
 182882	Franck Bambock	8	290	GUNCEL	16	Transfermarkt club career; current season reconciled
 149299	Franck Haise	8	309	GUNCEL	4	Transfermarkt club career; current season reconciled
 74821	Franco Mussis	8	269	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -20570,7 +20570,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 85289	Jordi Amat	8	374	GUNCEL	8	Transfermarkt club career; current season reconciled
 255814	Jordy van der Winden	8	171	GUNCEL	6	Transfermarkt club career; current season reconciled
 555500	Jorge Herrando	8	173	GUNCEL	3	Transfermarkt club career; current season reconciled
-3367	Jorginho Paulista	8	144	GUNCEL	16	Transfermarkt club career; current season reconciled
+3367	Jorginho Paulista	8	144	GUNCEL	17	Transfermarkt club career; current season reconciled
 72042	José Aicart	8	260	GUNCEL	8	Transfermarkt club career; current season reconciled
 51664	José Ángel Gascón	8	165	GUNCEL	8	Transfermarkt club career; current season reconciled
 319541	José Carlos Ramírez	8	257	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -21246,7 +21246,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 644157	Hugo Moura	7	246	GUNCEL	4	Transfermarkt club career; current season reconciled
 735822	Hugo Oliveira	7	86	GUNCEL	6	Transfermarkt club career; current season reconciled
 834487	Hugo Rincón	7	140	GUNCEL	4	Transfermarkt club career; current season reconciled
-29503	Hüseyin Yoğurtçu	7	167	GUNCEL	11	Transfermarkt club career; current season reconciled
+29503	Hüseyin Yoğurtçu	7	167	GUNCEL	12	Transfermarkt club career; current season reconciled
 163653	Iacopo Galli	7	130	GUNCEL	10	Transfermarkt club career; current season reconciled
 35029	Ibrahim Kas	7	195	GUNCEL	12	Transfermarkt club career; current season reconciled
 1178488	Idrissa Gueye	7	46	GUNCEL	3	Transfermarkt club career; current season reconciled
@@ -21367,7 +21367,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 4489	Khalid Boulahrouz	7	299	GUNCEL	9	Transfermarkt club career; current season reconciled
 262682	Kingsley Madu	7	174	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:29:36.012Z
 481513	Koffi Kouao	7	196	GUNCEL	4	Transfermarkt club career; current season reconciled
-184349	Koldo Sarasúa Gamazo	7	174	GUNCEL	7	Transfermarkt club career; current season reconciled
+184349	Koldo Sarasúa Gamazo	7	174	GUNCEL	8	Transfermarkt club career; current season reconciled
 490384	Koni De Winter	7	196	GUNCEL	8	Transfermarkt club career; current season reconciled
 507223	Kristijan Belic	7	164	GUNCEL	9	Transfermarkt club career; current season reconciled
 568532	Kuku Fidelis	7	26	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -21447,7 +21447,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 13677	Matthew Robinson	7	338	GUNCEL	7	Transfermarkt club career; current season reconciled
 61723	Matthew Saunders	7	80	GUNCEL	7	Transfermarkt club career; current season reconciled
 7573	Mauricio Pellegrino	7	284	GUNCEL	5	Transfermarkt club career; current season reconciled
-73298	Mauricio Saucedo	7	58	GUNCEL	9	Transfermarkt club career; current season reconciled
+73298	Mauricio Saucedo	7	58	GUNCEL	10	Transfermarkt club career; current season reconciled
 329221	Maxime Spano	7	206	GUNCEL	6	Transfermarkt club career; current season reconciled
 154172	Mehdi Courgnaud	7	68	GUNCEL	7	Transfermarkt club career; current season reconciled
 371343	Mehmet Secme	7	115	GUNCEL	2	Live Transfermarkt game audit 2026-07-17T14:28:28.051Z
@@ -21521,7 +21521,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 73786	Pablo Armero	7	289	GUNCEL	10	Transfermarkt club career; current season reconciled
 348553	Pablo Clavería	7	252	GUNCEL	8	Transfermarkt club career; current season reconciled
 7541	Pablo Coira	7	136	GUNCEL	8	Transfermarkt club career; current season reconciled
-7870	Pablo Sierra Madrazo	7	135	GUNCEL	8	Transfermarkt club career; current season reconciled
+7870	Pablo Sierra Madrazo	7	135	GUNCEL	9	Transfermarkt club career; current season reconciled
 16118	Paíto	7	248	GUNCEL	7	Transfermarkt club career; current season reconciled
 338669	Paolo Sabak	7	84	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:30:02.737Z
 56796	Pape M'Bow	7	189	GUNCEL	14	Live Transfermarkt game audit 2026-07-17T14:28:06.438Z
@@ -21736,7 +21736,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 469986	Ahmed Mostafa	6	146	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:28:38.432Z
 91347	Aidy White	6	250	GUNCEL	7	Transfermarkt club career; current season reconciled
 71989	Aitor Núñez	6	364	GUNCEL	14	Transfermarkt club career; current season reconciled
-7615	Aitor Ocio	6	262	GUNCEL	5	Transfermarkt club career; current season reconciled
+7615	Aitor Ocio	6	262	GUNCEL	6	Transfermarkt club career; current season reconciled
 756990	Alan Varela	6	243	GUNCEL	3	Transfermarkt club career; current season reconciled
 261912	Alassane Diallo	6	86	GUNCEL	4	Live Transfermarkt game audit 2026-07-17T14:28:38.990Z
 374882	Alberk Koç	6	190	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -21867,7 +21867,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 625169	D'Leanu Arts	6	100	GUNCEL	6	Transfermarkt club career; current season reconciled
 95699	Dale Bennett	6	304	GUNCEL	7	Transfermarkt club career; current season reconciled
 28002	Damià Abella	6	274	GUNCEL	7	Transfermarkt club career; current season reconciled
-27618	Damir Mirvić	6	270	GUNCEL	5	Transfermarkt club career; current season reconciled
+27618	Damir Mirvić	6	270	GUNCEL	6	Transfermarkt club career; current season reconciled
 747153	Dan Gore	6	88	GUNCEL	6	Transfermarkt club career; current season reconciled
 372445	Dani Silva	6	152	GUNCEL	6	Transfermarkt club career; current season reconciled
 35552	Daniel Cifuentes	6	261	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -22001,7 +22001,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 354232	Hakim El Mokeddem	6	65	GUNCEL	9	Transfermarkt club career; current season reconciled
 990731	Hakim Sahabo	6	108	GUNCEL	6	Transfermarkt club career; current season reconciled
 353205	Hamadou Karamoko	6	270	GUNCEL	9	Transfermarkt club career; current season reconciled
-29492	Hamza Çakır	6	213	GUNCEL	6	Transfermarkt club career; current season reconciled
+29492	Hamza Çakır	6	213	GUNCEL	7	Transfermarkt club career; current season reconciled
 597095	Hamza Masoudi	6	28	GUNCEL	3	Transfermarkt club career; current season reconciled
 306042	Harry Kyprianou	6	130	GUNCEL	7	Transfermarkt club career; current season reconciled
 33569	Hayrettin Yerlikaya	6	260	GUNCEL	1	Transfermarkt club career; current season reconciled
@@ -22026,7 +22026,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 659089	Ilya Zabarnyi	6	210	GUNCEL	4	Transfermarkt club career; current season reconciled
 96051	Iñaki Bollaín	6	206	GUNCEL	10	Transfermarkt club career; current season reconciled
 54973	Índio Ferreira	6	168	GUNCEL	8	Transfermarkt club career; current season reconciled
-277500	Iñigo Sebastián	6	185	GUNCEL	9	Transfermarkt club career; current season reconciled
+277500	Iñigo Sebastián	6	185	GUNCEL	10	Transfermarkt club career; current season reconciled
 53313	Irondino Ferreira Neto	6	252	GUNCEL	6	Transfermarkt club career; current season reconciled
 670843	Isaac Mabaya	6	75	GUNCEL	5	Transfermarkt club career; current season reconciled
 263214	Isi Gómez	6	238	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -22102,7 +22102,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 111900	Ju-ho Park	6	387	GUNCEL	10	Transfermarkt club career; current season reconciled
 274794	Juan de Alba	6	284	GUNCEL	10	Transfermarkt club career; current season reconciled
 480763	Juan Foyth	6	194	GUNCEL	3	Transfermarkt club career; current season reconciled
-26150	Juan José García Granero	6	94	GUNCEL	8	Transfermarkt club career; current season reconciled
+26150	Juan José García Granero	6	94	GUNCEL	9	Transfermarkt club career; current season reconciled
 73014	Juan Povedano Martínez	6	131	GUNCEL	8	Transfermarkt club career; current season reconciled
 323838	Juan Sebastián Quintero	6	326	GUNCEL	8	Transfermarkt club career; current season reconciled
 51368	Juanpa	6	235	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -22338,7 +22338,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 21518	Peter Reekers	6	232	GUNCEL	4	Transfermarkt club career; current season reconciled
 127074	Petrus Boumal	6	281	GUNCEL	12	Transfermarkt club career; current season reconciled
 117996	Phil Jones	6	288	GUNCEL	4	Transfermarkt club career; current season reconciled
-23900	Pierre-Emmanuel Bourdeau	6	278	GUNCEL	4	Transfermarkt club career; current season reconciled
+23900	Pierre-Emmanuel Bourdeau	6	278	GUNCEL	5	Transfermarkt club career; current season reconciled
 624698	Pim Saathof	6	69	GUNCEL	4	Transfermarkt club career; current season reconciled
 332142	Quentin Lecoeuche	6	250	GUNCEL	11	Transfermarkt club career; current season reconciled
 283149	Quincy Boogers	6	62	GUNCEL	2	Live Transfermarkt game audit 2026-07-17T14:30:08.109Z
@@ -22941,7 +22941,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 5453	Juan-Luis Montero	5	349	GUNCEL	5	Transfermarkt club career; current season reconciled
 52324	Jucemar Luiz Domingos de Ambrózio	5	73	GUNCEL	7	Transfermarkt club career; current season reconciled
 19007	Jude Vandelannoite	5	240	GUNCEL	5	Transfermarkt club career; current season reconciled
-447053	Julen Bernaola	5	29	GUNCEL	4	Transfermarkt club career; current season reconciled
+447053	Julen Bernaola	5	29	GUNCEL	5	Transfermarkt club career; current season reconciled
 354359	Julen López Salas	5	137	GUNCEL	5	Transfermarkt club career; current season reconciled
 513970	Julián Araujo	5	166	GUNCEL	5	Transfermarkt club career; current season reconciled
 401583	Julián Chicco	5	151	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -23046,7 +23046,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 815384	Matheus Dias	5	110	GUNCEL	4	Transfermarkt club career; current season reconciled
 288498	Matheus Índio	5	97	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:27:43.537Z
 379249	Matheus Reis	5	364	GUNCEL	7	Transfermarkt club career; current season reconciled
-57857	Mathieu Bouyer	5	92	GUNCEL	7	Transfermarkt club career; current season reconciled
+57857	Mathieu Bouyer	5	92	GUNCEL	8	Transfermarkt club career; current season reconciled
 1010854	Mathis Amougou	5	58	GUNCEL	5	Transfermarkt club career; current season reconciled
 783799	Mathys Saban	5	46	GUNCEL	5	Transfermarkt club career; current season reconciled
 149810	Matija Boben	5	244	GUNCEL	11	Transfermarkt club career; current season reconciled
@@ -23123,7 +23123,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 674921	Nikola Soldo	5	133	GUNCEL	6	Transfermarkt club career; current season reconciled
 425733	Nikola Stevanovic	5	196	GUNCEL	7	Transfermarkt club career; current season reconciled
 42935	Nikolaos Karabelas	5	277	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:28:29.797Z
-6329	Nikolaos Nakas	5	196	GUNCEL	8	Transfermarkt club career; current season reconciled
+6329	Nikolaos Nakas	5	196	GUNCEL	9	Transfermarkt club career; current season reconciled
 16419	Nikos Kounenakis	5	190	GUNCEL	4	Transfermarkt club career; current season reconciled
 611906	Nnamdi Ofoborh	5	94	GUNCEL	5	Transfermarkt club career; current season reconciled
 1034853	Nobel Mendy	5	117	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -23182,7 +23182,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 247633	Raz Meir	5	235	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:30:09.382Z
 1094135	Reda Laalaoui	5	57	GUNCEL	2	Transfermarkt club career; current season reconciled
 478940	Reggie Cannon	5	220	GUNCEL	4	Transfermarkt club career; current season reconciled
-20043	Regillio Nooitmeer	5	199	GUNCEL	9	Transfermarkt club career; current season reconciled
+20043	Regillio Nooitmeer	5	199	GUNCEL	10	Transfermarkt club career; current season reconciled
 626102	Régis	5	89	GUNCEL	7	Transfermarkt club career; current season reconciled
 170359	Reiner Ferreira	5	189	GUNCEL	11	Transfermarkt club career; current season reconciled
 410281	Renato Pantalon	5	214	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -23218,7 +23218,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 357158	Rúben Vinagre	5	200	GUNCEL	10	Transfermarkt club career; current season reconciled
 79979	Rudy Saintini	5	91	GUNCEL	4	Transfermarkt club career; current season reconciled
 127672	Rui da Gracia Gomes	5	200	GUNCEL	8	Transfermarkt club career; current season reconciled
-86064	Ruy Netto	5	115	GUNCEL	10	Transfermarkt club career; current season reconciled
+86064	Ruy Netto	5	115	GUNCEL	11	Transfermarkt club career; current season reconciled
 519619	Ryan Kadima	5	164	GUNCEL	5	Transfermarkt club career; current season reconciled
 61632	Ryan McGivern	5	362	GUNCEL	15	Transfermarkt club career; current season reconciled
 1031293	Ryan Oné	5	59	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -23541,7 +23541,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 111184	Dico Koppers	4	237	GUNCEL	13	Live Transfermarkt game audit 2026-07-17T14:27:58.776Z
 51616	Diego Alegre	4	246	GUNCEL	6	Transfermarkt club career; current season reconciled
 541646	Diego Barri	4	172	GUNCEL	8	Transfermarkt club career; current season reconciled
-71677	Diego Simón	4	264	GUNCEL	16	Transfermarkt club career; current season reconciled
+71677	Diego Simón	4	264	GUNCEL	17	Transfermarkt club career; current season reconciled
 921090	Dieu-Merci Michel	4	16	GUNCEL	2	Transfermarkt club career; current season reconciled
 420890	Dimitri Lavalée	4	203	GUNCEL	7	Transfermarkt club career; current season reconciled
 663254	Dinis Pinto	4	105	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -23931,7 +23931,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 14514	Miguel Garcia	4	231	GUNCEL	7	Transfermarkt club career; current season reconciled
 298607	Miguel Olavide	4	122	GUNCEL	4	Transfermarkt club career; current season reconciled
 36756	Miguel Pallardó	4	218	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:29:49.865Z
-7910	Miguel Rebosio	4	196	GUNCEL	6	Transfermarkt club career; current season reconciled
+7910	Miguel Rebosio	4	196	GUNCEL	7	Transfermarkt club career; current season reconciled
 96092	Miguel Villarejo	4	317	GUNCEL	13	Transfermarkt club career; current season reconciled
 617060	Mika Mármol	4	185	GUNCEL	5	Transfermarkt club career; current season reconciled
 892101	Mike Aidoo	4	130	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -24152,7 +24152,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 430788	Tom Edwards	4	207	GUNCEL	8	Transfermarkt club career; current season reconciled
 424900	Tom Holmes	4	224	GUNCEL	7	Transfermarkt club career; current season reconciled
 275946	Tom Menting	4	150	GUNCEL	8	Transfermarkt club career; current season reconciled
-3717	Tom Peeters	4	154	GUNCEL	6	Transfermarkt club career; current season reconciled
+3717	Tom Peeters	4	154	GUNCEL	7	Transfermarkt club career; current season reconciled
 396342	Toni Borevković	4	306	GUNCEL	6	Transfermarkt club career; current season reconciled
 344579	Tony Gallacher	4	140	GUNCEL	6	Transfermarkt club career; current season reconciled
 1053908	Travis Hernes	4	56	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -24216,7 +24216,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 349608	Abdulsamet Burak	3	198	GUNCEL	7	Transfermarkt club career; current season reconciled
 57255	Abdülkadir Kayali	3	191	GUNCEL	9	Transfermarkt club career; current season reconciled
 10256	Aboubacar Fofana	3	66	GUNCEL	9	Transfermarkt club career; current season reconciled
-111169	Aboubacar Guindo	3	54	GUNCEL	3	Transfermarkt club career; current season reconciled
+111169	Aboubacar Guindo	3	54	GUNCEL	4	Transfermarkt club career; current season reconciled
 272920	Abud Omar	3	152	GUNCEL	7	Transfermarkt club career; current season reconciled
 255688	Achilleas Poungouras	3	201	GUNCEL	7	Transfermarkt club career; current season reconciled
 1159759	Adam Nhaili	3	24	GUNCEL	2	Transfermarkt club career; current season reconciled
@@ -24600,7 +24600,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 73027	Jacobo Campos	3	112	GUNCEL	9	Transfermarkt club career; current season reconciled
 960941	Jacopo Bacci	3	96	GUNCEL	4	Transfermarkt club career; current season reconciled
 942497	Jahmai Simpson-Pusey	3	101	GUNCEL	6	Transfermarkt club career; current season reconciled
-76469	Jaime Jornet	3	48	GUNCEL	7	Transfermarkt club career; current season reconciled
+76469	Jaime Jornet	3	48	GUNCEL	8	Transfermarkt club career; current season reconciled
 398159	Jaime Sierra	3	167	GUNCEL	8	Transfermarkt club career; current season reconciled
 112948	Jakub Brabec	3	26	GUNCEL	6	Transfermarkt club career; current season reconciled
 498043	Jakub Iskra	3	135	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -24810,7 +24810,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 812659	Muhammed Eren Arıkan	3	91	GUNCEL	5	Live Transfermarkt game audit 2026-07-17T14:29:52.770Z
 339432	Muhammet Özkal	3	217	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:28:28.719Z
 539822	Muharrem Cinan	3	190	GUNCEL	3	Transfermarkt club career; current season reconciled
-41339	Murat Ocak	3	154	GUNCEL	11	Transfermarkt club career; current season reconciled
+41339	Murat Ocak	3	154	GUNCEL	12	Transfermarkt club career; current season reconciled
 10138	Musa Büyük	3	163	GUNCEL	10	Transfermarkt club career; current season reconciled
 708721	Mustafa Eser	3	82	GUNCEL	2	Transfermarkt club career; current season reconciled
 500497	Mustafa İnan	3	92	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -24851,7 +24851,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1175	Oliver Beer	3	226	GUNCEL	6	Transfermarkt club career; current season reconciled
 406638	Oliver Skipp	3	254	GUNCEL	6	Transfermarkt club career; current season reconciled
 611195	Oliver Zandén	3	83	GUNCEL	8	Transfermarkt club career; current season reconciled
-45251	Olivier Guégan	3	236	GUNCEL	5	Transfermarkt club career; current season reconciled
+45251	Olivier Guégan	3	236	GUNCEL	6	Transfermarkt club career; current season reconciled
 155703	Omar Belbey	3	178	GUNCEL	4	Transfermarkt club career; current season reconciled
 43045	Onur Demirtaş	3	188	GUNCEL	7	Transfermarkt club career; current season reconciled
 1209829	Onuralp Çakıroğlu	3	2	GUNCEL	1	Transfermarkt club career; current season reconciled
@@ -25067,7 +25067,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1070797	Adnan Aktaş	2	48	GUNCEL	2	Transfermarkt club career; current season reconciled
 834737	Adri Miranda	2	105	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:28:38.195Z
 53810	Adrian García Arias	2	411	GUNCEL	11	Transfermarkt club career; current season reconciled
-14899	Adrian Mrowiec	2	195	GUNCEL	10	Transfermarkt club career; current season reconciled
+14899	Adrian Mrowiec	2	195	GUNCEL	11	Transfermarkt club career; current season reconciled
 304419	Adrian Pennock	2	182	GUNCEL	4	Transfermarkt club career; current season reconciled
 70911	Adrián Ripa	2	300	GUNCEL	6	Transfermarkt club career; current season reconciled
 448264	Afonso Freitas	2	117	GUNCEL	7	Transfermarkt club career; current season reconciled
@@ -25173,8 +25173,8 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1054429	Carlos Guirao	2	42	GUNCEL	5	Transfermarkt club career; current season reconciled
 56332	Carlos Michel Lopes Vargas	2	59	GUNCEL	9	Transfermarkt club career; current season reconciled
 209015	Carlos Santos	2	41	GUNCEL	2	Live Transfermarkt game audit 2026-07-17T14:27:58.020Z
-59339	Carmelo Yuste Yuste	2	157	GUNCEL	8	Transfermarkt club career; current season reconciled
-141261	Cecil Filanckembo	2	30	GUNCEL	3	Transfermarkt club career; current season reconciled
+59339	Carmelo Yuste Yuste	2	157	GUNCEL	9	Transfermarkt club career; current season reconciled
+141261	Cecil Filanckembo	2	30	GUNCEL	4	Transfermarkt club career; current season reconciled
 51606	Cemal Taşlı	2	62	GUNCEL	7	Transfermarkt club career; current season reconciled
 646948	Cengiz Demir	2	122	GUNCEL	8	Transfermarkt club career; current season reconciled
 698047	César Sousa	2	114	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -25337,7 +25337,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 240102	Giulio Mulas	2	148	GUNCEL	8	Transfermarkt club career; current season reconciled
 140096	Giuseppe Imburgia	2	232	GUNCEL	7	Transfermarkt club career; current season reconciled
 726721	Gonçalo Esteves	2	68	GUNCEL	9	Transfermarkt club career; current season reconciled
-16580	Gorka García	2	184	GUNCEL	7	Transfermarkt club career; current season reconciled
+16580	Gorka García	2	184	GUNCEL	8	Transfermarkt club career; current season reconciled
 311440	Gorka Zabarte	2	57	GUNCEL	6	Live Transfermarkt game audit 2026-07-17T14:29:17.890Z
 1122334	Gökdeniz Tunç	2	35	GUNCEL	2	Transfermarkt club career; current season reconciled
 51572	Grégory Béranger	2	205	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -25478,7 +25478,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1116537	Kevyn Monteiro	2	56	GUNCEL	3	Transfermarkt club career; current season reconciled
 1187942	Khalis Merah	2	30	GUNCEL	1	Transfermarkt club career; current season reconciled
 901236	Kilian Lokembo Lokaso	2	96	GUNCEL	4	Transfermarkt club career; current season reconciled
-57024	Koikili Lertxundi	2	160	GUNCEL	6	Transfermarkt club career; current season reconciled
+57024	Koikili Lertxundi	2	160	GUNCEL	7	Transfermarkt club career; current season reconciled
 322061	Kristopher Da Graca	2	202	GUNCEL	13	Transfermarkt club career; current season reconciled
 1008640	Ktatau	2	86	GUNCEL	3	Live Transfermarkt game audit 2026-07-17T14:29:37.367Z
 5426	Kuami Agboh	2	165	GUNCEL	4	Transfermarkt club career; current season reconciled
@@ -25580,7 +25580,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 817133	Moisés Mosquera	2	102	GUNCEL	3	Transfermarkt club career; current season reconciled
 55466	Moreno Aoas Vidal	2	109	GUNCEL	12	Transfermarkt club career; current season reconciled
 7299	Morten Karlsen	2	320	GUNCEL	7	Transfermarkt club career; current season reconciled
-169046	Mouloud Akloul	2	33	GUNCEL	2	Transfermarkt club career; current season reconciled
+169046	Mouloud Akloul	2	33	GUNCEL	3	Transfermarkt club career; current season reconciled
 979235	Moussa Diakité	2	93	GUNCEL	2	Transfermarkt club career; current season reconciled
 450390	Moussa Diallo	2	161	GUNCEL	8	Transfermarkt club career; current season reconciled
 649022	Moussa Ndiaye	2	118	GUNCEL	3	Transfermarkt club career; current season reconciled
@@ -25749,7 +25749,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 51935	Sergei Temryukov	2	133	GUNCEL	6	Transfermarkt club career; current season reconciled
 181112	Sergi Samper	2	299	GUNCEL	7	Transfermarkt club career; current season reconciled
 722351	Sergio Arribas	2	53	GUNCEL	4	Live Transfermarkt game audit 2026-07-17T14:30:18.804Z
-71118	Sergio Gámiz	2	91	GUNCEL	9	Transfermarkt club career; current season reconciled
+71118	Sergio Gámiz	2	91	GUNCEL	10	Transfermarkt club career; current season reconciled
 491966	Serkan Asan	2	143	GUNCEL	5	Transfermarkt club career; current season reconciled
 45005	Serkan Kurtulus	2	179	GUNCEL	10	Transfermarkt club career; current season reconciled
 53588	Severo Meza	2	390	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -25944,7 +25944,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 685329	Anıl Yaşar	1	103	GUNCEL	6	Transfermarkt club career; current season reconciled
 157387	Anthony D'Alberto	1	210	GUNCEL	8	Transfermarkt club career; current season reconciled
 804812	Anthony Oyono	1	126	GUNCEL	3	Transfermarkt club career; current season reconciled
-110184	Anton Peterlin	1	121	GUNCEL	8	Transfermarkt club career; current season reconciled
+110184	Anton Peterlin	1	121	GUNCEL	9	Transfermarkt club career; current season reconciled
 154888	Antonio Grillo	1	41	GUNCEL	9	Transfermarkt club career; current season reconciled
 39172	Antonio Tavares	1	37	GUNCEL	5	Transfermarkt club career; current season reconciled
 797791	Antonio Tikvic	1	45	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -26199,10 +26199,10 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 268122	Iebe Swers	1	197	GUNCEL	6	Transfermarkt club career; current season reconciled
 1078159	Ife Ibrahim	1	43	GUNCEL	4	Transfermarkt club career; current season reconciled
 71435	Ignacio Hierro	1	210	GUNCEL	10	Transfermarkt club career; current season reconciled
-27666	Iker Garai	1	188	GUNCEL	5	Transfermarkt club career; current season reconciled
+27666	Iker Garai	1	188	GUNCEL	7	Transfermarkt club career; current season reconciled
 1379545	Ilai Grootfaam	1	1	GUNCEL	1	Transfermarkt club career; current season reconciled
 1065442	Iñigo Arguibide	1	53	GUNCEL	2	Transfermarkt club career; current season reconciled
-408542	Ionuț Radu	1	12	GUNCEL	3	Transfermarkt club career; current season reconciled
+408542	Ionuț Radu	1	12	GUNCEL	4	Transfermarkt club career; current season reconciled
 1414670	Ismaila Manga	1	4	GUNCEL	1	Transfermarkt club career; current season reconciled
 1180835	Issiaga Camara	1	25	GUNCEL	5	Transfermarkt club career; current season reconciled
 75735	Iván Casquero Cosío	1	171	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -26253,7 +26253,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 479431	Jethro Mashart	1	183	GUNCEL	6	Transfermarkt club career; current season reconciled
 709767	Ji-soo Kim	1	41	GUNCEL	5	Transfermarkt club career; current season reconciled
 1072898	Jili Buyabu	1	30	GUNCEL	5	Transfermarkt club career; current season reconciled
-48297	Jimmy Downey	1	21	GUNCEL	4	Transfermarkt club career; current season reconciled
+48297	Jimmy Downey	1	21	GUNCEL	5	Transfermarkt club career; current season reconciled
 638573	Jin-ho Jo	1	20	GUNCEL	1	Transfermarkt club career; current season reconciled
 1088697	Jinairo Johnson	1	1	GUNCEL	1	Transfermarkt club career; current season reconciled
 1075577	Joane Gadou	1	84	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -26473,7 +26473,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 339330	Navajo Bakboord	1	192	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:29:54.133Z
 1367976	Naziru Shuabiu	1	8	GUNCEL	2	Transfermarkt club career; current season reconciled
 273152	Nemanja Maksimovic	1	4	GUNCEL	3	Transfermarkt club career; current season reconciled
-19709	Nenad Kovačević	1	284	GUNCEL	9	Transfermarkt club career; current season reconciled
+19709	Nenad Kovačević	1	284	GUNCEL	10	Transfermarkt club career; current season reconciled
 955281	Nhoa Sangui	1	98	GUNCEL	4	Transfermarkt club career; current season reconciled
 396516	Nicholas Opoku	1	216	GUNCEL	6	Transfermarkt club career; current season reconciled
 185147	Nick	1	4	GUNCEL	3	Live Transfermarkt game audit 2026-07-17T14:28:29.043Z
@@ -26966,7 +26966,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 60368	Ángel Bernabé	0	187	GUNCEL	11	Transfermarkt club career; current season reconciled
 628487	Ángel Fortuño	0	89	GUNCEL	2	Transfermarkt club career; current season reconciled
 713632	Ángel Jiménez	0	40	GUNCEL	3	Transfermarkt club career; current season reconciled
-16011	Ángel Pindado	0	113	GUNCEL	8	Transfermarkt club career; current season reconciled
+16011	Ángel Pindado	0	113	GUNCEL	9	Transfermarkt club career; current season reconciled
 82693	Angelo da Costa	0	211	GUNCEL	5	Transfermarkt club career; current season reconciled
 201574	Angus Gunn	0	277	GUNCEL	10	Transfermarkt club career; current season reconciled
 170233	Anıl Atağ	0	315	GUNCEL	9	Transfermarkt club career; current season reconciled
@@ -27285,7 +27285,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 55282	Ciprian Tatarusanu	0	482	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:28:58.638Z
 44926	Cirilo Saucedo	0	453	GUNCEL	10	Transfermarkt club career; current season reconciled
 22123	Ciro Polito	0	291	GUNCEL	13	Transfermarkt club career; current season reconciled
-40325	Claude Stephane Seanla	0	6	GUNCEL	2	Transfermarkt club career; current season reconciled
+40325	Claude Stephane Seanla	0	6	GUNCEL	4	Transfermarkt club career; current season reconciled
 40423	Claudio Bravo	0	493	GUNCEL	5	Transfermarkt club career; current season reconciled
 155396	Cláudio Ramos	0	295	GUNCEL	3	Transfermarkt club career; current season reconciled
 83385	Claudio Scarzanella	0	56	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -27489,7 +27489,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 224091	Diego Rivas Rego	0	214	GUNCEL	12	Transfermarkt club career; current season reconciled
 90800	Diego Rodríguez	0	369	GUNCEL	9	Transfermarkt club career; current season reconciled
 53050	Diego Salgado Costa de Menezes	0	282	GUNCEL	6	Transfermarkt club career; current season reconciled
-8906	Dieter Paucken	0	412	GUNCEL	7	Transfermarkt club career; current season reconciled
+8906	Dieter Paucken	0	412	GUNCEL	8	Transfermarkt club career; current season reconciled
 714612	Dilhan Demir	0	6	GUNCEL	1	Transfermarkt club career; current season reconciled
 259151	Dillon Barnes	0	49	GUNCEL	9	Transfermarkt club career; current season reconciled
 308431	Dillon Phillips	0	229	GUNCEL	6	Transfermarkt club career; current season reconciled
@@ -27823,10 +27823,10 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 344591	Gaëtan Poussin	0	106	GUNCEL	5	Transfermarkt club career; current season reconciled
 561702	Gaizka Aiesa	0	126	GUNCEL	4	Transfermarkt club career; current season reconciled
 448835	Gaizka Campos Bahillo	0	120	GUNCEL	9	Transfermarkt club career; current season reconciled
-72425	Galder Zubizarreta	0	68	GUNCEL	7	Transfermarkt club career; current season reconciled
+72425	Galder Zubizarreta	0	68	GUNCEL	8	Transfermarkt club career; current season reconciled
 1491843	Gani Büyükhan	0	1	GUNCEL	1	Transfermarkt club career; current season reconciled
 48317	Gareth Stewart	0	180	GUNCEL	3	Transfermarkt club career; current season reconciled
-71752	Garikoitz Basauri Amezua	0	48	GUNCEL	6	Transfermarkt club career; current season reconciled
+71752	Garikoitz Basauri Amezua	0	48	GUNCEL	7	Transfermarkt club career; current season reconciled
 73582	Gary Woods	0	257	GUNCEL	11	Transfermarkt club career; current season reconciled
 26451	Gastón Sessa	0	418	GUNCEL	8	Transfermarkt club career; current season reconciled
 193256	Gauthier Gallon	0	235	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -27837,8 +27837,8 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 28306	Gennaro Bracigliano	0	255	GUNCEL	7	Live Transfermarkt game audit 2026-07-17T14:29:14.737Z
 20738	Gennaro Iezzo	0	293	GUNCEL	5	Transfermarkt club career; current season reconciled
 23938	Geoffrey Jourdren	0	313	GUNCEL	4	Live Transfermarkt game audit 2026-07-17T14:29:14.792Z
-72414	Geoffrey Lembet	0	172	GUNCEL	6	Transfermarkt club career; current season reconciled
-11	Georg Koch	0	515	GUNCEL	10	Transfermarkt club career; current season reconciled
+72414	Geoffrey Lembet	0	172	GUNCEL	7	Transfermarkt club career; current season reconciled
+11	Georg Koch	0	515	GUNCEL	11	Transfermarkt club career; current season reconciled
 151334	George Long	0	331	GUNCEL	10	Transfermarkt club career; current season reconciled
 502070	George Wickens	0	157	GUNCEL	6	Transfermarkt club career; current season reconciled
 258369	Georgemy	0	144	GUNCEL	12	Transfermarkt club career; current season reconciled
@@ -28082,7 +28082,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1405120	İsmail Solmaz	0	5	GUNCEL	1	Transfermarkt club career; current season reconciled
 118006	İsmail Şahmalı	0	236	GUNCEL	9	Transfermarkt club career; current season reconciled
 306384	İsmet Yumakoğulları	0	154	GUNCEL	14	Transfermarkt club career; current season reconciled
-209291	Jack Bonham	0	259	GUNCEL	7	Transfermarkt club career; current season reconciled
+209291	Jack Bonham	0	259	GUNCEL	8	Transfermarkt club career; current season reconciled
 128899	Jack Butland	0	443	GUNCEL	13	Transfermarkt club career; current season reconciled
 1131973	Jack Porter	0	23	GUNCEL	4	Transfermarkt club career; current season reconciled
 368629	Jack Walton	0	150	GUNCEL	5	Transfermarkt club career; current season reconciled
@@ -28703,7 +28703,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1296876	Marc Domènech	0	9	GUNCEL	1	Transfermarkt club career; current season reconciled
 1060658	Marc Jurado	0	1	GUNCEL	1	Transfermarkt club career; current season reconciled
 129374	Marc Martínez	0	318	GUNCEL	11	Transfermarkt club career; current season reconciled
-378947	Marc Vito	0	119	GUNCEL	10	Transfermarkt club career; current season reconciled
+378947	Marc Vito	0	119	GUNCEL	11	Transfermarkt club career; current season reconciled
 162	Marc Ziegler	0	201	GUNCEL	11	Transfermarkt club career; current season reconciled
 74857	Marc-André ter Stegen	0	624	GUNCEL	6	Transfermarkt club career; current season reconciled
 205465	Marc-Aurèle Caillard	0	151	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -29033,7 +29033,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 993081	Murat Eser	0	47	GUNCEL	5	Transfermarkt club career; current season reconciled
 115298	Murat İbrahim Uslu	0	3	GUNCEL	8	Transfermarkt club career; current season reconciled
 641264	Murat Sarigül	0	36	GUNCEL	3	Transfermarkt club career; current season reconciled
-6942	Murat Şahin	0	197	GUNCEL	9	Transfermarkt club career; current season reconciled
+6942	Murat Şahin	0	197	GUNCEL	10	Transfermarkt club career; current season reconciled
 27349	Muriel	0	452	GUNCEL	10	Transfermarkt club career; current season reconciled
 209569	Mücahit Atalay	0	135	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:29:53.154Z
 724050	Mücahit Ibrahimoglu	0	2	GUNCEL	1	Transfermarkt club career; current season reconciled
@@ -29514,7 +29514,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 387925	Ronaldo de Oliveira Strada	0	254	GUNCEL	3	Transfermarkt club career; current season reconciled
 5444	Ronan Le Crom	0	238	GUNCEL	9	Live Transfermarkt game audit 2026-07-17T14:30:12.855Z
 25321	Ronny Gaspercic	0	426	GUNCEL	7	Transfermarkt club career; current season reconciled
-15434	Ronny Kockel	0	156	GUNCEL	13	Transfermarkt club career; current season reconciled
+15434	Ronny Kockel	0	156	GUNCEL	14	Transfermarkt club career; current season reconciled
 39860	Rorys Aragón	0	103	GUNCEL	4	Transfermarkt club career; current season reconciled
 29159	Ross Turnbull	0	182	GUNCEL	9	Transfermarkt club career; current season reconciled
 40109	Rouven Sattelmaier	0	183	GUNCEL	10	Transfermarkt club career; current season reconciled
@@ -29925,7 +29925,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 625651	Urko González de Zárate	0	147	GUNCEL	3	Transfermarkt club career; current season reconciled
 9941	Urko Rafael Pardo	0	283	GUNCEL	12	Transfermarkt club career; current season reconciled
 169511	Uros Radakovic	0	6	GUNCEL	7	Transfermarkt club career; current season reconciled
-89324	Urtzi Iturrioz Urkiza	0	233	GUNCEL	7	Transfermarkt club career; current season reconciled
+89324	Urtzi Iturrioz Urkiza	0	233	GUNCEL	9	Transfermarkt club career; current season reconciled
 1185812	Utku Eriş	0	3	GUNCEL	1	Transfermarkt club career; current season reconciled
 342995	Utku Yuvakuran	0	95	GUNCEL	5	Transfermarkt club career; current season reconciled
 6	Uwe Gospodarek	0	371	GUNCEL	8	Transfermarkt club career; current season reconciled
@@ -29987,7 +29987,7 @@ transfermarkt_id	futbolcu	gol	mac	istatistik_durumu	kulup_sayisi	aciklama
 1169436	Vladyslav Krapyvtsov	0	5	GUNCEL	2	Transfermarkt club career; current season reconciled
 52261	Volkan Babacan	0	381	GUNCEL	5	Transfermarkt club career; current season reconciled
 7079	Volkan Demirel	0	525	GUNCEL	2	Transfermarkt club career; current season reconciled
-54159	Volkan Koçaloğlu	0	289	GUNCEL	11	Transfermarkt club career; current season reconciled
+54159	Volkan Koçaloğlu	0	289	GUNCEL	12	Transfermarkt club career; current season reconciled
 1720	Volkan Ünlü	0	107	GUNCEL	11	Transfermarkt club career; current season reconciled
 296802	Walter Benítez	0	380	GUNCEL	5	Transfermarkt club career; current season reconciled
 38582	Walter Bressan	0	360	GUNCEL	8	Live Transfermarkt game audit 2026-07-17T14:30:37.090Z
